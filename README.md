@@ -12,7 +12,7 @@ Mockfn is available from [Clojars](https://clojars.org/mockfn).
 [mockfn "0.1.0-SNAPSHOT"]
 ```
 
-## Examples
+## Usage
 
 The `providing` macro replaces a function with a configured mock.
 
