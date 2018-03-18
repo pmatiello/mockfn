@@ -4,7 +4,7 @@
 mockist test-driven-development in Clojure. It is meant to be used
 alongside a regular testing framework such as `clojure.test`.
 
-## Usage
+## Availability
 
 Mockfn is available from [Clojars](https://clojars.org/mockfn).
 
