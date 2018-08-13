@@ -8,8 +8,8 @@ All notable changes to this project are documented in this file.
 - Added function stubs.
 - Added call verification.
 - Added argument matchers. 
+- Syntax sugar for clojure.test
 
 ## Planned
 
 - Chained responses
-- Syntax sugar deftest
