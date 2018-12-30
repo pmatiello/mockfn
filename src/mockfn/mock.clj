@@ -1,6 +1,12 @@
 (ns mockfn.mock
   (:require [mockfn.matchers :as matchers]))
 
+(defrecord AsFunc [func])
+
+(defn as-fn
+  "Use mocked value as a function instead of returning it."
+  [func] (->AsFunc func))
+
 (defn- matches-arg?
   [[expected arg]]
   (if (satisfies? matchers/Matcher expected)
@@ -23,16 +29,22 @@
 (defn- unexpected-call [func args]
   (format "Unexpected call to %s with args %s." func args))
 
-(defn- return-value-for
+(defn- get-value-for
   [func spec args]
   (when (-> spec :return-values (for-args args) #{::unexpected-call})
     (throw (ex-info (unexpected-call func args) {})))
   (-> spec :times-called (for-args args) (swap! inc))
   (-> spec :return-values (for-args args)))
 
+(defn- base-value-or-invoke [func spec args]
+  (let [mocked-value (get-value-for func spec args)]
+    (if (instance? AsFunc mocked-value)
+      (apply (:func mocked-value) args)
+      mocked-value)))
+
 (defn mock [func spec]
   (with-meta
-    (fn [& args] (return-value-for func spec (into [] args)))
+    (fn [& args] (base-value-or-invoke func spec (into [] args)))
     spec))
 
 (defn- doesnt-match [function args matcher times-called]
