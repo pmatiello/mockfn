@@ -4,9 +4,12 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-### 0.?.0 - 201?-00-00
+### 0.4.0 - 2019-01-07
 - Allow mocks to not only return base values, but invoke function calls.
   This enables mocked functions to throw exceptions.
+
+### 0.3.0 - 2018-10-04
+- Allow for use of predicates to match function arguments
 
 ### 0.2.0 - 2018-08-20
 - Added syntax sugar for clojure.test.
