@@ -2,11 +2,7 @@
   (:require [mockfn.matchers :as matchers]
             [mockfn.parser]))
 
-(defrecord AsFunc [func])
-
-(defn as-fn
-  "Use mocked value as a function instead of returning it."
-  [func] (->AsFunc func))
+(defrecord Calling [func])
 
 (defn- matches-arg?
   [[expected arg]]
@@ -39,7 +35,7 @@
 
 (defn- base-value-or-invoke [func spec args]
   (let [mocked-value (get-value-for func spec args)]
-    (if (instance? AsFunc mocked-value)
+    (if (instance? Calling mocked-value)
       (apply (:func mocked-value) args)
       mocked-value)))
 

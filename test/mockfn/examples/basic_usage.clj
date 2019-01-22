@@ -1,7 +1,6 @@
 (ns mockfn.examples.basic-usage
   (:require [clojure.test :refer :all]
             [mockfn.macros :as mfn]
-            [mockfn.mock :as mck]
             [mockfn.matchers :as matchers])
   (:import (clojure.lang ExceptionInfo)))
 
@@ -20,7 +19,7 @@
       (is (= :result-2 (one-fn :argument-2)))))
 
   (testing "providing - cause function to throw exception"
-    (mfn/providing [(one-fn :argument-1) (mck/as-fn #(throw (ex-info "one-fn mocked to fail" {:arg %})))
+    (mfn/providing [(one-fn :argument-1) (mfn/calling #(throw (ex-info "one-fn mocked to fail" {:arg %})))
                     (one-fn :argument-2) :result-2]
       (is (thrown? ExceptionInfo (one-fn :argument-1)))
       (is (= :result-2 (one-fn :argument-2)))))
