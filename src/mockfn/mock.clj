@@ -4,6 +4,8 @@
 
 (defrecord Calling [func])
 
+(defrecord CallingOriginal [])
+
 (defn- matches-arg?
   [[expected arg]]
   (if (satisfies? matchers/Matcher expected)
@@ -35,8 +37,14 @@
 
 (defn- base-value-or-invoke [func spec args]
   (let [mocked-value (get-value-for func spec args)]
-    (if (instance? Calling mocked-value)
+    (cond
+      (instance? Calling mocked-value)
       (apply (:func mocked-value) args)
+
+      (instance? CallingOriginal mocked-value)
+      (apply (:function spec) args)
+
+      :default
       mocked-value)))
 
 (defn mock [func spec]
