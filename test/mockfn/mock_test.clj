@@ -75,7 +75,7 @@
       (is (= 1 (-> mock meta (get-in [:times-called [(matchers/pred odd?)]]) deref)))
       (is (= 1 (-> mock meta (get-in [:times-called [(matchers/any)]]) deref))))))
 
-(deftest mock-calling-original
+(deftest mock-unmocked
   (let [definition {:function      (fn [& args] args)
                     :return-values {[]            (mock/->CallingOriginal)
                                     [:arg1]       (mock/->CallingOriginal)

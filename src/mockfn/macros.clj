@@ -22,7 +22,7 @@
   "Invoke mocked value as a function instead of returning it."
   [func] (mock/->Calling func))
 
-(def calling-original
+(def unmocked
   "Invoke the original implementation of the mocked function."
   (mock/->CallingOriginal))
 

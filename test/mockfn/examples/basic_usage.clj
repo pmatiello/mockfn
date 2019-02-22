@@ -44,7 +44,7 @@
       (is (= :inc-fn (one-fn inc)))))
 
   (testing "providing - calling original"
-    (mfn/providing [(implemented-fn :argument-1) mfn/calling-original]
+    (mfn/providing [(implemented-fn :argument-1) mfn/unmocked]
       (is (= :argument-1 (implemented-fn :argument-1)))))
 
   (testing "verifying"
