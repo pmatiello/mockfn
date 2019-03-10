@@ -1,7 +1,7 @@
 (ns mockfn.matchers-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest testing is]]
             [mockfn.matchers :as matchers])
-  (:import (clojure.lang Keyword)))
+  #?(:clj (:import (clojure.lang Keyword))))
 
 (deftest exactly-test
   (let [exactly (matchers/exactly 1)]

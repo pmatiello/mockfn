@@ -1,8 +1,8 @@
 (ns mockfn.mock-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest testing is]]
             [mockfn.mock :as mock]
             [mockfn.matchers :as matchers])
-  (:import (clojure.lang ExceptionInfo Keyword)))
+  #?(:clj (:import (clojure.lang ExceptionInfo Keyword))))
 
 (def one-fn)
 
