@@ -4,6 +4,9 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+### 0.4.0 - Unreleased
+- clojurescript support
+
 ### 0.3.0 - 2019-01-25
 - Allow mocks to not only return base values, but invoke function calls.
   This enables mocked functions to throw exceptions.
