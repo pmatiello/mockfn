@@ -8,4 +8,5 @@
 
 (doo-tests 'mockfn.macros-test
            'mockfn.matchers-test
-           'mockfn.mock-test)
+           ;'mockfn.mock-test
+           )

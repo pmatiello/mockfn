@@ -43,10 +43,12 @@
       (is (= "any" (matchers/description any))))))
 
 (deftest a-test
-  (let [a (matchers/a Keyword)]
+  (let [a (matchers/a Keyword)
+        keyword-desc #?(:clj "a clojure.lang.Keyword"
+                        :cljs "a cljs.core/Keyword")]
     (testing "matches actuals of the expected type"
       (is (true? (matchers/matches? a :keyword)))
       (is (false? (matchers/matches? a "string"))))
 
     (testing "provides an informative string representation"
-      (is (= "a clojure.lang.Keyword" (matchers/description a))))))
+      (is (= keyword-desc (matchers/description a))))))

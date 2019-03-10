@@ -1,6 +1,7 @@
 (ns mockfn.mock
   (:require [mockfn.matchers :as matchers]
-            [mockfn.parser]))
+            [mockfn.parser]
+            [mockfn.utils :as utils]))
 
 (defrecord Calling [func])
 
@@ -24,7 +25,7 @@
       ::unexpected-call)))
 
 (defn- unexpected-call [func args]
-  (format "Unexpected call to %s with args %s." func args))
+  (utils/formatter "Unexpected call to %s with args %s." func args))
 
 (defn- get-value-for
   [func spec args]
@@ -45,8 +46,8 @@
     spec))
 
 (defn- doesnt-match [function args matcher times-called]
-  (format "Expected %s with arguments %s %s, received %s."
-          function args (matchers/description matcher) times-called))
+  (utils/formatter "Expected %s with arguments %s %s, received %s."
+                   function args (matchers/description matcher) times-called))
 
 (defn verify [mock]
   (doseq [args    (-> mock meta :times-expected keys)
