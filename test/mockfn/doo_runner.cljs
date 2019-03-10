@@ -1,12 +1,13 @@
 (ns mockfn.doo-runner
   (:require [doo.runner :refer-macros [doo-tests]]
+            mockfn.examples.basic-usage
             mockfn.macros-test
             mockfn.matchers-test
             mockfn.mock-test))
 
 (enable-console-print!)
 
-(doo-tests 'mockfn.macros-test
+(doo-tests 'mockfn.examples.basic-usage
+           'mockfn.macros-test
            'mockfn.matchers-test
-           ;'mockfn.mock-test
-           )
+           'mockfn.mock-test)

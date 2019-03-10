@@ -23,9 +23,11 @@
       (is (= nil (mock :nil))))
 
     (testing "throws exception when called with unexpected arguments"
-      (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call to Unbound: #'mockfn.mock-test/one-fn with args \[:unexpected\]"
-            (mock :unexpected))))))
+      (let [message-regex #?(:clj #"Unexpected call to Unbound: #'mockfn.mock-test/one-fn with args \[:unexpected\]"
+                             :cljs #"Unexpected call to <unbound var> with args \[:unexpected\]")]
+        (is (thrown-with-msg?
+              ExceptionInfo message-regex
+              (mock :unexpected)))))))
 
 (deftest mock-call-count-test
   (let [definition {:function       'one-fn
@@ -49,7 +51,8 @@
       (is nil? (mock/verify mock))
       (mock :arg1 :arg2)
       (is (thrown-with-msg?
-            ExceptionInfo #"Expected one-fn with arguments \[:arg1 :arg2\] exactly 0 times, received 1."
+            ExceptionInfo
+            #"Expected one-fn with arguments \[:arg1 :arg2\] exactly 0 times, received 1."
             (mock/verify mock))))))
 
 (deftest mock-match-argument-test

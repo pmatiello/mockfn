@@ -49,6 +49,6 @@
       (catch #?(:clj Exception :cljs js/Error) _e false)))
   (description [_this]
     (utils/formatter "satisfies %s predicate function"
-            (str predicate))))
+                     (str predicate))))
 
 (def pred ->Predicate)
