@@ -93,6 +93,9 @@
       (is (= [:arg1 :arg2] (mock :arg1 :arg2))))
 
     (testing "throws exception when called with unexpected arguments"
-      (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call to Unbound: #'mockfn.mock-test/one-fn with args \[:unexpected\]"
-            (mock :unexpected))))))
+      (let [message-regex #?(:clj #"Unexpected call to Unbound: #'mockfn.mock-test/one-fn with args \[:unexpected\]"
+                             :cljs #"Unexpected call to <unbound var> with args \[:unexpected\]")]
+        (is (thrown-with-msg?
+              ExceptionInfo
+              message-regex
+              (mock :unexpected)))))))
