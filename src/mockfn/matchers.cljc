@@ -9,21 +9,21 @@
   Matcher
   (matches? [this actual] (= expected actual))
   (description [this]
-    (utils/formatter "exactly %s times" expected)))
+    (utils/formatted "exactly %s times" expected)))
 
 (def exactly ->Exactly)
 
 (defrecord AtLeast [expected]
   Matcher
   (matches? [this actual] (>= actual expected))
-  (description [this] (utils/formatter "at least %s times" expected)))
+  (description [this] (utils/formatted "at least %s times" expected)))
 
 (def at-least ->AtLeast)
 
 (defrecord AtMost [expected]
   Matcher
   (matches? [this actual] (<= actual expected))
-  (description [this] (utils/formatter "at most %s times" expected)))
+  (description [this] (utils/formatted "at most %s times" expected)))
 
 (def at-most ->AtMost)
 
@@ -37,7 +37,7 @@
 (defrecord A [expected]
   Matcher
   (matches? [this actual] (instance? expected actual))
-  (description [this] (utils/formatter "a %s" (pr-str expected))))
+  (description [this] (utils/formatted "a %s" (pr-str expected))))
 
 (def a ->A)
 
@@ -48,7 +48,7 @@
       (predicate actual)
       (catch #?(:clj Exception :cljs js/Error) _e false)))
   (description [_this]
-    (utils/formatter "satisfies %s predicate function"
+    (utils/formatted "satisfies %s predicate function"
                      (str predicate))))
 
 (def pred ->Predicate)

@@ -24,14 +24,16 @@
       (get m expected)
       ::unexpected-call)))
 
+(defn- remap-unbound-var [func]
+  #?(:cljs (if (nil? func) ;; cljs doesn't have unbound vars
+             "<unbound var>"
+             func)
+     :clj func))
+
 (defn- unexpected-call [func args]
-  (let [func' #?(:cljs (if (nil? func) ;; cljs doesn't have unbound vars
-                         "<unbound var>"
-                         func)
-                 :clj func)]
-    (utils/formatter "Unexpected call to %s with args %s"
-                     func'
-                     args)))
+  (utils/formatted "Unexpected call to %s with args %s"
+                   (remap-unbound-var func)
+                   args))
 
 (defn- get-value-for
   [func spec args]
@@ -52,15 +54,11 @@
     spec))
 
 (defn- doesnt-match [func args matcher times-called]
-  (let [func' #?(:cljs (if (nil? func) ;; cljs doesn't have unbound vars
-                         "<unbound var>"
-                         func)
-                 :clj func)]
-    (utils/formatter "Expected %s with arguments %s %s, received %s."
-                     func'
-                     args
-                     (matchers/description matcher)
-                     times-called)))
+  (utils/formatted "Expected %s with arguments %s %s, received %s."
+                   (remap-unbound-var func)
+                   args
+                   (matchers/description matcher)
+                   times-called))
 
 (defn verify [mock]
   (doseq [args    (-> mock meta :times-expected keys)

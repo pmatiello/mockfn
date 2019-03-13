@@ -4,7 +4,7 @@
        [goog.string :as gstring]
        [goog.string.format])))
 
-(def formatter
+(def formatted
   #?(:clj format
      :cljs gstring/format))
 

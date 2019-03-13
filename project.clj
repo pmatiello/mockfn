@@ -13,7 +13,8 @@
 
   :aliases {"test-phantom" ["doo" "phantom" "test"]
             "test-advanced" ["doo" "phantom" "advanced-test"]
-            "test-node" ["doo" "node" "node-test"]}
+            "test-node" ["doo" "node" "node-test" "once"]
+            "test-node-watch" ["doo" "node" "node-test"]}
   ;; Below, :process-shim false is workaround for <https://github.com/bensu/doo/pull/141>
   :cljsbuild {:builds [{:id "test"
                         :source-paths ["src/" "test/"]
