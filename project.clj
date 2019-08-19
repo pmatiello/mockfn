@@ -11,7 +11,6 @@
                    :dependencies [[org.clojure/clojurescript "1.10.520"]]}}
 
   :aliases {"test-phantom" ["doo" "phantom" "test"]
-            "test-advanced" ["doo" "phantom" "advanced-test"]
             "test-node" ["doo" "node" "node-test" "once"]
             "test-node-watch" ["doo" "node" "node-test"]}
   ;; Below, :process-shim false is workaround for <https://github.com/bensu/doo/pull/141>
@@ -21,13 +20,6 @@
                                    :output-dir "target/out"
                                    :main mockfn.doo-runner
                                    :optimizations :none
-                                   :process-shim false}}
-                       {:id "advanced-test"
-                        :source-paths ["src/" "test/"]
-                        :compiler {:output-to "target/advanced_out/test.js"
-                                   :output-dir "target/advanced_out"
-                                   :main matcher-combinator.doo-runner
-                                   :optimizations :advanced
                                    :process-shim false}}
                        ;; Node.js requires :target :nodejs, hence the separate
                        ;; build configuration.
