@@ -10,9 +10,9 @@
   [func]
   (if (seq? func) (last func) func))
 
-(defn as-redefs
-  [func->definition]
-  (->> func->definition
+(defn specification->redef-bindings
+  [specification]
+  (->> specification
        (map (fn [[func definition]] [(func->func-sym func) `(mock/mock ~func ~definition)]))
        (apply concat)))
 

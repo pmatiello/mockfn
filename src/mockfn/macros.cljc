@@ -14,14 +14,14 @@
 (defmacro providing
   "Mocks functions."
   [bindings & body]
-  `(with-redefs ~(->> bindings (partition 2) internal.macro/bindings->specification internal.macro/as-redefs)
+  `(with-redefs ~(->> bindings (partition 2) internal.macro/bindings->specification internal.macro/specification->redef-bindings)
      ~@body))
 
 (defmacro verifying
   "Mocks functions and verifies calls."
   [bindings & body]
   (let [specs# (->> bindings (partition 3) internal.macro/bindings->specification)]
-    `(with-redefs ~(internal.macro/as-redefs specs#)
+    `(with-redefs ~(internal.macro/specification->redef-bindings specs#)
        ~@body
        (doseq [mock# (keys ~specs#)]
          (mock/verify mock#)))))
