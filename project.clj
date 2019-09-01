@@ -5,7 +5,6 @@
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]]
 
-
   :profiles {:dev {:plugins [[lein-cljsbuild "1.1.7"]
                              [lein-doo "0.1.11"]]
                    :dependencies [[org.clojure/clojurescript "1.10.520"]]}}
