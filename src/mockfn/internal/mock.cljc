@@ -1,5 +1,5 @@
 (ns mockfn.internal.mock
-  (:require [mockfn.utils :as utils]
+  (:require [mockfn.internal.utils :as utils]
             [mockfn.matchers :as matchers]))
 
 (defrecord Calling [function])
