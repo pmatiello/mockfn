@@ -1,77 +1,22 @@
 (ns mockfn.mock
-  (:require [mockfn.matchers :as matchers]
+  (:require [mockfn.internal.mock :as internal.mock]
+            [mockfn.matchers :as matchers]
             [mockfn.parser]
             [mockfn.utils :as utils]))
 
-(defrecord Calling [function])
+(def ->Calling internal.mock/->Calling)
 
-(defrecord CallingOriginal [])
-
-(defn- matches-arg?
-  [[expected arg]]
-  (if (satisfies? matchers/Matcher expected)
-    (matchers/matches? expected arg)
-    (= expected arg)))
-
-(defn- matches-args?
-  [expected args]
-  (let [arity-matches?    (= (count expected) (count args))
-        each-arg-matches? (every? matches-arg? (map vector expected args))]
-    (and arity-matches? each-arg-matches? expected)))
-
-(defn- for-args [m args]
-  (if-let [expected (some #(matches-args? % args) (keys m))]
-    (get m expected)
-    ::unexpected-call))
-
-(defn- func-or-unbound-var [func]
-  #?(:clj  func
-     :cljs (or func "<unbound var>"))) ;; cljs doesn't have unbound vars
-
-(defn- unexpected-call-msg [func args]
-  (utils/formatted "Unexpected call to %s with args %s"
-                   (func-or-unbound-var func) args))
-
-(defn- get-value-for
-  [func spec args]
-  (when (-> spec :return-values (for-args args) #{::unexpected-call})
-    (throw (ex-info (unexpected-call-msg func args) {})))
-  (-> spec :times-called (for-args args) (swap! inc))
-  (-> spec :return-values (for-args args)))
-
-(defn- return-value-for-call [func spec args]
-  (let [mocked-value (get-value-for func spec args)]
-    (cond
-      (instance? Calling mocked-value)
-      (-> mocked-value :function (apply args))
-
-      (instance? CallingOriginal mocked-value)
-      (-> spec :function (apply args))
-
-      :default
-      mocked-value)))
+(def ->CallingOriginal internal.mock/->CallingOriginal)
 
 (defn mock [func spec]
   (with-meta
-    (fn [& args] (return-value-for-call func spec (into [] args)))
+    (fn [& args] (internal.mock/return-value-for-call func spec (into [] args)))
     spec))
 
-(defn- doesnt-match [func args matcher times-called]
-  (utils/formatted "Expected %s with arguments %s %s, received %s."
-                   (func-or-unbound-var func)
-                   args
-                   (matchers/description matcher)
-                   times-called))
-
-(defn- mock->meta [mock]
-  (cond-> mock
-          (var? mock) deref
-          :then meta))
-
 (defn verify [mock]
-  (let [meta (mock->meta mock)]
+  (let [meta (internal.mock/mock->meta mock)]
     (doseq [args    (-> meta :times-expected keys)
             matcher (-> meta :times-expected (get args))]
       (let [times-called (-> meta :times-called (get args) deref)]
         (when-not (matchers/matches? matcher times-called)
-          (throw (ex-info (doesnt-match (-> meta :function) args matcher times-called) {})))))))
+          (throw (ex-info (internal.mock/doesnt-match (-> meta :function) args matcher times-called) {})))))))
