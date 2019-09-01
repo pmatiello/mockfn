@@ -24,40 +24,43 @@
     ::unexpected-call))
 
 (defn- func-or-unbound-var [func]
-  #?(:clj  func
-     :cljs (or func "<unbound var>")))                      ;; cljs doesn't have unbound vars
+  ;; cljs doesn't have unbound vars
+  #?(:clj func :cljs (or func "<unbound var>")))
 
 (defn- unexpected-call-msg [func args]
   (utils/formatted "Unexpected call to %s with args %s"
                    (func-or-unbound-var func) args))
 
-(defn- get-value-for
-  [func spec args]
+(defn- ensure-expected-call [func spec args]
   (when (-> spec :return-values (for-args args) #{::unexpected-call})
-    (throw (ex-info (unexpected-call-msg func args) {})))
-  (-> spec :times-called (for-args args) (swap! inc))
-  (-> spec :return-values (for-args args)))
+    (throw (ex-info (unexpected-call-msg func args) {}))))
 
-(defn return-value-for-call [func spec args]
-  (let [mocked-value (get-value-for func spec args)]
+(defn- increase-call-count [spec args]
+  (-> spec :times-called (for-args args) (swap! inc)))
+
+(defn call->ret-val [func spec args]
+  (ensure-expected-call func spec args)
+  (increase-call-count spec args)
+
+  (let [ret-val (-> spec :return-values (for-args args))]
     (cond
-      (instance? Calling mocked-value)
-      (-> mocked-value :function (apply args))
+      (instance? Calling ret-val)
+      (-> ret-val :function (apply args))
 
-      (instance? CallingOriginal mocked-value)
+      (instance? CallingOriginal ret-val)
       (-> spec :function (apply args))
 
       :default
-      mocked-value)))
+      ret-val)))
 
-(defn doesnt-match [func args matcher times-called]
+(defn matcher-failure-ex-msg [func args matcher times-called]
   (utils/formatted "Expected %s with arguments %s %s, received %s."
                    (func-or-unbound-var func)
                    args
                    (matchers/description matcher)
                    times-called))
 
-(defn mock->meta [mock]
+(defn mock->spec [mock]
   (cond-> mock
           (var? mock) deref
           :then meta))

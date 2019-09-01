@@ -5,11 +5,11 @@
 
 (defn calling
   "Invoke mocked value as a function instead of returning it."
-  [func] (mock/->Calling func))
+  [func] (mock/calling func))
 
 (def unmocked
   "Invoke the original implementation of the mocked function."
-  (mock/->CallingOriginal))
+  (mock/calling-original))
 
 (defmacro providing
   "Mocks functions."
