@@ -1,37 +1,23 @@
 (ns mockfn.internal.mock
   (:require [mockfn.internal.utils :as utils]
+            [mockfn.internal.matchers :as internal.matchers]
             [mockfn.matchers :as matchers]))
 
 (defrecord Calling [function])
 
 (defrecord CallingOriginal [])
 
-(defn- matches-arg?
-  "Given a matcher expected and an argument arg, verify whether there is a
-  match.
-
-  If expected is a plain value instead of an implementation of
-  mockfn.matchers/Matcher, use a simple equality check to verify matching."
-  [[expected arg]]
-  (if (satisfies? matchers/Matcher expected)
-    (matchers/matches? expected arg)
-    (= expected arg)))
-
-(defn- matches-args?
-  "Given a list o matchers expected and a list of values args, verify whether
-  every value in args matches the corresponding (by position in sequence)
-  matcher in expected."
-  [expected args]
-  (let [arity-matches?    (= (count expected) (count args))
-        each-arg-matches? (every? matches-arg? (map vector expected args))]
-    (and arity-matches? each-arg-matches? expected)))
+(defn- matching-fn-for [args]
+  (fn [matchers]
+    (when (internal.matchers/matches-args? matchers args)
+      matchers)))
 
 (defn- for-args [m args]
   "Takes a map m where the keys are lists of matchers. Retrieves from this
   map a value for which the list args fulfill the list of matchers in the key.
 
   If args doesn't satisfy any list of matchers, returns ::unexpected-call."
-  (if-let [expected (some #(matches-args? % args) (keys m))]
+  (if-let [expected (some (matching-fn-for args) (keys m))]
     (get m expected)
     ::unexpected-call))
 
