@@ -13,7 +13,7 @@
     (= expected arg)))
 
 (defn matches-args?
-  "Given a list o matchers expected and a list of values args, verify whether
+  "Given a list of matchers expected and a list of values args, verify whether
   every value in args matches the corresponding (by position in sequence)
   matcher in expected."
   [expected args]
