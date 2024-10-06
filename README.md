@@ -6,8 +6,6 @@ alongside a regular testing framework such as `clojure.test`.
 
 [![Clojars Project](https://img.shields.io/clojars/v/mockfn.svg)](https://clojars.org/mockfn)
 
-[![CircleCI](https://circleci.com/gh/pmatiello/mockfn.svg?style=svg)](https://circleci.com/gh/pmatiello/mockfn)
-
 ## Usage
 
 The `providing` macro replaces a function with a configured mock.
@@ -36,8 +34,63 @@ information, including:
 - [Syntax sugar for `clojure.test`](doc/documentation.md#syntax-sugar-for-clojuretest)
 - [Argument matchers](doc/documentation.md#argument-matchers)
 
+## Development
+
+Information for developing this library.
+
+### Running tests
+
+The following command will execute the unit tests:
+
+```
+% clj -X:test
+```
+
+### Building
+
+The following command will build a jar file:
+
+```
+% clj -T:build jar
+```
+
+To clean a previous build, run:
+
+```
+% clj -T:build clean
+```
+
+### Releasing
+
+Before releasing, update the library version in the [build.clj](./build.clj) file.
+
+Make a commit and generate a new tag:
+
+```
+% git commit -a -m "Release: ${VERSION}"
+% git tag -a "v${VERSION}" -m "Release: ${VERSION}"
+% git push
+% git push origin "v${VERSION}" 
+```
+
+To release to [clojars](https://clojars.org), run:
+
+```
+% mvn deploy:deploy-file \
+      -Dfile=target/tui-${VERSION}.jar \
+      -DrepositoryId=clojars \
+      -Durl=https://clojars.org/repo \
+      -DpomFile=target/classes/META-INF/maven/me.pmatiello/mockfn/pom.xml
+```
+
+Notice that this step requires clojars to be configured as a server in the local
+`~/.m2/settings.xml` file.
+
+## Contribution Policy
+
+This software is open-source, but closed to contributions.
+
 ## License
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
-
