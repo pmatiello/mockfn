@@ -4,14 +4,6 @@
 mockist test-driven-development in Clojure. It is meant to be used
 alongside a regular testing framework such as `clojure.test`.
 
-## Availability
-
-Mockfn is available from [Clojars](https://clojars.org/mockfn).
-
-```clj
-[mockfn "0.1.0-SNAPSHOT"]
-```
-
 ## Usage
 
 The `providing` macro replaces a function with a configured mock.
@@ -39,6 +31,62 @@ information, including:
 - [Framework-agonostic usage](doc/documentation.md#framework-agonostic-usage)
 - [Syntax sugar for `clojure.test`](doc/documentation.md#syntax-sugar-for-clojuretest)
 - [Argument matchers](doc/documentation.md#argument-matchers)
+
+## Development
+
+Information for developing this library.
+
+### Running tests
+
+The following command will execute the unit tests:
+
+```
+% clj -X:test
+```
+
+### Building
+
+The following command will build a jar file:
+
+```
+% clj -T:build jar
+```
+
+To clean a previous build, run:
+
+```
+% clj -T:build clean
+```
+
+### Releasing
+
+Before releasing, update the library version in the [build.clj](./build.clj) file.
+
+Make a commit and generate a new tag:
+
+```
+% git commit -a -m "Release: ${VERSION}"
+% git tag -a "v${VERSION}" -m "Release: ${VERSION}"
+% git push
+% git push origin "v${VERSION}" 
+```
+
+To release to [clojars](https://clojars.org), run:
+
+```
+% mvn deploy:deploy-file \
+      -Dfile=target/tui-${VERSION}.jar \
+      -DrepositoryId=clojars \
+      -Durl=https://clojars.org/repo \
+      -DpomFile=target/classes/META-INF/maven/me.pmatiello/mockfn/pom.xml
+```
+
+Notice that this step requires clojars to be configured as a server in the local
+`~/.m2/settings.xml` file.
+
+## Contribution Policy
+
+This software is open-source, but closed to contributions.
 
 ## License
 
