@@ -1,4 +1,4 @@
-# mockfn
+# me.pmatiello/mockfn
 
 [`mockfn`](https://github.com/pmatiello/mockfn) is a library supporting
 mockist test-driven-development in Clojure. It is meant to be used
