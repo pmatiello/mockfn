@@ -1,8 +1,7 @@
-# mockfn
+# me.pmatiello/mockfn
 
-[`mockfn`](https://github.com/pmatiello/mockfn) is a library supporting mockist
-test-driven-development in Clojure. It is meant to be used alongside a regular
-testing framework such as `clojure.test`.
+This is a library for mockist test-driven-development in Clojure. It is meant to be used alongside a regular testing
+framework such as `clojure.test`.
 
 ## Framework-agonostic usage
 
@@ -144,7 +143,6 @@ Matches if actual value is less or equal than the expected value.
 ```
 
 Always matches.
-
 
 ### a
 
