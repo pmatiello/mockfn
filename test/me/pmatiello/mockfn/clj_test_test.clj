@@ -1,7 +1,7 @@
-(ns mockfn.clj-test-test
+(ns me.pmatiello.mockfn.clj-test-test
   (:require [clojure.test :refer :all]
-            [mockfn.clj-test :as mfn]
-            [mockfn.matchers :as matchers]))
+            [me.pmatiello.mockfn.clj-test :as mfn]
+            [me.pmatiello.mockfn.matchers :as matchers]))
 
 (def tests-run (atom #{}))
 

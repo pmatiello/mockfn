@@ -1,7 +1,7 @@
-(ns mockfn.integration
+(ns me.pmatiello.mockfn.integration
   (:require [clojure.test :refer :all]
-            [mockfn.clj-test :as mfn]
-            [mockfn.matchers :as matchers]))
+            [me.pmatiello.mockfn.clj-test :as mfn]
+            [me.pmatiello.mockfn.matchers :as matchers]))
 
 (def power-available?)
 (def turn-on-lightbulb)

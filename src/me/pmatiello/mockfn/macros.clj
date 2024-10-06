@@ -1,5 +1,5 @@
-(ns mockfn.macros
-  (:require [mockfn.mock :as mock]))
+(ns me.pmatiello.mockfn.macros
+  (:require [me.pmatiello.mockfn.mock :as mock]))
 
 (defn- as-redefs
   [func->definition]

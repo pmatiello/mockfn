@@ -1,6 +1,6 @@
-(ns mockfn.core
-  (:require [mockfn.macros :as macros]
-            [mockfn.matchers :as matchers]))
+(ns me.pmatiello.mockfn.core
+  (:require [me.pmatiello.mockfn.macros :as macros]
+            [me.pmatiello.mockfn.matchers :as matchers]))
 
 (def #^{:macro true} ^:deprecated providing #'macros/providing)
 (def #^{:macro true} ^:deprecated verifying #'macros/verifying)

@@ -1,7 +1,7 @@
-(ns mockfn.examples.basic-usage
+(ns me.pmatiello.mockfn.examples.basic-usage
   (:require [clojure.test :refer :all]
-            [mockfn.macros :as mfn]
-            [mockfn.matchers :as matchers])
+            [me.pmatiello.mockfn.macros :as mfn]
+            [me.pmatiello.mockfn.matchers :as matchers])
   (:import (clojure.lang ExceptionInfo)))
 
 (def one-fn)

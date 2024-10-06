@@ -1,6 +1,6 @@
-(ns mockfn.clj-test
+(ns me.pmatiello.mockfn.clj-test
   (:require [clojure.test :as test]
-            [mockfn.macros :as macros]))
+            [me.pmatiello.mockfn.macros :as macros]))
 
 (declare providing)
 (declare verifying)
