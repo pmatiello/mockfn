@@ -1,7 +1,7 @@
-(ns mockfn.macros-test
+(ns me.pmatiello.mockfn.macros-test
   (:require [clojure.test :refer :all]
-            [mockfn.macros :as macros]
-            [mockfn.matchers :as matchers])
+            [me.pmatiello.mockfn.macros :as macros]
+            [me.pmatiello.mockfn.matchers :as matchers])
   (:import (clojure.lang ExceptionInfo Keyword)))
 
 (def one-fn)

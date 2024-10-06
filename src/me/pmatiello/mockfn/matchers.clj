@@ -1,4 +1,4 @@
-(ns mockfn.matchers)
+(ns me.pmatiello.mockfn.matchers)
 
 (defprotocol Matcher
   (matches? [this actual])

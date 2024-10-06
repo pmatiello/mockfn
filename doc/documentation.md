@@ -9,8 +9,8 @@ testing framework such as `clojure.test`.
 In order to use `mockfn`, it's enough to require it in a test namespace.
 
 ```clj
-(:require [mockfn.macros :as mfn]
-          [mockfn.matchers :as matchers]
+(:require [me.pmatiello.mockfn.macros :as mfn]
+          [me.pmatiello.mockfn.matchers :as matchers]
           ...)
 ```
 
@@ -82,8 +82,8 @@ is provided in the `mockfn.clj-test` namespace.
 
 ```clj
 (:require [clojure.test :refer :all]
-          [mockfn.clj-test :as mfn]
-          [mockfn.matchers :as matchers]
+          [me.pmatiello.mockfn.clj-test :as mfn]
+          [me.pmatiello.mockfn.matchers :as matchers]
           ...)
 ```
 

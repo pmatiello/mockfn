@@ -1,7 +1,7 @@
-(ns mockfn.examples.clojure-test
+(ns me.pmatiello.mockfn.examples.clojure-test
   (:require [clojure.test :refer :all]
-            [mockfn.clj-test :as mfn]
-            [mockfn.matchers :as matchers]))
+            [me.pmatiello.mockfn.clj-test :as mfn]
+            [me.pmatiello.mockfn.matchers :as matchers]))
 
 (def one-fn)
 (def other-fn)

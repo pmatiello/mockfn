@@ -1,6 +1,6 @@
-(ns mockfn.matchers-test
+(ns me.pmatiello.mockfn.matchers-test
   (:require [clojure.test :refer :all]
-            [mockfn.matchers :as matchers])
+            [me.pmatiello.mockfn.matchers :as matchers])
   (:import (clojure.lang Keyword)))
 
 (deftest exactly-test
