@@ -4,6 +4,8 @@
 mockist test-driven-development in Clojure. It is meant to be used
 alongside a regular testing framework such as `clojure.test`.
 
+[![Clojars Project](https://img.shields.io/clojars/v/me.pmatiello/mockfn.svg)](https://clojars.org/me.pmatiello/mockfn)
+
 ## Usage
 
 The `providing` macro replaces a function with a configured mock.
@@ -75,7 +77,7 @@ To release to [clojars](https://clojars.org), run:
 
 ```
 % mvn deploy:deploy-file \
-      -Dfile=target/tui-${VERSION}.jar \
+      -Dfile=target/mockfn-${VERSION}.jar \
       -DrepositoryId=clojars \
       -Durl=https://clojars.org/repo \
       -DpomFile=target/classes/META-INF/maven/me.pmatiello/mockfn/pom.xml
