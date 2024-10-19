@@ -12,4 +12,5 @@ All notable changes to this project are documented in this file.
 
 ## Planned
 
-- Chained responses
+- Chained responses.
+- Call original function.
