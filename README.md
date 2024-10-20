@@ -16,8 +16,8 @@ The `providing` macro replaces a function with a configured mock.
     (is (= :mocked (one-fn)))))
 ```
 
-The `verifying` macro works similarly, but also defines an expectation
-for the number of times a call should be performed during the test.
+The `verifying` macro works similarly, but also defines an expectation for the number of times a call should be
+performed during the test.
 
 ```clj
 (deftest verifying-test
@@ -26,8 +26,7 @@ for the number of times a call should be performed during the test.
     (is (= :mocked (one-fn)))))
 ```
 
-Refer to the [documentation](doc/documentation.md) for more detailed
-information, including:
+Refer to the [documentation](doc/documentation.md) for more detailed information, including:
 
 - [Framework-agonostic usage](doc/documentation.md#framework-agonostic-usage)
 - [Syntax sugar for `clojure.test`](doc/documentation.md#syntax-sugar-for-clojuretest)
@@ -91,5 +90,4 @@ This software is open-source, but closed to contributions.
 
 ## License
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.

@@ -17,8 +17,8 @@ This will bring `mockfn` features in scope for this namespace.
 
 ### Stubbing Function Calls
 
-The `providing` macro replaces functions with mocks. These mocks return
-preconfigured values when called with the expected arguments.
+The `providing` macro replaces functions with mocks. These mocks return preconfigured values when called with the
+expected arguments.
 
 ```clj
 (testing "providing"
@@ -26,8 +26,7 @@ preconfigured values when called with the expected arguments.
     (is (= :result (one-fn)))))
 ```
 
-As presented below, a mock (`one-fn`) can be configured with different returns
-for different arguments.
+As presented below, a mock (`one-fn`) can be configured with different returns for different arguments.
 
 ```clj
 (testing "providing - one function, different arguments"
@@ -37,8 +36,7 @@ for different arguments.
     (is (= :result-2 (one-fn :argument-2)))))
 ```
 
-It's also possible to configure multiple mocks, for multiple functions, at
-once.
+It's also possible to configure multiple mocks, for multiple functions, at once.
 
 ```clj
 (testing "providing with more than one function"
@@ -50,9 +48,8 @@ once.
 
 ### Verifying Interactions
 
-The `verifying` macro works similarly, but also defines an expectation for the
-number of times a call should be performed during the test. A test will fail if
-this expectation is not met.
+The `verifying` macro works similarly, but also defines an expectation for the number of times a call should be
+performed during the test. A test will fail if this expectation is not met.
 
 ```clj
 (testing "verifying"
@@ -65,8 +62,8 @@ Notice that the expected number of calls is defined with a
 
 ### Argument Matchers
 
-Mocks can be configured to return a specific value for a range of different
-arguments through [matchers](#built-in-matchers).
+Mocks can be configured to return a specific value for a range of different arguments
+through [matchers](#built-in-matchers).
 
 ```clj
 (testing "argument matchers"
@@ -87,8 +84,8 @@ is provided in the `mockfn.clj-test` namespace.
 ```
 
 The `mockfn.clj-test/deftest` and `mockfn.clj-test/testing` macros replace
-`clojure.test/deftest` and `clojure.test/testing` and support a flatter (as in
-not nested) mocking style using `mockfn.clj-test/providing` and
+`clojure.test/deftest` and `clojure.test/testing` and support a flatter (as in not nested) mocking style using
+`mockfn.clj-test/providing` and
 `mockfn.clj-test/verifying`:
 
 ```clj
@@ -104,9 +101,8 @@ not nested) mocking style using `mockfn.clj-test/providing` and
       (other-fn) :other-fn (exactly 1))))
 ```
 
-Notice that in order to leverage the built-in support for mocking in these
-macros, it's necessary to use the `providing` and `verifying` versions provided
-at the `mockfn.clj-test` namespace.
+Notice that in order to leverage the built-in support for mocking in these macros, it's necessary to use the `providing`
+and `verifying` versions provided at the `mockfn.clj-test` namespace.
 
 ## Built-in Matchers
 
@@ -154,10 +150,9 @@ Matches if actual value is an instance of the expected type.
 
 ## Quirks and Limitations
 
-While `providing` and `verifying` calls can be nested, all required stubs and
-expectations for a single mock must be defined in the same call. Mocking a
-function in a inner `providing` or `verifying` call will override any
-definitions made in the outer scope for the tests being run in the inner scope.
+While `providing` and `verifying` calls can be nested, all required stubs and expectations for a single mock must be
+defined in the same call. Mocking a function in a inner `providing` or `verifying` call will override any definitions
+made in the outer scope for the tests being run in the inner scope.
 
 ```clj
 (testing "nested mocks"
