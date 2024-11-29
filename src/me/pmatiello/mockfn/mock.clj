@@ -36,7 +36,7 @@
     spec))
 
 (defn- doesnt-match [function args matcher times-called]
-  (format "Expected %s with arguments %s %s, received %s."
+  (format "Expected %s with arguments %s %s times, received %s."
           function args (matchers/description matcher) times-called))
 
 (defn verify [mock]
