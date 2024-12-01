@@ -1,7 +1,7 @@
 (ns me.pmatiello.mockfn.mock-test
   (:require [clojure.test :refer :all]
-            [me.pmatiello.mockfn.mock :as mock]
-            [me.pmatiello.mockfn.matchers :as matchers])
+            [me.pmatiello.mockfn.matchers :as matchers]
+            [me.pmatiello.mockfn.mock :as mock])
   (:import (clojure.lang ExceptionInfo Keyword)))
 
 (def one-fn)
