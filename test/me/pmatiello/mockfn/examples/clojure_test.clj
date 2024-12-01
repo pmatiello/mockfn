@@ -1,7 +1,7 @@
 (ns me.pmatiello.mockfn.examples.clojure-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
-            [me.pmatiello.mockfn.matchers :as matchers]))
+            [me.pmatiello.mockfn.matchers :as mfn.m]))
 
 (def one-fn)
 (def other-fn)
@@ -15,4 +15,4 @@
     (is (= :one-fn (one-fn)))
     (is (= :other-fn (other-fn)))
     (mfn/verifying
-      (other-fn) :other-fn (matchers/exactly 1))))
+      (other-fn) :other-fn (mfn.m/exactly 1))))

@@ -1,7 +1,7 @@
 (ns me.pmatiello.mockfn.examples.basic-usage
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.macros :as mfn]
-            [me.pmatiello.mockfn.matchers :as matchers])
+            [me.pmatiello.mockfn.matchers :as mfn.m])
   (:import (clojure.lang ExceptionInfo)))
 
 (def one-fn)
@@ -25,11 +25,11 @@
       (is (= :result-2 (other-fn :argument)))))
 
   (testing "verifying"
-    (mfn/verifying [(one-fn :argument) :result (matchers/exactly 1)]
+    (mfn/verifying [(one-fn :argument) :result (mfn.m/exactly 1)]
       (is (= :result (one-fn :argument)))))
 
   (testing "argument matchers"
-    (mfn/providing [(one-fn (matchers/at-least 10) (matchers/at-most 20)) 15]
+    (mfn/providing [(one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15]
       (is (= 15 (one-fn 12 18)))))
 
   (testing "nested mocks"

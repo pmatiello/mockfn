@@ -9,7 +9,7 @@ In order to use `mockfn`, it's enough to require it in a test namespace.
 
 ```clj
 (:require [me.pmatiello.mockfn.macros :as mfn]
-          [me.pmatiello.mockfn.matchers :as matchers]
+          [me.pmatiello.mockfn.matchers :as mfn.m]
           ...)
 ```
 
