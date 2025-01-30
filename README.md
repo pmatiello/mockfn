@@ -1,7 +1,7 @@
 # me.pmatiello/mockfn
 
-This is a library for mockist test-driven-development in Clojure. It is meant to be used alongside a regular testing
-framework such as `clojure.test`.
+This is a library for mockist test-driven-development in Clojure. It is meant to
+be used alongside a regular testing framework such as `clojure.test`.
 
 [![Clojars Project](https://img.shields.io/clojars/v/me.pmatiello/mockfn.svg)](https://clojars.org/me.pmatiello/mockfn)
 
@@ -16,8 +16,8 @@ The `providing` macro replaces a function with a configured mock.
     (is (= :mocked (one-fn)))))
 ```
 
-The `verifying` macro works similarly, but also defines an expectation for the number of times a call should be
-performed during the test.
+The `verifying` macro works similarly, but also defines an expectation for the
+number of times a call should be performed during the test.
 
 ```clj
 (deftest verifying-test
@@ -26,10 +26,12 @@ performed during the test.
     (is (= :mocked (one-fn)))))
 ```
 
-Refer to the [documentation](doc/documentation.md) for more detailed information, including:
+Refer to the [documentation](doc/documentation.md) for more detailed
+information, including:
 
 - [Framework-agonostic usage](doc/documentation.md#framework-agonostic-usage)
-- [Syntax sugar for `clojure.test`](doc/documentation.md#syntax-sugar-for-clojuretest)
+- [Syntax sugar for
+  `clojure.test`](doc/documentation.md#syntax-sugar-for-clojuretest)
 - [Argument matchers](doc/documentation.md#argument-matchers)
 
 ## Development
@@ -60,7 +62,8 @@ To clean a previous build, run:
 
 ### Releasing
 
-Before releasing, update the library version in the [build.clj](./build.clj) file.
+Before releasing, update the library version in the [build.clj](./build.clj)
+file.
 
 Make a commit and generate a new tag:
 
@@ -90,4 +93,5 @@ This software is open-source, but closed to contributions.
 
 ## License
 
-Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
+Distributed under the Eclipse Public License either version 1.0 or (at your
+option) any later version.

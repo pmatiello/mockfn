@@ -1,9 +1,9 @@
 # me.pmatiello/mockfn
 
-This is a library for mockist test-driven-development in Clojure. It is meant to be used alongside a regular testing
-framework such as `clojure.test`.
+This is a library for mockist test-driven-development in Clojure. It is meant to
+be used alongside a regular testing framework such as `clojure.test`.
 
-## Framework-agonostic usage
+## Framework-agnostic usage
 
 In order to use `mockfn`, it's enough to require it in a test namespace.
 
@@ -17,8 +17,8 @@ This will bring `mockfn` features in scope for this namespace.
 
 ### Stubbing Function Calls
 
-The `providing` macro replaces functions with mocks. These mocks return preconfigured values when called with the
-expected arguments.
+The `providing` macro replaces functions with mocks. These mocks return
+preconfigured values when called with the expected arguments.
 
 ```clj
 (testing "providing"
@@ -26,7 +26,8 @@ expected arguments.
     (is (= :result (one-fn)))))
 ```
 
-As presented below, a mock (`one-fn`) can be configured with different returns for different arguments.
+As presented below, a mock (`one-fn`) can be configured with different returns
+for different arguments.
 
 ```clj
 (testing "providing - one function, different arguments"
@@ -48,8 +49,9 @@ It's also possible to configure multiple mocks, for multiple functions, at once.
 
 ### Verifying Interactions
 
-The `verifying` macro works similarly, but also defines an expectation for the number of times a call should be
-performed during the test. A test will fail if this expectation is not met.
+The `verifying` macro works similarly, but also defines an expectation for the
+number of times a call should be performed during the test. A test will fail if
+this expectation is not met.
 
 ```clj
 (testing "verifying"
@@ -62,8 +64,8 @@ Notice that the expected number of calls is defined with a
 
 ### Argument Matchers
 
-Mocks can be configured to return a specific value for a range of different arguments
-through [matchers](#built-in-matchers).
+Mocks can be configured to return a specific value for a range of different
+arguments through [matchers](#built-in-matchers).
 
 ```clj
 (testing "argument matchers"
@@ -73,7 +75,8 @@ through [matchers](#built-in-matchers).
 
 ## Syntax sugar for clojure.test
 
-Support for [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html)
+Support
+for [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html)
 is provided in the `mockfn.clj-test` namespace.
 
 ```clj
@@ -84,7 +87,8 @@ is provided in the `mockfn.clj-test` namespace.
 ```
 
 The `mockfn.clj-test/deftest` and `mockfn.clj-test/testing` macros replace
-`clojure.test/deftest` and `clojure.test/testing` and support a flatter (as in not nested) mocking style using
+`clojure.test/deftest` and `clojure.test/testing` and support a flatter (as in
+not nested) mocking style using
 `mockfn.clj-test/providing` and
 `mockfn.clj-test/verifying`:
 
@@ -101,7 +105,8 @@ The `mockfn.clj-test/deftest` and `mockfn.clj-test/testing` macros replace
       (other-fn) :other-fn (exactly 1))))
 ```
 
-Notice that in order to leverage the built-in support for mocking in these macros, it's necessary to use the `providing`
+Notice that in order to leverage the built-in support for mocking in these
+macros, it's necessary to use the `providing`
 and `verifying` versions provided at the `mockfn.clj-test` namespace.
 
 ## Built-in Matchers
@@ -150,9 +155,11 @@ Matches if actual value is an instance of the expected type.
 
 ## Quirks and Limitations
 
-While `providing` and `verifying` calls can be nested, all required stubs and expectations for a single mock must be
-defined in the same call. Mocking a function in a inner `providing` or `verifying` call will override any definitions
-made in the outer scope for the tests being run in the inner scope.
+While `providing` and `verifying` calls can be nested, all required stubs and
+expectations for a single mock must be defined in the same call. Mocking a
+function in a inner `providing` or
+`verifying` call will override any definitions made in the outer scope for the
+tests being run in the inner scope.
 
 ```clj
 (testing "nested mocks"
