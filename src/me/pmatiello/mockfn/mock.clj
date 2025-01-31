@@ -25,10 +25,11 @@
 
 (defn- return-value-for
   [func spec args]
-  (when (-> spec :return-values (for-args args) #{::unexpected-call})
-    (throw (ex-info (unexpected-call func args) {})))
-  (-> spec :times-called (for-args args) (swap! inc))
-  (-> spec :return-values (for-args args)))
+  (let [spec* (-> spec :args (for-args args))]
+    (when (= spec* ::unexpected-call)
+      (throw (ex-info (unexpected-call func args) {})))
+    (-> spec* :calls (swap! inc))
+    (:ret-val spec*)))
 
 (defn mock [func spec]
   (with-meta
@@ -40,8 +41,8 @@
           function args (matchers/description matcher) times-called))
 
 (defn verify [mock]
-  (doseq [args    (-> mock meta :times-expected keys)
-          matcher (-> mock meta :times-expected (get args))]
-    (let [times-called (-> mock meta :times-called (get args) deref)]
-      (when-not (matchers/matches? matcher times-called)
-        (throw (ex-info (doesnt-match (-> mock meta :function) args matcher times-called) {}))))))
+  (doseq [args     (-> mock meta :args keys)
+          expected (-> mock meta :args (get args) :expected)]
+    (let [calls (-> mock meta :args (get args) :calls deref)]
+      (when-not (matchers/matches? expected calls)
+        (throw (ex-info (doesnt-match (-> mock meta :fn) args expected calls) {}))))))

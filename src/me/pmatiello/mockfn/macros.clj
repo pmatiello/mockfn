@@ -10,12 +10,13 @@
 (defn- func->spec
   [bindings]
   (reduce
-    (fn [acc [[func & args] ret-val & times-expected]]
+    (fn [acc [[func & args] ret-val & expected]]
       (-> acc
-          (assoc-in [func :function] func)
-          (assoc-in [func :return-values (into [] args)] ret-val)
-          (assoc-in [func :times-called (into [] args)] `(atom 0))
-          (assoc-in [func :times-expected (into [] args)] (into [] times-expected))))
+          (assoc-in [func :fn] func)
+          (assoc-in [func :args (into [] args)]
+                    {:ret-val  ret-val
+                     :calls    `(atom 0)
+                     :expected (into [] expected)})))
     {} bindings))
 
 (defmacro providing
