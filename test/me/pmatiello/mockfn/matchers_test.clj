@@ -44,9 +44,9 @@
 
 (deftest a-test
   (let [a (matchers/a Keyword)]
-    (testing "matches actuals of the expected type"
+    (testing "matches actual of the expected type"
       (is (true? (matchers/matches? a :keyword)))
       (is (false? (matchers/matches? a "string"))))
 
     (testing "provides an informative string representation"
-      (is (= "a class clojure.lang.Keyword" (matchers/description a))))))
+      (is (= "a clojure.lang.Keyword" (matchers/description a))))))
