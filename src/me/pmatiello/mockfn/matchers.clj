@@ -1,40 +1,27 @@
-(ns me.pmatiello.mockfn.matchers)
+(ns me.pmatiello.mockfn.matchers
+  (:require [clojure.string :as str]))
 
-(defprotocol Matcher
-  (matches? [this actual])
-  (description [this]))
+(defrecord Matcher [name function expected])
 
-(defrecord Exactly [expected]
-  Matcher
-  (matches? [this actual] (= expected actual))
-  (description [this] (format "exactly %s" expected)))
+(defn matches? [matcher actual]
+  ((:function matcher) actual (:expected matcher)))
 
-(def exactly ->Exactly)
+(defn description [matcher]
+  (->> [(:name matcher) (:expected matcher)]
+       (filter some?)
+       (str/join " ")))
 
-(defrecord AtLeast [expected]
-  Matcher
-  (matches? [this actual] (>= actual expected))
-  (description [this] (format "at least %s" expected)))
+(defn exactly [expected]
+  (->Matcher "exactly" = expected))
 
-(def at-least ->AtLeast)
+(defn at-least [expected]
+  (->Matcher "at least" >= expected))
 
-(defrecord AtMost [expected]
-  Matcher
-  (matches? [this actual] (<= actual expected))
-  (description [this] (format "at most %s" expected)))
+(defn at-most [expected]
+  (->Matcher "at most" <= expected))
 
-(def at-most ->AtMost)
+(defn any []
+  (->Matcher "any" (constantly true) nil))
 
-(defrecord Any []
-  Matcher
-  (matches? [this actual] true)
-  (description [this] "any"))
-
-(def any ->Any)
-
-(defrecord A [expected]
-  Matcher
-  (matches? [this actual] (instance? expected actual))
-  (description [this] (format "a %s" (pr-str expected))))
-
-(def a ->A)
+(defn a [expected]
+  (->Matcher "a" #(instance? %2 %1) expected))

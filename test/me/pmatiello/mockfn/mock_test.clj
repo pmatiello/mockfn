@@ -50,10 +50,12 @@
             (mock/verify mock))))))
 
 (deftest mock-match-argument-test
-  (let [definition {:fn   'one-fn
-                    :args {[:argument]            {:ret-val :equal :calls (atom 0)}
-                           [(matchers/a Keyword)] {:ret-val :matchers-a :calls (atom 0)}
-                           [(matchers/any)]       {:ret-val :matchers-any :calls (atom 0)}}}
+  (let [match-a-kw (matchers/a Keyword)
+        match-any  (matchers/any)
+        definition {:fn   'one-fn
+                    :args {[:argument]  {:ret-val :equal :calls (atom 0)}
+                           [match-a-kw] {:ret-val :matchers-a :calls (atom 0)}
+                           [match-any]  {:ret-val :matchers-any :calls (atom 0)}}}
         mock       (mock/mock one-fn definition)]
     (testing "returns to expected calls with configured return values"
       (is (= :equal (mock :argument)))
@@ -62,5 +64,5 @@
 
     (testing "counts the number of times that each call was performed"
       (is (= 1 (-> mock meta :args (get [:argument]) :calls deref)))
-      (is (= 1 (-> mock meta :args (get [(matchers/a Keyword)]) :calls deref)))
-      (is (= 1 (-> mock meta :args (get [(matchers/any)]) :calls deref))))))
+      (is (= 1 (-> mock meta :args (get [match-a-kw]) :calls deref)))
+      (is (= 1 (-> mock meta :args (get [match-any]) :calls deref))))))

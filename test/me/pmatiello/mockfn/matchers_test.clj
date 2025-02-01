@@ -49,4 +49,4 @@
       (is (false? (matchers/matches? a "string"))))
 
     (testing "provides an informative string representation"
-      (is (= "a clojure.lang.Keyword" (matchers/description a))))))
+      (is (= "a class clojure.lang.Keyword" (matchers/description a))))))

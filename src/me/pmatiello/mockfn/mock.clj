@@ -1,9 +1,10 @@
 (ns me.pmatiello.mockfn.mock
-  (:require [me.pmatiello.mockfn.matchers :as matchers]))
+  (:require [me.pmatiello.mockfn.matchers :as matchers])
+  (:import (me.pmatiello.mockfn.matchers Matcher)))
 
 (defn- matches-arg?
   [[expected arg]]
-  (if (satisfies? matchers/Matcher expected)
+  (if (instance? Matcher expected)
     (matchers/matches? expected arg)
     (= expected arg)))
 
