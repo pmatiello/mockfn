@@ -119,45 +119,16 @@ and `verifying` versions provided at the `mockfn.clj-test` namespace.
 
 The following matchers are included in `mockfn`:
 
-#### exactly
+| Matcher    | Description                                                          | Usage                 |
+|------------|----------------------------------------------------------------------|-----------------------|
+| `exactly`  | Matches if actual value is equal to the expected value.              | `(exactly expected)`  |
+| `at-least` | Matches if actual value is greater or equal than the expected value. | `(at-least expected)` |
+| `at-most`  | Matches if actual value is less or equal than the expected value.    | `(at-most expected)`  |
+| `any`      | Always matches.                                                      | `(any)`               |
+| `a`        | Matches if actual value is an instance of the expected type.         | `(a expected)`        |
 
-```clj
-(exactly expected)
-```
-
-Matches if actual value is equal to the expected value.
-
-#### at-least
-
-```clj
-(at-least expected)
-```
-
-Matches if actual value is greater or equal than the expected value.
-
-#### at-most
-
-```clj
-(at-most expected)
-```
-
-Matches if actual value is less or equal than the expected value.
-
-#### any
-
-```clj
-(any)
-```
-
-Always matches.
-
-#### a
-
-```clj
-(a expected)
-```
-
-Matches if actual value is an instance of the expected type.
+All matchers above are available in the `me.pmatiello.mockfn.matchers`
+namespace.
 
 ## Quirks and Limitations
 
