@@ -10,8 +10,3 @@ All notable changes to this project are documented in this file.
 - Added call verification.
 - Added argument matchers.
 - Added syntax sugar for clojure.test.
-
-## Planned
-
-- Chained responses.
-- Call original function.
