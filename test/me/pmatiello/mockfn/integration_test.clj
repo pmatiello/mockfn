@@ -1,4 +1,4 @@
-(ns me.pmatiello.mockfn.integration
+(ns me.pmatiello.mockfn.integration-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.matchers :as mfn.m]))
