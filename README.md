@@ -88,7 +88,7 @@ is provided in the `mockfn.clj-test` namespace.
 ```clj
 (:require [clojure.test :refer :all]
           [me.pmatiello.mockfn.clj-test :as mfn]
-          [me.pmatiello.mockfn.matchers :as matchers]
+          [me.pmatiello.mockfn.matchers :as mfn.m]
           ...)
 ```
 
@@ -107,7 +107,7 @@ not nested) mocking style using `mockfn.clj-test/providing` and
     (is (= :one-fn (one-fn)))
     (is (= :other-fn (other-fn)))
     (mfn/verifying
-      (other-fn) :other-fn (exactly 1))))
+      (other-fn) :other-fn (mfn.m/exactly 1))))
 ```
 
 Note that to leverage the built-in support for mocking in these macros, it's
