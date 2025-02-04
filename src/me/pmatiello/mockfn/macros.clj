@@ -20,13 +20,23 @@
     {} bindings))
 
 (defmacro providing
-  "Mocks functions."
+  "Replaces functions with mocks. These mocks return preconfigured values when
+  called with the expected arguments.
+
+  (providing
+    [(one-fn) :result]
+    (is (= :result (one-fn))))"
   [bindings & body]
   `(with-redefs ~(->> bindings (partition 2) func->spec as-redefs)
      ~@body))
 
 (defmacro verifying
-  "Mocks functions and verifies calls."
+  "Replaces functions with mocks. Verifies that a calls where performed the
+  expected number of times.
+
+  (verifying
+    [(one-fn :argument) :result (exactly 1)]
+    (is (= :result (one-fn :argument))))"
   [bindings & body]
   (let [specs# (->> bindings (partition 3) func->spec)]
     `(with-redefs ~(as-redefs specs#)
