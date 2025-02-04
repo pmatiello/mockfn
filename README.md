@@ -61,7 +61,7 @@ this expectation is not met.
 
 ```clj
 (testing "verifying"
-  (verifying [(one-fn :argument) :result (exactly 1)]
+  (verifying [(one-fn :argument) :result (mfn.m/exactly 1)]
     (is (= :result (one-fn :argument)))))
 ```
 
@@ -75,7 +75,7 @@ arguments through [matchers](#built-in-matchers).
 
 ```clj
 (testing "argument matchers"
-  (providing [(one-fn (at-least 10) (at-most 20)) 15]
+  (providing [(one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15]
     (is (= 15 (one-fn 12 18))))))
 ```
 
