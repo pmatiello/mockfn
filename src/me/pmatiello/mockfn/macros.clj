@@ -24,6 +24,12 @@
   called with the expected arguments.
 
   (providing
+    [(fn-name &args) return-value
+     ...]
+    test-body)
+
+  Example:
+  (providing
     [(one-fn) :result]
     (is (= :result (one-fn))))"
   [bindings & body]
@@ -34,6 +40,12 @@
   "Replaces functions with mocks. Verifies that a calls where performed the
   expected number of times.
 
+  (verifying
+    [(fn-name &args) return-value call-count-matcher
+     ...]
+    test-body)
+
+  Example:
   (verifying
     [(one-fn :argument) :result (exactly 1)]
     (is (= :result (one-fn :argument))))"
