@@ -1,7 +1,6 @@
 (ns me.pmatiello.mockfn.clj-test
   (:require [clojure.test :as test]
             [me.pmatiello.mockfn.macros :as macros]))
-
 (declare providing)
 (declare verifying)
 
@@ -24,9 +23,49 @@
            ~@actual-body)))))
 
 (defmacro deftest
+  "Declares a test function as done by clojure.test/deftest with built-in
+  support for mocking through (optional) providing and verifying forms.
+
+  (deftest test-name
+    ; test code
+    (providing
+      ; one or more entries in the form:
+      ; (fn-name &args) return-value
+      ...)
+    (verifying
+      ; one or more entries in the form:
+      ; (fn-name &args) return-value call-count-matcher
+      ...)
+
+  Example:
+  (deftest test-name
+    (is (= :ret-val (one-fn)))
+    (providing
+      (one-fn) :ret-val))"
   [name & body]
   `(with-mocking test/deftest ~name ~@body))
 
 (defmacro testing
+  "Declares a new testing context inside a test function as done by
+  clojure.test/testing with built-in support for mocking through (optional)
+  providing and verifying forms.
+
+  (testing \"description\"
+    ; test code
+    (providing
+      ; one or more entries in the form:
+      ; (fn-name &args) return-value
+      ...)
+    (verifying
+      ; one or more entries in the form:
+      ; (fn-name &args) return-value call-count-matcher
+      ...)
+
+  Example:
+  (deftest test-name
+    (testing \"context\"
+      (is (= :ret-val (one-fn)))
+      (verifying
+        (one-fn) :ret-val (mockfn.matchers/exactly 1))))"
   [string & body]
   `(with-mocking test/testing ~string ~@body))
