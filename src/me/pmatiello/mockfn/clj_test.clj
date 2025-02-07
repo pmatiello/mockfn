@@ -1,6 +1,7 @@
 (ns me.pmatiello.mockfn.clj-test
   (:require [clojure.test :as test]
             [me.pmatiello.mockfn.macros :as macros]))
+
 (declare providing)
 (declare verifying)
 
@@ -11,16 +12,14 @@
 (def ^:private providing-only? (partial only? #'providing))
 (def ^:private verifying-only? (partial only? #'verifying))
 
-(defmacro with-mocking
-  [base-macro name & body]
-  (let [providing-bindings (->> body (filter providing-only?) first rest)
-        verifying-bindings (->> body (filter verifying-only?) first rest)
-        actual-body        (->> body (remove providing-only?) (remove verifying-only?))]
-    `(~base-macro
-       ~name
-       (macros/providing [~@providing-bindings]
-         (macros/verifying [~@verifying-bindings]
-           ~@actual-body)))))
+(defn ^:private with-mocking
+  [body]
+  (let [providing-bindings# (->> body (filter providing-only?) first rest)
+        verifying-bindings# (->> body (filter verifying-only?) first rest)
+        actual-body#        (->> body (remove providing-only?) (remove verifying-only?))]
+    `(macros/providing [~@providing-bindings#]
+       (macros/verifying [~@verifying-bindings#]
+         ~@actual-body#))))
 
 (defmacro deftest
   "Declares a test function as done by clojure.test/deftest with built-in
@@ -43,7 +42,8 @@
     (providing
       (one-fn) :ret-val))"
   [name & body]
-  `(with-mocking test/deftest ~name ~@body))
+  `(test/deftest ~name
+     ~(with-mocking body)))
 
 (defmacro testing
   "Declares a new testing context inside a test function as done by
@@ -68,4 +68,5 @@
       (verifying
         (one-fn) :ret-val (mockfn.matchers/exactly 1))))"
   [string & body]
-  `(with-mocking test/testing ~string ~@body))
+  `(test/testing ~string
+     ~(with-mocking body)))
