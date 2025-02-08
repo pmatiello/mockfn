@@ -33,6 +33,8 @@
     (:ret-val spec*)))
 
 (defn mock [func spec]
+  "Creates a mock function that returns predefined values when called with
+  expected arguments."
   (with-meta
     (fn [& args] (return-value-for func spec (into [] args)))
     spec))
@@ -42,6 +44,8 @@
           function args (matchers/description matcher) times-called))
 
 (defn verify [mock]
+  "Verifies that the given mock function was called the expected number of
+  times with the expected arguments."
   (doseq [args     (-> mock meta :args keys)
           expected (-> mock meta :args (get args) :expected)]
     (let [calls (-> mock meta :args (get args) :calls deref)]
