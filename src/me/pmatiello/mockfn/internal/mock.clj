@@ -1,4 +1,4 @@
-(ns me.pmatiello.mockfn.mock
+(ns me.pmatiello.mockfn.internal.mock
   (:require [me.pmatiello.mockfn.matchers :as matchers])
   (:import (me.pmatiello.mockfn.matchers Matcher)))
 
