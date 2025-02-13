@@ -57,3 +57,8 @@
   "Returns a matcher that expects a string ending with the provided substring."
   [expected]
   (make "ends with" #(str/ends-with? %1 %2) expected pr-str))
+
+(defn includes
+  "Returns a matcher that expects a string containing the provided substring."
+  [expected]
+  (make "includes" #(str/includes? %1 %2) expected pr-str))

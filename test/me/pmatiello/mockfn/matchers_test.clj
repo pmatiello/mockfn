@@ -53,7 +53,7 @@
 
 (deftest starts-with-test
   (let [starts-with (matchers/starts-with "prefix")]
-    (testing "returns whether actual starts with expected"
+    (testing "returns whether actual starts with expected prefix"
       (is (true? (matchers/matches? starts-with "prefix-str")))
       (is (false? (matchers/matches? starts-with "no-prefix"))))
 
@@ -62,9 +62,18 @@
 
 (deftest ends-with-test
   (let [ends-with (matchers/ends-with "suffix")]
-    (testing "returns whether actual ends with expected"
+    (testing "returns whether actual ends with expected suffix"
       (is (true? (matchers/matches? ends-with "str-suffix")))
       (is (false? (matchers/matches? ends-with "suffix-no"))))
 
     (testing "provides an informative string representation"
       (is (= "ends with \"suffix\"" (matchers/description ends-with))))))
+
+(deftest includes-test
+  (let [includes (matchers/includes "substring")]
+    (testing "returns whether actual includes the expected substring"
+      (is (true? (matchers/matches? includes "with substring here")))
+      (is (false? (matchers/matches? includes "no match here"))))
+
+    (testing "provides an informative string representation"
+      (is (= "includes \"substring\"" (matchers/description includes))))))
