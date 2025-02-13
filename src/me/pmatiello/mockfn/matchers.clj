@@ -47,3 +47,13 @@
   "Returns a matcher that expects an instance of the provided class."
   [expected]
   (make "a" #(instance? %2 %1) expected pr-str))
+
+(defn starts-with
+  "Returns a matcher that expects a string starting with the provided substring."
+  [expected]
+  (make "starts with" #(str/starts-with? %1 %2) expected pr-str))
+
+(defn ends-with
+  "Returns a matcher that expects a string ending with the provided substring."
+  [expected]
+  (make "ends with" #(str/ends-with? %1 %2) expected pr-str))

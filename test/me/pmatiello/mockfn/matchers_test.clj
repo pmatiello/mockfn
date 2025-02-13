@@ -50,3 +50,21 @@
 
     (testing "provides an informative string representation"
       (is (= "a clojure.lang.Keyword" (matchers/description a))))))
+
+(deftest starts-with-test
+  (let [starts-with (matchers/starts-with "prefix")]
+    (testing "returns whether actual starts with expected"
+      (is (true? (matchers/matches? starts-with "prefix-str")))
+      (is (false? (matchers/matches? starts-with "no-prefix"))))
+
+    (testing "provides an informative string representation"
+      (is (= "starts with \"prefix\"" (matchers/description starts-with))))))
+
+(deftest ends-with-test
+  (let [ends-with (matchers/ends-with "suffix")]
+    (testing "returns whether actual ends with expected"
+      (is (true? (matchers/matches? ends-with "str-suffix")))
+      (is (false? (matchers/matches? ends-with "suffix-no"))))
+
+    (testing "provides an informative string representation"
+      (is (= "ends with \"suffix\"" (matchers/description ends-with))))))
