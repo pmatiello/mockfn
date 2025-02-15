@@ -31,12 +31,12 @@
 (defn at-least
   "Returns a matcher that expects a value greater than or equal to the argument."
   [expected]
-  (make "at least" >= expected))
+  (make "at-least" >= expected))
 
 (defn at-most
   "Returns a matcher that expects a value less than or equal to the argument."
   [expected]
-  (make "at most" <= expected))
+  (make "at-most" <= expected))
 
 (defn any
   "Returns a matcher that expects any value."
@@ -48,17 +48,17 @@
   [expected]
   (make "a" #(instance? %2 %1) expected pr-str))
 
-(defn starts-with
+(defn str-starts-with
   "Returns a matcher that expects a string starting with the provided substring."
   [expected]
-  (make "starts with" #(str/starts-with? %1 %2) expected pr-str))
+  (make "str-starts-with" #(str/starts-with? %1 %2) expected pr-str))
 
-(defn ends-with
+(defn str-ends-with
   "Returns a matcher that expects a string ending with the provided substring."
   [expected]
-  (make "ends with" #(str/ends-with? %1 %2) expected pr-str))
+  (make "str-ends-with" #(str/ends-with? %1 %2) expected pr-str))
 
-(defn includes
+(defn str-includes
   "Returns a matcher that expects a string containing the provided substring."
   [expected]
-  (make "includes" #(str/includes? %1 %2) expected pr-str))
+  (make "str-includes" #(str/includes? %1 %2) expected pr-str))

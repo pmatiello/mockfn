@@ -20,7 +20,7 @@
       (is (false? (matchers/matches? at-least 1))))
 
     (testing "provides an informative string representation"
-      (is (= "at least 2" (matchers/description at-least))))))
+      (is (= "at-least 2" (matchers/description at-least))))))
 
 (deftest at-most-test
   (let [at-most (matchers/at-most 2)]
@@ -30,7 +30,7 @@
       (is (false? (matchers/matches? at-most 3))))
 
     (testing "provides an informative string representation"
-      (is (= "at most 2" (matchers/description at-most))))))
+      (is (= "at-most 2" (matchers/description at-most))))))
 
 (deftest any-test
   (let [any (matchers/any)]
@@ -51,29 +51,29 @@
     (testing "provides an informative string representation"
       (is (= "a clojure.lang.Keyword" (matchers/description a))))))
 
-(deftest starts-with-test
-  (let [starts-with (matchers/starts-with "prefix")]
+(deftest str-starts-with-test
+  (let [starts-with (matchers/str-starts-with "prefix")]
     (testing "returns whether actual starts with expected prefix"
       (is (true? (matchers/matches? starts-with "prefix-str")))
       (is (false? (matchers/matches? starts-with "no-prefix"))))
 
     (testing "provides an informative string representation"
-      (is (= "starts with \"prefix\"" (matchers/description starts-with))))))
+      (is (= "str-starts-with \"prefix\"" (matchers/description starts-with))))))
 
-(deftest ends-with-test
-  (let [ends-with (matchers/ends-with "suffix")]
+(deftest str-ends-with-test
+  (let [ends-with (matchers/str-ends-with "suffix")]
     (testing "returns whether actual ends with expected suffix"
       (is (true? (matchers/matches? ends-with "str-suffix")))
       (is (false? (matchers/matches? ends-with "suffix-no"))))
 
     (testing "provides an informative string representation"
-      (is (= "ends with \"suffix\"" (matchers/description ends-with))))))
+      (is (= "str-ends-with \"suffix\"" (matchers/description ends-with))))))
 
-(deftest includes-test
-  (let [includes (matchers/includes "substring")]
+(deftest str-includes-test
+  (let [includes (matchers/str-includes "substring")]
     (testing "returns whether actual includes the expected substring"
       (is (true? (matchers/matches? includes "with substring here")))
       (is (false? (matchers/matches? includes "no match here"))))
 
     (testing "provides an informative string representation"
-      (is (= "includes \"substring\"" (matchers/description includes))))))
+      (is (= "str-includes \"substring\"" (matchers/description includes))))))
