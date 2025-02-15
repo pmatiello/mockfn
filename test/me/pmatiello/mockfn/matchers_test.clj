@@ -77,3 +77,12 @@
 
     (testing "provides an informative string representation"
       (is (= "str-includes \"substring\"" (matchers/description includes))))))
+
+(deftest str-rexp-test
+  (let [rexp (matchers/str-rexp #"^prefix.*suffix$")]
+    (testing "returns whether actual matches the expected regular expression"
+      (is (true? (matchers/matches? rexp "prefix-middle-suffix")))
+      (is (false? (matchers/matches? rexp "no-match"))))
+
+    (testing "provides an informative string representation"
+      (is (= "str-rexp #\"^prefix.*suffix$\"" (matchers/description rexp))))))

@@ -62,3 +62,8 @@
   "Returns a matcher that expects a string containing the provided substring."
   [expected]
   (make "str-includes" #(str/includes? %1 %2) expected pr-str))
+
+(defn str-rexp
+  "Returns a matcher that expects a string matching the provided regular expression."
+  [expected]
+  (make "str-rexp" #(some? (re-matches %2 %1)) expected pr-str))
