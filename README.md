@@ -118,13 +118,17 @@ necessary to use the `providing` and `verifying` versions provided in the
 
 The following matchers are included in `mockfn`:
 
-| Matcher    | Description                                                          | Usage                 |
-|------------|----------------------------------------------------------------------|-----------------------|
-| `exactly`  | Matches if actual value is equal to the expected value.              | `(exactly expected)`  |
-| `at-least` | Matches if actual value is greater or equal than the expected value. | `(at-least expected)` |
-| `at-most`  | Matches if actual value is less or equal than the expected value.    | `(at-most expected)`  |
-| `any`      | Always matches.                                                      | `(any)`               |
-| `a`        | Matches if actual value is an instance of the expected type.         | `(a expected)`        |
+| Matcher           | Description                                                           | Usage                        |
+|-------------------|-----------------------------------------------------------------------|------------------------------|
+| `exactly`         | Matches if actual value is equal to the expected value.               | `(exactly expected)`         |
+| `at-least`        | Matches if actual value is greater or equal than the expected value.  | `(at-least expected)`        |
+| `at-most`         | Matches if actual value is less or equal than the expected value.     | `(at-most expected)`         |
+| `any`             | Always matches.                                                       | `(any)`                      |
+| `a`               | Matches if actual value is an instance of the expected type.          | `(a expected)`               |
+| `str-starts-with` | Matches if actual string starts with the expected prefix.             | `(str-starts-with expected)` |
+| `str-ends-with`   | Matches if actual string ends with the expected suffix.               | `(str-ends-with expected)`   |
+| `str-includes`    | Matches if actual string includes the expected substring.             | `(str-includes expected)`    |
+| `str-rexp`        | Matches if the expected regular expression matches the actual string. | `(str-rexp expected)`        |
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.
