@@ -1,7 +1,7 @@
 (ns me.pmatiello.mockfn.examples.basic-usage
   (:require [clojure.test :refer :all]
-            [me.pmatiello.mockfn.plain :as mfn]
-            [me.pmatiello.mockfn.matchers :as mfn.m])
+            [me.pmatiello.mockfn.matchers :as mfn.m]
+            [me.pmatiello.mockfn.plain :as mfn])
   (:import (clojure.lang ExceptionInfo)))
 
 (def one-fn)
