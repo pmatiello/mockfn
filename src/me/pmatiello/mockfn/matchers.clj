@@ -1,12 +1,12 @@
 (ns me.pmatiello.mockfn.matchers
   (:require [clojure.string :as str]))
 
-(defrecord Matcher [name function expected args-desc-fn])
+(defrecord Matcher [name match-fn expected args-desc-fn])
 
 (defn matches?
   "Returns whether the matcher accepts the actual value."
   [matcher actual]
-  ((:function matcher) actual (:expected matcher)))
+  ((:match-fn matcher) actual (:expected matcher)))
 
 (defn description
   "Describes a matcher by returning it's name and expectations."
@@ -20,8 +20,8 @@
 
 (defn make
   "Produces a new matcher instance."
-  ([name function expected] (make name function expected identity))
-  ([name function expected description-fn] (->Matcher name function expected description-fn)))
+  ([name match-fn expected] (make name match-fn expected identity))
+  ([name match-fn expected description-fn] (->Matcher name match-fn expected description-fn)))
 
 (defn exactly
   "Returns a matcher that expects an exact value."
