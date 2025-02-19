@@ -22,9 +22,10 @@
          ~@actual-body#))))
 
 (defmacro deftest
-  "Declares a test function as done by clojure.test/deftest with built-in
-  support for mocking through (optional) providing and verifying forms.
+  "Declares a test function as done by `clojure.test/deftest` with built-in
+  support for mocking through (optional) `providing` and `verifying` forms.
 
+  ```
   (deftest test-name
     ; test code
     (providing
@@ -35,21 +36,25 @@
       ; one or more entries in the form:
       ; (fn-name &args) return-value call-count-matcher
       ...)
+  ```
 
   Example:
+  ```
   (deftest test-name
     (is (= :ret-val (one-fn)))
     (providing
-      (one-fn) :ret-val))"
+      (one-fn) :ret-val))
+  ```"
   [name & body]
   `(test/deftest ~name
      ~(with-mocking body)))
 
 (defmacro testing
   "Declares a new testing context inside a test function as done by
-  clojure.test/testing with built-in support for mocking through (optional)
-  providing and verifying forms.
+  `clojure.test/testing` with built-in support for mocking through (optional)
+  `providing` and `verifying` forms.
 
+  ```
   (testing \"description\"
     ; test code
     (providing
@@ -60,13 +65,16 @@
       ; one or more entries in the form:
       ; (fn-name &args) return-value call-count-matcher
       ...)
+  ```
 
   Example:
+  ```
   (deftest test-name
     (testing \"context\"
       (is (= :ret-val (one-fn)))
       (verifying
-        (one-fn) :ret-val (mockfn.matchers/exactly 1))))"
+        (one-fn) :ret-val (mockfn.matchers/exactly 1))))
+  ```"
   [string & body]
   `(test/testing ~string
      ~(with-mocking body)))

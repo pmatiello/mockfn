@@ -23,15 +23,19 @@
   "Replaces functions with mocks. These mocks return preconfigured values when
   called with the expected arguments.
 
+  ```
   (providing
     [(fn-name &args) return-value
      ...]
     test-body)
+  ```
 
   Example:
+  ```
   (providing
     [(one-fn) :result]
-    (is (= :result (one-fn))))"
+    (is (= :result (one-fn))))
+  ```"
   [bindings & body]
   `(with-redefs ~(->> bindings (partition 2) func->spec as-redefs)
      ~@body))
@@ -40,15 +44,19 @@
   "Replaces functions with mocks. Verifies that a calls where performed the
   expected number of times.
 
+  ```
   (verifying
     [(fn-name &args) return-value call-count-matcher
      ...]
     test-body)
+  ```
 
   Example:
+  ```
   (verifying
     [(one-fn :argument) :result (exactly 1)]
-    (is (= :result (one-fn :argument))))"
+    (is (= :result (one-fn :argument))))
+  ```"
   [bindings & body]
   (let [specs# (->> bindings (partition 3) func->spec)]
     `(with-redefs ~(as-redefs specs#)
