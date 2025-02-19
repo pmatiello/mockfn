@@ -28,7 +28,7 @@ preconfigured values when called with the expected arguments.
 
 ```clj
 (testing "providing"
-  (providing [(one-fn) :result]
+  (mfn/providing [(one-fn) :result]
     (is (= :result (one-fn)))))
 ```
 
@@ -37,8 +37,8 @@ values for different arguments.
 
 ```clj
 (testing "providing - one function, different arguments"
-  (providing [(one-fn :argument-1) :result-1
-              (one-fn :argument-2) :result-2]
+  (mfn/providing [(one-fn :argument-1) :result-1
+                  (one-fn :argument-2) :result-2]
     (is (= :result-1 (one-fn :argument-1)))
     (is (= :result-2 (one-fn :argument-2)))))
 ```
@@ -47,8 +47,8 @@ It's also possible to configure multiple mocks, for multiple functions, at once.
 
 ```clj
 (testing "providing with more than one function"
-  (providing [(one-fn :argument) :result-1
-              (other-fn :argument) :result-2]
+  (mfn/providing [(one-fn :argument) :result-1
+                  (other-fn :argument) :result-2]
     (is (= :result-1 (one-fn :argument)))
     (is (= :result-2 (other-fn :argument))))))
 ```
@@ -61,7 +61,7 @@ this expectation is not met.
 
 ```clj
 (testing "verifying"
-  (verifying [(one-fn :argument) :result (mfn.m/exactly 1)]
+  (mfn/verifying [(one-fn :argument) :result (mfn.m/exactly 1)]
     (is (= :result (one-fn :argument)))))
 ```
 
@@ -75,7 +75,7 @@ arguments through [matchers](#built-in-matchers).
 
 ```clj
 (testing "argument matchers"
-  (providing [(one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15]
+  (mfn/providing [(one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15]
     (is (= 15 (one-fn 12 18))))))
 ```
 
@@ -142,9 +142,9 @@ definitions made in the outer scope for the tests being run in the inner scope.
 
 ```clj
 (testing "nested mocks"
-  (providing [(one-fn :argument-1) :result-1]
-    (providing [(one-fn :argument-2) :result-2
-                (other-fn :argument-3) :result-3]
+  (mfn/providing [(one-fn :argument-1) :result-1]
+    (mfn/providing [(one-fn :argument-2) :result-2
+                    (other-fn :argument-3) :result-3]
       (is (thrown? ExceptionInfo (one-fn :argument-1)))
       (is (= :result-2 (one-fn :argument-2)))
       (is (= :result-3 (other-fn :argument-3))))
