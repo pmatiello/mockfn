@@ -14,7 +14,7 @@ Instructions for using this library.
 In order to use `mockfn`, it's enough to require it in a test namespace.
 
 ```clj
-(:require [me.pmatiello.mockfn.macros :as mfn]
+(:require [me.pmatiello.mockfn.plain :as mfn]
           [me.pmatiello.mockfn.matchers :as mfn.m]
           ...)
 ```

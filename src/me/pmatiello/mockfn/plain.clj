@@ -1,4 +1,4 @@
-(ns me.pmatiello.mockfn.macros
+(ns me.pmatiello.mockfn.plain
   (:require [me.pmatiello.mockfn.internal.mock :as mock]))
 
 (defn- as-redefs

@@ -1,6 +1,6 @@
 (ns me.pmatiello.mockfn.examples.basic-usage
   (:require [clojure.test :refer :all]
-            [me.pmatiello.mockfn.macros :as mfn]
+            [me.pmatiello.mockfn.plain :as mfn]
             [me.pmatiello.mockfn.matchers :as mfn.m])
   (:import (clojure.lang ExceptionInfo)))
 

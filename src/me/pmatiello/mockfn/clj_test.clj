@@ -1,6 +1,6 @@
 (ns me.pmatiello.mockfn.clj-test
   (:require [clojure.test :as test]
-            [me.pmatiello.mockfn.macros :as macros]))
+            [me.pmatiello.mockfn.plain :as plain]))
 
 (declare providing)
 (declare verifying)
@@ -17,8 +17,8 @@
   (let [providing-bindings# (->> body (filter providing-only?) first rest)
         verifying-bindings# (->> body (filter verifying-only?) first rest)
         actual-body#        (->> body (remove providing-only?) (remove verifying-only?))]
-    `(macros/providing [~@providing-bindings#]
-       (macros/verifying [~@verifying-bindings#]
+    `(plain/providing [~@providing-bindings#]
+       (plain/verifying [~@verifying-bindings#]
          ~@actual-body#))))
 
 (defmacro deftest

@@ -1,7 +1,7 @@
-(ns me.pmatiello.mockfn.macros-test
+(ns me.pmatiello.mockfn.plain-test
   (:require [clojure.test :refer :all]
-            [me.pmatiello.mockfn.macros :as macros]
-            [me.pmatiello.mockfn.matchers :as matchers])
+            [me.pmatiello.mockfn.matchers :as matchers]
+            [me.pmatiello.mockfn.plain :as plain])
   (:import (clojure.lang ExceptionInfo Keyword)))
 
 (def one-fn)
@@ -9,12 +9,12 @@
 
 (deftest providing-test
   (testing "mocks functions without arguments"
-    (macros/providing
+    (plain/providing
       [(one-fn) :mocked]
       (is (= :mocked (one-fn)))))
 
   (testing "mocks functions with arguments"
-    (macros/providing
+    (plain/providing
       [(one-fn :expected) :mocked
        (one-fn :expected :also-expected) :also-mocked]
       (is (= :mocked (one-fn :expected)))
@@ -27,7 +27,7 @@
             (one-fn)))))
 
   (testing "mocks functions with argument matchers"
-    (macros/providing
+    (plain/providing
       [(one-fn (matchers/a Keyword)) :mocked]
       (is (= :mocked (one-fn :expected)))
       (is (thrown-with-msg?
@@ -35,7 +35,7 @@
             (one-fn "unexpected")))))
 
   (testing "mocks multiple functions at once"
-    (macros/providing
+    (plain/providing
       [(one-fn) :one-fn
        (another-fn) :other-fn]
       (is (= :one-fn (one-fn)))
@@ -43,12 +43,12 @@
 
 (deftest verifying-test
   (testing "mocks functions without arguments"
-    (macros/verifying
+    (plain/verifying
       [(one-fn) :mocked (matchers/exactly 1)]
       (is (= :mocked (one-fn)))))
 
   (testing "mocks functions with arguments"
-    (macros/verifying
+    (plain/verifying
       [(one-fn :expected) :mocked (matchers/exactly 1)
        (one-fn :expected :also-expected) :also-mocked (matchers/exactly 1)]
       (is (= :mocked (one-fn :expected)))
@@ -61,7 +61,7 @@
             (one-fn)))))
 
   (testing "mocks functions with argument matchers"
-    (macros/verifying
+    (plain/verifying
       [(one-fn (matchers/a Keyword)) :mocked (matchers/exactly 1)]
       (is (= :mocked (one-fn :expected)))
       (is (thrown-with-msg?
@@ -69,7 +69,7 @@
             (one-fn "unexpected")))))
 
   (testing "mocks multiple functions at once"
-    (macros/verifying
+    (plain/verifying
       [(one-fn) :one-fn (matchers/exactly 1)
        (another-fn) :other-fn (matchers/exactly 1)]
       (is (= :one-fn (one-fn)))
@@ -78,6 +78,6 @@
   (testing "fails if calls are not performed the expected number of times"
     (is (thrown-with-msg?
           ExceptionInfo #"Expected .* with arguments"
-          (macros/verifying
+          (plain/verifying
             [(one-fn) :one-fn (matchers/exactly 2)]
             (is (= :one-fn (one-fn))))))))
