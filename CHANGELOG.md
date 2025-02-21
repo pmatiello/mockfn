@@ -7,7 +7,7 @@ All notable changes to this project are documented in this file.
 ## 0.3.0 - 2025-02-21
 
 - Improved documentation formatting.
-- Rename mockfn.macros to mockfn.plain.
+- Rename `mockfn.macros` to `mockfn.plain`.
 - Make matchers more readable and explicit in error messages.
 - Add predicate matcher.
 
@@ -21,4 +21,4 @@ All notable changes to this project are documented in this file.
 - Added function stubs.
 - Added call verification.
 - Added argument matchers.
-- Added syntax sugar for clojure.test.
+- Added syntax sugar for `clojure.test`.
