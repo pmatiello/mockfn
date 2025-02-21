@@ -95,3 +95,14 @@
 
     (testing "provides an informative string representation"
       (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
+
+(deftest coll-empty-test
+  (let [coll-empty (matchers/coll-empty)]
+    (testing "returns whether actual is an empty collection"
+      (is (true? (matchers/matches? coll-empty [])))
+      (is (true? (matchers/matches? coll-empty '())))
+      (is (false? (matchers/matches? coll-empty [1])))
+      (is (false? (matchers/matches? coll-empty {:key "value"}))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢coll-empty｣" (matchers/description coll-empty))))))

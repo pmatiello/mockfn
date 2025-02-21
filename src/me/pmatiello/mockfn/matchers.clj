@@ -73,3 +73,8 @@
   "Returns a matcher that expects a value satisfying the provided predicate."
   [pred-fn]
   (make "pred" (fn [actual p-fn] (p-fn actual)) pred-fn #(-> % class pr-str)))
+
+(defn coll-empty
+  "Returns a matcher that expects an empty collection."
+  []
+  (make "coll-empty" (fn [actual _] (empty? actual)) nil))
