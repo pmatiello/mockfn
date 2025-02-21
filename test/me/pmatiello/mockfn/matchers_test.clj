@@ -86,3 +86,12 @@
 
     (testing "provides an informative string representation"
       (is (= "｢str-rexp #\"^prefix.*suffix$\"｣" (matchers/description rexp))))))
+
+(deftest pred-test
+  (let [pred (matchers/pred even?)]
+    (testing "matches actual satisfying the predicate"
+      (is (true? (matchers/matches? pred 2)))
+      (is (false? (matchers/matches? pred 3))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))

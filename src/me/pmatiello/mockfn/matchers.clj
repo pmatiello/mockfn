@@ -68,3 +68,8 @@
   "Returns a matcher that expects a string matching the provided regular expression."
   [expected]
   (make "str-rexp" #(some? (re-matches %2 %1)) expected pr-str))
+
+(defn pred
+  "Returns a matcher that expects a value satisfying the provided predicate."
+  [pred-fn]
+  (make "pred" (fn [actual p-fn] (p-fn actual)) pred-fn #(-> % class pr-str)))
