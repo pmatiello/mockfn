@@ -26,18 +26,18 @@
 
 (defn exactly
   "Returns a matcher that expects an exact value."
-  [expected]
-  (make "exactly" = expected))
+  [value]
+  (make "exactly" = value))
 
 (defn at-least
   "Returns a matcher that expects a value greater than or equal to the argument."
-  [expected]
-  (make "at-least" >= expected))
+  [value]
+  (make "at-least" >= value))
 
 (defn at-most
   "Returns a matcher that expects a value less than or equal to the argument."
-  [expected]
-  (make "at-most" <= expected))
+  [value]
+  (make "at-most" <= value))
 
 (defn any
   "Returns a matcher that expects any value."
@@ -45,29 +45,29 @@
   (make "any" (constantly true) nil))
 
 (defn a
-  "Returns a matcher that expects an instance of the provided class."
-  [expected]
-  (make "a" #(instance? %2 %1) expected pr-str))
+  "Returns a matcher that expects an instance of the provided type."
+  [type]
+  (make "a" #(instance? %2 %1) type pr-str))
 
 (defn str-starts-with
-  "Returns a matcher that expects a string starting with the provided substring."
-  [expected]
-  (make "str-starts-with" #(str/starts-with? %1 %2) expected pr-str))
+  "Returns a matcher that expects a string starting with the provided prefix."
+  [prefix]
+  (make "str-starts-with" #(str/starts-with? %1 %2) prefix pr-str))
 
 (defn str-ends-with
-  "Returns a matcher that expects a string ending with the provided substring."
-  [expected]
-  (make "str-ends-with" #(str/ends-with? %1 %2) expected pr-str))
+  "Returns a matcher that expects a string ending with the provided suffix."
+  [suffix]
+  (make "str-ends-with" #(str/ends-with? %1 %2) suffix pr-str))
 
 (defn str-includes
   "Returns a matcher that expects a string containing the provided substring."
-  [expected]
-  (make "str-includes" #(str/includes? %1 %2) expected pr-str))
+  [substring]
+  (make "str-includes" #(str/includes? %1 %2) substring pr-str))
 
 (defn str-rexp
   "Returns a matcher that expects a string matching the provided regular expression."
-  [expected]
-  (make "str-rexp" #(some? (re-matches %2 %1)) expected pr-str))
+  [regex]
+  (make "str-rexp" #(some? (re-matches %2 %1)) regex pr-str))
 
 (defn pred
   "Returns a matcher that expects a value satisfying the provided predicate."
