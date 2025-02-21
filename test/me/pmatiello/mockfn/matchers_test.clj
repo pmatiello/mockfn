@@ -52,40 +52,40 @@
       (is (= "｢a clojure.lang.Keyword｣" (matchers/description a))))))
 
 (deftest str-starts-with-test
-  (let [starts-with (matchers/str-starts-with "prefix")]
+  (let [str-starts-with (matchers/str-starts-with "prefix")]
     (testing "returns whether actual starts with expected prefix"
-      (is (true? (matchers/matches? starts-with "prefix-str")))
-      (is (false? (matchers/matches? starts-with "no-prefix"))))
+      (is (true? (matchers/matches? str-starts-with "prefix-str")))
+      (is (false? (matchers/matches? str-starts-with "no-prefix"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-starts-with \"prefix\"｣" (matchers/description starts-with))))))
+      (is (= "｢str-starts-with \"prefix\"｣" (matchers/description str-starts-with))))))
 
 (deftest str-ends-with-test
-  (let [ends-with (matchers/str-ends-with "suffix")]
+  (let [str-ends-with (matchers/str-ends-with "suffix")]
     (testing "returns whether actual ends with expected suffix"
-      (is (true? (matchers/matches? ends-with "str-suffix")))
-      (is (false? (matchers/matches? ends-with "suffix-no"))))
+      (is (true? (matchers/matches? str-ends-with "str-suffix")))
+      (is (false? (matchers/matches? str-ends-with "suffix-no"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-ends-with \"suffix\"｣" (matchers/description ends-with))))))
+      (is (= "｢str-ends-with \"suffix\"｣" (matchers/description str-ends-with))))))
 
 (deftest str-includes-test
-  (let [includes (matchers/str-includes "substring")]
+  (let [str-includes (matchers/str-includes "substring")]
     (testing "returns whether actual includes the expected substring"
-      (is (true? (matchers/matches? includes "with substring here")))
-      (is (false? (matchers/matches? includes "no match here"))))
+      (is (true? (matchers/matches? str-includes "with substring here")))
+      (is (false? (matchers/matches? str-includes "no match here"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-includes \"substring\"｣" (matchers/description includes))))))
+      (is (= "｢str-includes \"substring\"｣" (matchers/description str-includes))))))
 
 (deftest str-rexp-test
-  (let [rexp (matchers/str-rexp #"^prefix.*suffix$")]
+  (let [str-rexp (matchers/str-rexp #"^prefix.*suffix$")]
     (testing "returns whether actual matches the expected regular expression"
-      (is (true? (matchers/matches? rexp "prefix-middle-suffix")))
-      (is (false? (matchers/matches? rexp "no-match"))))
+      (is (true? (matchers/matches? str-rexp "prefix-middle-suffix")))
+      (is (false? (matchers/matches? str-rexp "no-match"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-rexp #\"^prefix.*suffix$\"｣" (matchers/description rexp))))))
+      (is (= "｢str-rexp #\"^prefix.*suffix$\"｣" (matchers/description str-rexp))))))
 
 (deftest pred-test
   (let [pred (matchers/pred even?)]
@@ -101,6 +101,8 @@
     (testing "returns whether actual is an empty collection"
       (is (true? (matchers/matches? coll-empty [])))
       (is (true? (matchers/matches? coll-empty '())))
+      (is (true? (matchers/matches? coll-empty #{})))
+      (is (true? (matchers/matches? coll-empty {})))
       (is (false? (matchers/matches? coll-empty [1])))
       (is (false? (matchers/matches? coll-empty {:key "value"}))))
 
