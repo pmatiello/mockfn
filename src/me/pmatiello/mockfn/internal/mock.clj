@@ -3,29 +3,29 @@
             [me.pmatiello.mockfn.matchers :as matchers])
   (:import (me.pmatiello.mockfn.matchers Matcher)))
 
-(defn- matches-arg?
+(defn ^:private matches-arg?
   [[expected arg]]
   (if (instance? Matcher expected)
     (matchers/matches? expected arg)
     (= expected arg)))
 
-(defn- matches-args?
+(defn ^:private matches-args?
   [expected args]
   (let [arity-matches?    (= (count expected) (count args))
         each-arg-matches? (every? matches-arg? (map vector expected args))]
     (and arity-matches? each-arg-matches? expected)))
 
-(defn- for-args
+(defn ^:private for-args
   [m args]
   (let [expected (some #(matches-args? % args) (keys m))]
     (if expected
       (get m expected)
       ::unexpected-call)))
 
-(defn- unexpected-call [func args]
+(defn ^:private unexpected-call [func args]
   (format "Unexpected call to %s with args %s." func args))
 
-(defn- return-value-for
+(defn ^:private return-value-for
   [func spec args]
   (let [spec* (-> spec :args (for-args args))]
     (when (= spec* ::unexpected-call)
@@ -50,7 +50,7 @@
        (mapv arg->str)
        (str/join " ")))
 
-(defn- doesnt-match [function args matcher times-called]
+(defn ^:private doesnt-match [function args matcher times-called]
   (format "Expected call (%s) %s times, received %s."
           (call->str function args) (matchers/description matcher) times-called))
 

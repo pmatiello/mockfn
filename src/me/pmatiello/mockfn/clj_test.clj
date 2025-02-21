@@ -5,7 +5,7 @@
 (declare providing)
 (declare verifying)
 
-(defn- only?
+(defn ^:private only?
   [symbol form]
   (-> form first resolve #{symbol}))
 

@@ -1,13 +1,13 @@
 (ns me.pmatiello.mockfn.plain
   (:require [me.pmatiello.mockfn.internal.mock :as mock]))
 
-(defn- as-redefs
+(defn ^:private as-redefs
   [func->definition]
   (->> func->definition
        (map (fn [[func definition]] [func `(mock/mock ~func ~definition)]))
        (apply concat)))
 
-(defn- func->spec
+(defn ^:private func->spec
   [bindings]
   (reduce
     (fn [acc [[func & args] ret-val & expected]]
