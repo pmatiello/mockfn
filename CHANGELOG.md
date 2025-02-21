@@ -8,6 +8,7 @@ All notable changes to this project are documented in this file.
 
 - Improved documentation formatting.
 - Rename mockfn.macros to mockfn.plain.
+- Make matchers more readable and explicit in error messages.
 
 ## 0.2.0 - 2025-02-18
 

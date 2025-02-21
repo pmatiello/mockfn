@@ -16,7 +16,8 @@
         expected     (-> matcher :expected args-desc-fn)]
     (->> [m-name expected]
          (filter some?)
-         (str/join " "))))
+         (str/join " ")
+         (format "｢%s｣"))))
 
 (defn make
   "Produces a new matcher instance."

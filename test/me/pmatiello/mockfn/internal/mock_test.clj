@@ -46,17 +46,24 @@
       (is nil? (mock/verify mock))
       (mock :arg1 :arg2)
       (is (thrown-with-msg?
-            ExceptionInfo #"Expected one-fn with arguments \[:arg1 :arg2\] exactly 0 times, received 1."
+            ExceptionInfo #"Expected call \(one-fn :arg1 :arg2\) ｢exactly 0｣ times, received 1."
             (mock/verify mock))))))
 
 (deftest mock-match-argument-test
-  (let [match-a-kw (matchers/a Keyword)
-        match-any  (matchers/any)
-        spec       {:fn   'one-fn
-                    :args {[:argument]  {:ret-val :equal :calls (atom 0)}
-                           [match-a-kw] {:ret-val :matchers-a :calls (atom 0)}
-                           [match-any]  {:ret-val :matchers-any :calls (atom 0)}}}
-        mock       (mock/mock one-fn spec)]
+  (let [match-a-kw    (matchers/a Keyword)
+        match-any     (matchers/any)
+        match-exact-x (matchers/exactly :x)
+        spec          {:fn   'one-fn
+                       :args {[:argument]     {:ret-val :equal
+                                               :calls   (atom 0)}
+                              [match-a-kw]    {:ret-val :matchers-a
+                                               :calls   (atom 0)}
+                              [match-any]     {:ret-val :matchers-any
+                                               :calls   (atom 0)}
+                              [match-exact-x] {:ret-val  :matchers-exact
+                                               :calls    (atom 0)
+                                               :expected [(matchers/exactly 1)]}}}
+        mock          (mock/mock one-fn spec)]
     (testing "returns to expected calls with configured return values"
       (is (= :equal (mock :argument)))
       (is (= :matchers-a (mock :any-keyword)))
@@ -65,4 +72,9 @@
     (testing "counts the number of times that each call was performed"
       (is (= 1 (-> mock meta :args (get [:argument]) :calls deref)))
       (is (= 1 (-> mock meta :args (get [match-a-kw]) :calls deref)))
-      (is (= 1 (-> mock meta :args (get [match-any]) :calls deref))))))
+      (is (= 1 (-> mock meta :args (get [match-any]) :calls deref))))
+
+    (testing "verifies that calls were performed the expected number of times"
+      (is (thrown-with-msg?
+            ExceptionInfo #"Expected call \(one-fn ｢exactly :x｣\) ｢exactly 1｣ times, received 0."
+            (mock/verify mock))))))

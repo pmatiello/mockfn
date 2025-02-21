@@ -77,7 +77,7 @@
 
   (testing "fails if calls are not performed the expected number of times"
     (is (thrown-with-msg?
-          ExceptionInfo #"Expected .* with arguments"
+          ExceptionInfo #"Expected call .*"
           (plain/verifying
             [(one-fn) :one-fn (matchers/exactly 2)]
             (is (= :one-fn (one-fn))))))))

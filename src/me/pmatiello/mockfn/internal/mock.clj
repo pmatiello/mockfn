@@ -1,5 +1,6 @@
 (ns me.pmatiello.mockfn.internal.mock
-  (:require [me.pmatiello.mockfn.matchers :as matchers])
+  (:require [clojure.string :as str]
+            [me.pmatiello.mockfn.matchers :as matchers])
   (:import (me.pmatiello.mockfn.matchers Matcher)))
 
 (defn- matches-arg?
@@ -39,15 +40,25 @@
     (fn [& args] (return-value-for func spec (into [] args)))
     spec))
 
+(defn ^:private arg->str [arg]
+  (cond
+    (instance? Matcher arg) (matchers/description arg)
+    :else (pr-str arg)))
+
+(defn ^:private call->str [function args]
+  (->> (cons function args)
+       (mapv arg->str)
+       (str/join " ")))
+
 (defn- doesnt-match [function args matcher times-called]
-  (format "Expected %s with arguments %s %s times, received %s."
-          function args (matchers/description matcher) times-called))
+  (format "Expected call (%s) %s times, received %s."
+          (call->str function args) (matchers/description matcher) times-called))
 
 (defn verify [mock]
   "Verifies that the given mock function was called the expected number of
   times with the expected arguments."
   (doseq [args     (-> mock meta :args keys)
           expected (-> mock meta :args (get args) :expected)]
-    (let [calls (-> mock meta :args (get args) :calls deref)]
-      (when-not (matchers/matches? expected calls)
-        (throw (ex-info (doesnt-match (-> mock meta :fn) args expected calls) {}))))))
+    (let [times-called (-> mock meta :args (get args) :calls deref)]
+      (when-not (matchers/matches? expected times-called)
+        (throw (ex-info (doesnt-match (-> mock meta :fn) args expected times-called) {}))))))
