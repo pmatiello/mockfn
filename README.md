@@ -130,6 +130,8 @@ The following matchers are included in `mockfn`:
 | `str-includes`    | Matches if actual string includes the expected substring.              | `(str-includes substring)` |
 | `str-rexp`        | Matches if the expected regular expression matches the actual string.  | `(str-rexp regex)`         |
 | `pred`            | Matches if the actual value satisfies the provided predicate function. | `(pred pred-fn)`           |
+| `coll-empty`      | Matches if the actual collection is empty.                             | `(coll-empty)`             |
+| `coll-contains`   | Matches if the actual collection contains all expected values.         | `(coll-contains values)`   |
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.
