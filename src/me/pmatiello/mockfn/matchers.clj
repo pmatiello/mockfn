@@ -1,5 +1,6 @@
 (ns me.pmatiello.mockfn.matchers
-  (:require [clojure.string :as str]))
+  (:require [clojure.set :as set]
+            [clojure.string :as str]))
 
 (defrecord Matcher [name match-fn expected args-desc-fn])
 
@@ -82,4 +83,4 @@
 (defn coll-contains
   "Returns a matcher that expects a collection containing all the provided values."
   [values]
-  (make "coll-contains" (fn [actual expected] (every? (set actual) expected)) values pr-str))
+  (make "coll-contains" #(= %2 (set/intersection (set %1) %2)) (set values) pr-str))

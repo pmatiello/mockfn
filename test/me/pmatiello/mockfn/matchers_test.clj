@@ -118,4 +118,9 @@
       (is (false? (matchers/matches? coll-contains [3 4]))))
 
     (testing "provides an informative string representation"
-      (is (= "｢coll-contains [1 2]｣" (matchers/description coll-contains))))))
+      (is (= "｢coll-contains #{1 2}｣" (matchers/description coll-contains)))))
+
+  (let [coll-contains (matchers/coll-contains [1 nil])]
+    (testing "enforces presence of nil in actual"
+      (is (true? (matchers/matches? coll-contains [1 2 nil])))
+      (is (false? (matchers/matches? coll-contains [1 2]))))))
