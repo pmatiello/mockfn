@@ -4,12 +4,16 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## 0.4.0 - ????-??-??
+
+- Added collection matchers.
+
 ## 0.3.0 - 2025-02-21
 
 - Improved documentation formatting.
-- Rename `mockfn.macros` to `mockfn.plain`.
-- Make matchers more readable and explicit in error messages.
-- Add predicate matcher.
+- Renamed `mockfn.macros` to `mockfn.plain`.
+- Made matchers more readable and explicit in error messages.
+- Added predicate matcher.
 
 ## 0.2.0 - 2025-02-18
 
