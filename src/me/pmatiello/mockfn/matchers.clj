@@ -78,3 +78,8 @@
   "Returns a matcher that expects an empty collection."
   []
   (make "coll-empty" (fn [actual _] (empty? actual)) nil))
+
+(defn coll-contains
+  "Returns a matcher that expects a collection containing all the provided values."
+  [values]
+  (make "coll-contains" (fn [actual expected] (every? (set actual) expected)) values pr-str))

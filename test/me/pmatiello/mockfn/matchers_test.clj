@@ -108,3 +108,14 @@
 
     (testing "provides an informative string representation"
       (is (= "｢coll-empty｣" (matchers/description coll-empty))))))
+
+(deftest coll-contains-test
+  (let [coll-contains (matchers/coll-contains [1 2])]
+    (testing "returns whether actual collection contains all expected values"
+      (is (true? (matchers/matches? coll-contains [1 2 3])))
+      (is (true? (matchers/matches? coll-contains [2 1])))
+      (is (false? (matchers/matches? coll-contains [1 3])))
+      (is (false? (matchers/matches? coll-contains [3 4]))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢coll-contains [1 2]｣" (matchers/description coll-contains))))))
