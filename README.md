@@ -118,24 +118,24 @@ necessary to use the `providing` and `verifying` versions provided in the
 
 The following matchers are included in `mockfn`:
 
-| Matcher           | Description                                                            | Usage                      |
-|-------------------|------------------------------------------------------------------------|----------------------------|
-| **Generic**       |                                                                        |                            |
-| `any`             | Always matches.                                                        | `(any)`                    |
-| `a`               | Matches if actual value is an instance of the expected type.           | `(a type)`                 |
-| `exactly`         | Matches if actual value is equal to the expected value.                | `(exactly value)`          |
-| `pred`            | Matches if the actual value satisfies the provided predicate function. | `(pred pred-fn)`           |
-| **Numeric**       |                                                                        |                            |
-| `at-least`        | Matches if actual value is greater or equal than the expected value.   | `(at-least value)`         |
-| `at-most`         | Matches if actual value is less or equal than the expected value.      | `(at-most value)`          |
-| **String**        |                                                                        |                            |
-| `str-starts-with` | Matches if actual string starts with the expected prefix.              | `(str-starts-with prefix)` |
-| `str-ends-with`   | Matches if actual string ends with the expected suffix.                | `(str-ends-with suffix)`   |
-| `str-includes`    | Matches if actual string includes the expected substring.              | `(str-includes substring)` |
-| `str-rexp`        | Matches if the expected regular expression matches the actual string.  | `(str-rexp regex)`         |
-| **Collection**    |                                                                        |                            |
-| `coll-empty`      | Matches if the actual collection is empty.                             | `(coll-empty)`             |
-| `coll-contains`   | Matches if the actual collection contains all expected values.         | `(coll-contains values)`   |
+| Matcher             | Description                                                            | Usage                      |
+|---------------------|------------------------------------------------------------------------|----------------------------|
+| **Generic**         |                                                                        |                            |
+| `any`               | Always matches.                                                        | `(any)`                    |
+| `a`                 | Matches if actual value is an instance of the expected type.           | `(a type)`                 |
+| `exactly`           | Matches if actual value is equal to the expected value.                | `(exactly value)`          |
+| `pred`              | Matches if the actual value satisfies the provided predicate function. | `(pred pred-fn)`           |
+| **Numeric**         |                                                                        |                            |
+| `at-least`          | Matches if actual value is greater or equal than the expected value.   | `(at-least value)`         |
+| `at-most`           | Matches if actual value is less or equal than the expected value.      | `(at-most value)`          |
+| **String**          |                                                                        |                            |
+| `str-starts-with`   | Matches if actual string starts with the expected prefix.              | `(str-starts-with prefix)` |
+| `str-ends-with`     | Matches if actual string ends with the expected suffix.                | `(str-ends-with suffix)`   |
+| `str-includes`      | Matches if actual string includes the expected substring.              | `(str-includes substring)` |
+| `str-rexp`          | Matches if the expected regular expression matches the actual string.  | `(str-rexp regex)`         |
+| **Collection**      |                                                                        |                            |
+| `coll-empty`        | Matches if the actual collection is empty.                             | `(coll-empty)`             |
+| `coll-contains-all` | Matches if the actual collection contains all expected values.         | `(coll-contains values)`   |
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.

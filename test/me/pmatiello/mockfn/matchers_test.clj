@@ -109,18 +109,18 @@
     (testing "provides an informative string representation"
       (is (= "｢coll-empty｣" (matchers/description coll-empty))))))
 
-(deftest coll-contains-test
-  (let [coll-contains (matchers/coll-contains [1 2])]
+(deftest coll-contains-all-test
+  (let [coll-contains-all (matchers/coll-contains-all [1 2])]
     (testing "returns whether actual collection contains all expected values"
-      (is (true? (matchers/matches? coll-contains [1 2 3])))
-      (is (true? (matchers/matches? coll-contains [2 1])))
-      (is (false? (matchers/matches? coll-contains [1 3])))
-      (is (false? (matchers/matches? coll-contains [3 4]))))
+      (is (true? (matchers/matches? coll-contains-all [1 2 3])))
+      (is (true? (matchers/matches? coll-contains-all [2 1])))
+      (is (false? (matchers/matches? coll-contains-all [1 3])))
+      (is (false? (matchers/matches? coll-contains-all [3 4]))))
 
     (testing "provides an informative string representation"
-      (is (= "｢coll-contains #{1 2}｣" (matchers/description coll-contains)))))
+      (is (= "｢coll-contains-all #{1 2}｣" (matchers/description coll-contains-all)))))
 
-  (let [coll-contains (matchers/coll-contains [1 nil])]
+  (let [coll-contains-all (matchers/coll-contains-all [1 nil])]
     (testing "enforces presence of nil in actual"
-      (is (true? (matchers/matches? coll-contains [1 2 nil])))
-      (is (false? (matchers/matches? coll-contains [1 2]))))))
+      (is (true? (matchers/matches? coll-contains-all [1 2 nil])))
+      (is (false? (matchers/matches? coll-contains-all [1 2]))))))

@@ -80,7 +80,8 @@
   []
   (make "coll-empty" (fn [a _] (empty? a)) nil))
 
-(defn coll-contains
+(defn coll-contains-all
   "Returns a matcher that expects a collection containing all the provided values."
   [values]
-  (make "coll-contains" #(= %2 (set/intersection (set %1) %2)) (set values) pr-str))
+  (make "coll-contains-all" #(= %2 (set/intersection (set %1) %2)) (set values) pr-str))
+
