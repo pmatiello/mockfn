@@ -124,3 +124,19 @@
     (testing "enforces presence of nil in actual"
       (is (true? (matchers/matches? coll-contains-all [1 2 nil])))
       (is (false? (matchers/matches? coll-contains-all [1 2]))))))
+
+(deftest coll-contains-any-test
+  (let [coll-contains-any (matchers/coll-contains-any [1 2])]
+    (testing "returns whether actual collection contains any expected values"
+      (is (true? (matchers/matches? coll-contains-any [1 3])))
+      (is (true? (matchers/matches? coll-contains-any [2 4])))
+      (is (false? (matchers/matches? coll-contains-any [3 4])))
+      (is (false? (matchers/matches? coll-contains-any []))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢coll-contains-any #{1 2}｣" (matchers/description coll-contains-any)))))
+
+  (let [coll-contains-any (matchers/coll-contains-any [1 nil])]
+    (testing "handles nil as regular values"
+      (is (true? (matchers/matches? coll-contains-any [nil])))
+      (is (false? (matchers/matches? coll-contains-any [2 3]))))))
