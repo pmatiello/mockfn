@@ -83,7 +83,7 @@
 (defn coll-contains-all
   "Returns a matcher that expects a collection containing all the provided values."
   [values]
-  (make "coll-contains-all" #(= %2 (set/intersection (set %1) %2)) (set values) pr-str))
+  (make "coll-contains-all" #(-> %1 set (set/intersection %2) (= %2)) (set values) pr-str))
 
 (defn coll-contains-any
   "Returns a matcher that expects a collection containing at least one of the provided values."
