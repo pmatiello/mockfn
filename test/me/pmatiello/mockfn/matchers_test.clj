@@ -145,3 +145,12 @@
     (testing "handles nil as regular values"
       (is (true? (matchers/matches? coll-contains-any [nil])))
       (is (false? (matchers/matches? coll-contains-any [2 3]))))))
+
+(deftest not>-test
+  (let [not> (matchers/not> (matchers/exactly 1))]
+    (testing "returns whether actual does not match the provided matcher"
+      (is (true? (matchers/matches? not> 2)))
+      (is (false? (matchers/matches? not> 1))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢not> ｢exactly 1｣｣" (matchers/description not>))))))

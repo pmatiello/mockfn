@@ -90,3 +90,9 @@
   "Returns a matcher that expects a collection containing at least one of the provided values."
   [values]
   (make "contains-any" #(-> %1 set (set/intersection %2) empty? not) (set values) pr-str))
+
+(defn not>
+  "Returns a matcher that expects a value not matching the provided matcher."
+  [matcher]
+  (make "not>" #(not (matches? %2 %1)) matcher description))
+
