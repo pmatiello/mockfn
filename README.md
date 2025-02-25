@@ -133,7 +133,7 @@ The following matchers are included in `mockfn`:
 | `starts-with`  | Matches if actual string starts with the expected prefix.              | `(starts-with prefix)`  |
 | `ends-with`    | Matches if actual string ends with the expected suffix.                | `(ends-with suffix)`    |
 | `includes`     | Matches if actual string includes the expected substring.              | `(includes substring)`  |
-| `rexp`         | Matches if the expected regular expression matches the actual string.  | `(rexp regex)`          |
+| `regex`        | Matches if the expected regular expression matches the actual string.  | `(rexp regex)`          |
 | **Collection** |                                                                        |                         |
 | `contains-all` | Matches if the actual collection contains all expected values.         | `(contains values)`     |
 | `contains-any` | Matches if the actual collection contains any expected values.         | `(contains-any values)` |

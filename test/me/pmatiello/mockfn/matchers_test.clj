@@ -3,6 +3,25 @@
             [me.pmatiello.mockfn.matchers :as matchers])
   (:import (clojure.lang Keyword)))
 
+(deftest any-test
+  (let [any (matchers/any)]
+    (testing "always matches actual"
+      (is (true? (matchers/matches? any :anything)))
+      (is (true? (matchers/matches? any "any thing")))
+      (is (true? (matchers/matches? any 01234567890M))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢any｣" (matchers/description any))))))
+
+(deftest a-test
+  (let [a (matchers/a Keyword)]
+    (testing "matches actual of the expected type"
+      (is (true? (matchers/matches? a :keyword)))
+      (is (false? (matchers/matches? a "string"))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢a clojure.lang.Keyword｣" (matchers/description a))))))
+
 (deftest exactly-test
   (let [exactly (matchers/exactly 1)]
     (testing "returns whether actual is equal to expected"
@@ -30,6 +49,15 @@
     (testing "provides an informative string representation"
       (is (= "｢empty｣" (matchers/description empty))))))
 
+(deftest pred-test
+  (let [pred (matchers/pred even?)]
+    (testing "matches actual satisfying the predicate"
+      (is (true? (matchers/matches? pred 2)))
+      (is (false? (matchers/matches? pred 3))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
+
 (deftest at-least-test
   (let [at-least (matchers/at-least 2)]
     (testing "returns whether actual is at least equal to expected"
@@ -49,25 +77,6 @@
 
     (testing "provides an informative string representation"
       (is (= "｢at-most 2｣" (matchers/description at-most))))))
-
-(deftest any-test
-  (let [any (matchers/any)]
-    (testing "always matches actual"
-      (is (true? (matchers/matches? any :anything)))
-      (is (true? (matchers/matches? any "any thing")))
-      (is (true? (matchers/matches? any 01234567890M))))
-
-    (testing "provides an informative string representation"
-      (is (= "｢any｣" (matchers/description any))))))
-
-(deftest a-test
-  (let [a (matchers/a Keyword)]
-    (testing "matches actual of the expected type"
-      (is (true? (matchers/matches? a :keyword)))
-      (is (false? (matchers/matches? a "string"))))
-
-    (testing "provides an informative string representation"
-      (is (= "｢a clojure.lang.Keyword｣" (matchers/description a))))))
 
 (deftest starts-with-test
   (let [starts-with (matchers/starts-with "prefix")]
@@ -104,15 +113,6 @@
 
     (testing "provides an informative string representation"
       (is (= "｢regex #\"^prefix.*suffix$\"｣" (matchers/description regex))))))
-
-(deftest pred-test
-  (let [pred (matchers/pred even?)]
-    (testing "matches actual satisfying the predicate"
-      (is (true? (matchers/matches? pred 2)))
-      (is (false? (matchers/matches? pred 3))))
-
-    (testing "provides an informative string representation"
-      (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
 
 (deftest contains-all-test
   (let [contains-all (matchers/contains-all [1 2])]

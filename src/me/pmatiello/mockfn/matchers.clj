@@ -26,6 +26,16 @@
   ([name match-fn expected] (make name match-fn expected identity))
   ([name match-fn expected description-fn] (->Matcher name match-fn expected description-fn)))
 
+(defn any
+  "Returns a matcher that expects any value."
+  []
+  (make "any" (constantly true) nil))
+
+(defn a
+  "Returns a matcher that expects an instance of the provided type."
+  [type]
+  (make "a" #(instance? %2 %1) type pr-str))
+
 (defn exactly
   "Returns a matcher that expects an exact value."
   [value]
@@ -36,6 +46,11 @@
   []
   (make "empty" (fn [a _] (empty? a)) nil))
 
+(defn pred
+  "Returns a matcher that expects a value satisfying the provided predicate."
+  [pred-fn]
+  (make "pred" #(%2 %1) pred-fn #(-> % class pr-str)))
+
 (defn at-least
   "Returns a matcher that expects a value greater than or equal to the argument."
   [value]
@@ -45,16 +60,6 @@
   "Returns a matcher that expects a value less than or equal to the argument."
   [value]
   (make "at-most" <= value))
-
-(defn any
-  "Returns a matcher that expects any value."
-  []
-  (make "any" (constantly true) nil))
-
-(defn a
-  "Returns a matcher that expects an instance of the provided type."
-  [type]
-  (make "a" #(instance? %2 %1) type pr-str))
 
 (defn starts-with
   "Returns a matcher that expects a string starting with the provided prefix."
@@ -75,11 +80,6 @@
   "Returns a matcher that expects a string matching the provided regular expression."
   [regex]
   (make "regex" #(some? (re-matches %2 %1)) regex pr-str))
-
-(defn pred
-  "Returns a matcher that expects a value satisfying the provided predicate."
-  [pred-fn]
-  (make "pred" #(%2 %1) pred-fn #(-> % class pr-str)))
 
 (defn contains-all
   "Returns a matcher that expects a collection containing all the provided values."
