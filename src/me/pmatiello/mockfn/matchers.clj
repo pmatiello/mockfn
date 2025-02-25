@@ -96,3 +96,8 @@
   [matcher]
   (make "not>" #(not (matches? %2 %1)) matcher description))
 
+(defn and>
+  "Returns a matcher that expects a value matching all provided matchers."
+  [& matchers]
+  (make "and>" (fn [a e] (every? #(matches? % a) e)) matchers
+        #(->> % (map description) (str/join " "))))

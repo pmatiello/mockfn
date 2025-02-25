@@ -154,3 +154,15 @@
 
     (testing "provides an informative string representation"
       (is (= "｢not> ｢exactly 1｣｣" (matchers/description not>))))))
+
+(deftest and>-test
+  (let [and> (matchers/and> (matchers/at-least 2) (matchers/at-most 4))]
+    (testing "returns whether actual matches all provided matchers"
+      (is (true? (matchers/matches? and> 2)))
+      (is (true? (matchers/matches? and> 3)))
+      (is (true? (matchers/matches? and> 4)))
+      (is (false? (matchers/matches? and> 1)))
+      (is (false? (matchers/matches? and> 5))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢and> ｢at-least 2｣ ｢at-most 4｣｣" (matchers/description and>))))))
