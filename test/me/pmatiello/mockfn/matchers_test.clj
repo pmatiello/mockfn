@@ -12,6 +12,24 @@
     (testing "provides an informative string representation"
       (is (= "｢exactly 1｣" (matchers/description exactly))))))
 
+(deftest empty-test
+  (let [empty (matchers/empty)]
+    (testing "returns whether actual is an empty collection"
+      (is (true? (matchers/matches? empty nil)))
+      (is (true? (matchers/matches? empty [])))
+      (is (true? (matchers/matches? empty '())))
+      (is (true? (matchers/matches? empty #{})))
+      (is (true? (matchers/matches? empty {})))
+      (is (false? (matchers/matches? empty [1])))
+      (is (false? (matchers/matches? empty {:key "value"}))))
+
+    (testing "returns whether actual is an empty string"
+      (is (true? (matchers/matches? empty "")))
+      (is (false? (matchers/matches? empty "not empty"))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢empty｣" (matchers/description empty))))))
+
 (deftest at-least-test
   (let [at-least (matchers/at-least 2)]
     (testing "returns whether actual is at least equal to expected"
@@ -51,41 +69,41 @@
     (testing "provides an informative string representation"
       (is (= "｢a clojure.lang.Keyword｣" (matchers/description a))))))
 
-(deftest str-starts-with-test
-  (let [str-starts-with (matchers/str-starts-with "prefix")]
+(deftest starts-with-test
+  (let [starts-with (matchers/starts-with "prefix")]
     (testing "returns whether actual starts with expected prefix"
-      (is (true? (matchers/matches? str-starts-with "prefix-str")))
-      (is (false? (matchers/matches? str-starts-with "no-prefix"))))
+      (is (true? (matchers/matches? starts-with "prefix-str")))
+      (is (false? (matchers/matches? starts-with "no-prefix"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-starts-with \"prefix\"｣" (matchers/description str-starts-with))))))
+      (is (= "｢starts-with \"prefix\"｣" (matchers/description starts-with))))))
 
-(deftest str-ends-with-test
-  (let [str-ends-with (matchers/str-ends-with "suffix")]
+(deftest ends-with-test
+  (let [ends-with (matchers/ends-with "suffix")]
     (testing "returns whether actual ends with expected suffix"
-      (is (true? (matchers/matches? str-ends-with "str-suffix")))
-      (is (false? (matchers/matches? str-ends-with "suffix-no"))))
+      (is (true? (matchers/matches? ends-with "str-suffix")))
+      (is (false? (matchers/matches? ends-with "suffix-no"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-ends-with \"suffix\"｣" (matchers/description str-ends-with))))))
+      (is (= "｢ends-with \"suffix\"｣" (matchers/description ends-with))))))
 
-(deftest str-includes-test
-  (let [str-includes (matchers/str-includes "substring")]
+(deftest includes-test
+  (let [includes (matchers/includes "substring")]
     (testing "returns whether actual includes the expected substring"
-      (is (true? (matchers/matches? str-includes "with substring here")))
-      (is (false? (matchers/matches? str-includes "no match here"))))
+      (is (true? (matchers/matches? includes "with substring here")))
+      (is (false? (matchers/matches? includes "no match here"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-includes \"substring\"｣" (matchers/description str-includes))))))
+      (is (= "｢includes \"substring\"｣" (matchers/description includes))))))
 
-(deftest str-rexp-test
-  (let [str-rexp (matchers/str-rexp #"^prefix.*suffix$")]
+(deftest regex-test
+  (let [regex (matchers/regex #"^prefix.*suffix$")]
     (testing "returns whether actual matches the expected regular expression"
-      (is (true? (matchers/matches? str-rexp "prefix-middle-suffix")))
-      (is (false? (matchers/matches? str-rexp "no-match"))))
+      (is (true? (matchers/matches? regex "prefix-middle-suffix")))
+      (is (false? (matchers/matches? regex "no-match"))))
 
     (testing "provides an informative string representation"
-      (is (= "｢str-rexp #\"^prefix.*suffix$\"｣" (matchers/description str-rexp))))))
+      (is (= "｢regex #\"^prefix.*suffix$\"｣" (matchers/description regex))))))
 
 (deftest pred-test
   (let [pred (matchers/pred even?)]
@@ -96,47 +114,34 @@
     (testing "provides an informative string representation"
       (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
 
-(deftest coll-empty-test
-  (let [coll-empty (matchers/coll-empty)]
-    (testing "returns whether actual is an empty collection"
-      (is (true? (matchers/matches? coll-empty [])))
-      (is (true? (matchers/matches? coll-empty '())))
-      (is (true? (matchers/matches? coll-empty #{})))
-      (is (true? (matchers/matches? coll-empty {})))
-      (is (false? (matchers/matches? coll-empty [1])))
-      (is (false? (matchers/matches? coll-empty {:key "value"}))))
-
-    (testing "provides an informative string representation"
-      (is (= "｢coll-empty｣" (matchers/description coll-empty))))))
-
-(deftest coll-contains-all-test
-  (let [coll-contains-all (matchers/coll-contains-all [1 2])]
+(deftest contains-all-test
+  (let [contains-all (matchers/contains-all [1 2])]
     (testing "returns whether actual collection contains all expected values"
-      (is (true? (matchers/matches? coll-contains-all [1 2 3])))
-      (is (true? (matchers/matches? coll-contains-all [2 1])))
-      (is (false? (matchers/matches? coll-contains-all [1 3])))
-      (is (false? (matchers/matches? coll-contains-all [3 4]))))
+      (is (true? (matchers/matches? contains-all [1 2 3])))
+      (is (true? (matchers/matches? contains-all [2 1])))
+      (is (false? (matchers/matches? contains-all [1 3])))
+      (is (false? (matchers/matches? contains-all [3 4]))))
 
     (testing "provides an informative string representation"
-      (is (= "｢coll-contains-all #{1 2}｣" (matchers/description coll-contains-all)))))
+      (is (= "｢contains-all #{1 2}｣" (matchers/description contains-all)))))
 
-  (let [coll-contains-all (matchers/coll-contains-all [1 nil])]
+  (let [contains-all (matchers/contains-all [1 nil])]
     (testing "enforces presence of nil in actual"
-      (is (true? (matchers/matches? coll-contains-all [1 2 nil])))
-      (is (false? (matchers/matches? coll-contains-all [1 2]))))))
+      (is (true? (matchers/matches? contains-all [1 2 nil])))
+      (is (false? (matchers/matches? contains-all [1 2]))))))
 
-(deftest coll-contains-any-test
-  (let [coll-contains-any (matchers/coll-contains-any [1 2])]
+(deftest contains-any-test
+  (let [contains-any (matchers/contains-any [1 2])]
     (testing "returns whether actual collection contains any expected values"
-      (is (true? (matchers/matches? coll-contains-any [1 3])))
-      (is (true? (matchers/matches? coll-contains-any [2 4])))
-      (is (false? (matchers/matches? coll-contains-any [3 4])))
-      (is (false? (matchers/matches? coll-contains-any []))))
+      (is (true? (matchers/matches? contains-any [1 3])))
+      (is (true? (matchers/matches? contains-any [2 4])))
+      (is (false? (matchers/matches? contains-any [3 4])))
+      (is (false? (matchers/matches? contains-any []))))
 
     (testing "provides an informative string representation"
-      (is (= "｢coll-contains-any #{1 2}｣" (matchers/description coll-contains-any)))))
+      (is (= "｢contains-any #{1 2}｣" (matchers/description contains-any)))))
 
-  (let [coll-contains-any (matchers/coll-contains-any [1 nil])]
+  (let [coll-contains-any (matchers/contains-any [1 nil])]
     (testing "handles nil as regular values"
       (is (true? (matchers/matches? coll-contains-any [nil])))
       (is (false? (matchers/matches? coll-contains-any [2 3]))))))

@@ -1,4 +1,5 @@
 (ns me.pmatiello.mockfn.matchers
+  (:refer-clojure :exclude [empty])
   (:require [clojure.set :as set]
             [clojure.string :as str]))
 
@@ -30,6 +31,11 @@
   [value]
   (make "exactly" = value))
 
+(defn empty
+  "Returns a matcher that expects an empty value."
+  []
+  (make "empty" (fn [a _] (empty? a)) nil))
+
 (defn at-least
   "Returns a matcher that expects a value greater than or equal to the argument."
   [value]
@@ -50,42 +56,37 @@
   [type]
   (make "a" #(instance? %2 %1) type pr-str))
 
-(defn str-starts-with
+(defn starts-with
   "Returns a matcher that expects a string starting with the provided prefix."
   [prefix]
-  (make "str-starts-with" #(str/starts-with? %1 %2) prefix pr-str))
+  (make "starts-with" #(str/starts-with? %1 %2) prefix pr-str))
 
-(defn str-ends-with
+(defn ends-with
   "Returns a matcher that expects a string ending with the provided suffix."
   [suffix]
-  (make "str-ends-with" #(str/ends-with? %1 %2) suffix pr-str))
+  (make "ends-with" #(str/ends-with? %1 %2) suffix pr-str))
 
-(defn str-includes
+(defn includes
   "Returns a matcher that expects a string containing the provided substring."
   [substring]
-  (make "str-includes" #(str/includes? %1 %2) substring pr-str))
+  (make "includes" #(str/includes? %1 %2) substring pr-str))
 
-(defn str-rexp
+(defn regex
   "Returns a matcher that expects a string matching the provided regular expression."
   [regex]
-  (make "str-rexp" #(some? (re-matches %2 %1)) regex pr-str))
+  (make "regex" #(some? (re-matches %2 %1)) regex pr-str))
 
 (defn pred
   "Returns a matcher that expects a value satisfying the provided predicate."
   [pred-fn]
   (make "pred" #(%2 %1) pred-fn #(-> % class pr-str)))
 
-(defn coll-empty
-  "Returns a matcher that expects an empty collection."
-  []
-  (make "coll-empty" (fn [a _] (empty? a)) nil))
-
-(defn coll-contains-all
+(defn contains-all
   "Returns a matcher that expects a collection containing all the provided values."
   [values]
-  (make "coll-contains-all" #(-> %1 set (set/intersection %2) (= %2)) (set values) pr-str))
+  (make "contains-all" #(-> %1 set (set/intersection %2) (= %2)) (set values) pr-str))
 
-(defn coll-contains-any
+(defn contains-any
   "Returns a matcher that expects a collection containing at least one of the provided values."
   [values]
-  (make "coll-contains-any" #(-> %1 set (set/intersection %2) empty? not) (set values) pr-str))
+  (make "contains-any" #(-> %1 set (set/intersection %2) empty? not) (set values) pr-str))
