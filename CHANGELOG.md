@@ -7,6 +7,7 @@ All notable changes to this project are documented in this file.
 ## 0.4.0 - ????-??-??
 
 - Added collection matchers.
+- Added logical operators for matchers.
 - Removed prefixes from matcher names.
 
 ## 0.3.0 - 2025-02-21
