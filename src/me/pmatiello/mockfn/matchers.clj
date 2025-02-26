@@ -101,3 +101,9 @@
   [& matchers]
   (make "and>" (fn [a e] (every? #(matches? % a) e)) matchers
         #(->> % (map description) (str/join " "))))
+
+(defn or>
+  "Returns a matcher that expects a value matching any of the provided matchers."
+  [& matchers]
+  (make "or>" (fn [a e] (boolean (some #(matches? % a) e))) matchers
+        #(->> % (map description) (str/join " "))))

@@ -166,3 +166,13 @@
 
     (testing "provides an informative string representation"
       (is (= "｢and> ｢at-least 2｣ ｢at-most 4｣｣" (matchers/description and>))))))
+
+(deftest or>-test
+  (let [or> (matchers/or> (matchers/exactly 2) (matchers/exactly 3))]
+    (testing "returns whether actual matches any of the provided matchers"
+      (is (true? (matchers/matches? or> 2)))
+      (is (true? (matchers/matches? or> 3)))
+      (is (false? (matchers/matches? or> 5))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢or> ｢exactly 2｣ ｢exactly 3｣｣" (matchers/description or>))))))
