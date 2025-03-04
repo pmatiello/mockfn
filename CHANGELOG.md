@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## 0.4.0 - ????-??-??
+## 0.4.0 - 2025-03-04
 
 - Added collection matchers.
 - Added boolean matchers.
