@@ -96,14 +96,16 @@
   [matcher]
   (make "not>" #(not (matches? %2 %1)) matcher description))
 
+(defn ^:private description*
+  [matchers]
+  (->> matchers (map description) (str/join " ")))
+
 (defn and>
   "Returns a matcher that expects a value matching all provided matchers."
   [& matchers]
-  (make "and>" (fn [a e] (every? #(matches? % a) e)) matchers
-        #(->> % (map description) (str/join " "))))
+  (make "and>" (fn [a e] (every? #(matches? % a) e)) matchers description*))
 
 (defn or>
   "Returns a matcher that expects a value matching any of the provided matchers."
   [& matchers]
-  (make "or>" (fn [a e] (boolean (some #(matches? % a) e))) matchers
-        #(->> % (map description) (str/join " "))))
+  (make "or>" (fn [a e] (boolean (some #(matches? % a) e))) matchers description*))
