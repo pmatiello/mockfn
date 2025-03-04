@@ -24,7 +24,7 @@
 (defn make
   "Produces a new matcher instance."
   ([name match-fn expected] (make name match-fn expected identity))
-  ([name match-fn expected description-fn] (->Matcher name match-fn expected description-fn)))
+  ([name match-fn expected args-desc-fn] (->Matcher name match-fn expected args-desc-fn)))
 
 (defn any
   "Returns a matcher that expects any value."
