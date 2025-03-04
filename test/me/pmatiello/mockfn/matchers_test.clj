@@ -58,6 +58,30 @@
     (testing "provides an informative string representation"
       (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
 
+(deftest truthy-test
+  (let [truthy (matchers/truthy)]
+    (testing "returns whether actual is a truthy value"
+      (is (true? (matchers/matches? truthy true)))
+      (is (true? (matchers/matches? truthy 1)))
+      (is (true? (matchers/matches? truthy "a string")))
+      (is (false? (matchers/matches? truthy false)))
+      (is (false? (matchers/matches? truthy nil))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢truthy｣" (matchers/description truthy))))))
+
+(deftest falsy-test
+  (let [falsy (matchers/falsy)]
+    (testing "returns whether actual is a falsy value"
+      (is (false? (matchers/matches? falsy true)))
+      (is (false? (matchers/matches? falsy 1)))
+      (is (false? (matchers/matches? falsy "a string")))
+      (is (true? (matchers/matches? falsy false)))
+      (is (true? (matchers/matches? falsy nil))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢falsy｣" (matchers/description falsy))))))
+
 (deftest at-least-test
   (let [at-least (matchers/at-least 2)]
     (testing "returns whether actual is at least equal to expected"

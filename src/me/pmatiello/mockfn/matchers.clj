@@ -51,6 +51,16 @@
   [pred-fn]
   (make "pred" #(%2 %1) pred-fn #(-> % class pr-str)))
 
+(defn truthy
+  "Returns a matcher that expects a truthy value."
+  []
+  (make "truthy" (fn [a _] (boolean a)) nil))
+
+(defn falsy
+  "Returns a matcher that expects a falsy value."
+  []
+  (make "falsy" (fn [a _] (not (boolean a))) nil))
+
 (defn at-least
   "Returns a matcher that expects a value greater than or equal to the argument."
   [value]

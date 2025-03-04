@@ -126,6 +126,9 @@ The following matchers are included in `mockfn`:
 | `exactly`      | Matches if actual value is equal to the expected value.                | `(exactly value)`       |
 | `empty`        | Matches if the actual value is empty.                                  | `(empty)`               |
 | `pred`         | Matches if the actual value satisfies the provided predicate function. | `(pred pred-fn)`        |
+| **Boolean**    |                                                                        |                         |
+| `truthy`       | Matches if the actual value is truthy.                                 | `(truthy)`              |
+| `falsy`        | Matches if the actual value is falsy.                                  | `(falsy)`               |
 | **Numeric**    |                                                                        |                         |
 | `at-least`     | Matches if actual value is greater or equal than the expected value.   | `(at-least value)`      |
 | `at-most`      | Matches if actual value is less or equal than the expected value.      | `(at-most value)`       |
