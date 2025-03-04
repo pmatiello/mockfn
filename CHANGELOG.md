@@ -7,6 +7,8 @@ All notable changes to this project are documented in this file.
 ## 0.4.0 - ????-??-??
 
 - Added collection matchers.
+- Added boolean matchers.
+- Added new numeric matcher: between.
 - Added logical operators for matchers.
 - Removed prefixes from matcher names.
 
