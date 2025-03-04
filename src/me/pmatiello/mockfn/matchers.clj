@@ -61,6 +61,12 @@
   [value]
   (make "at-most" <= value))
 
+(defn between
+  "Returns a matcher that expects a value between lower-bound and upper-bound, inclusive."
+  [lower-bound upper-bound]
+  (make "between" (fn [a [lo up]] (and (>= a lo) (<= a up)))
+        [lower-bound upper-bound] #(str/join " and " %)))
+
 (defn starts-with
   "Returns a matcher that expects a string starting with the provided prefix."
   [prefix]

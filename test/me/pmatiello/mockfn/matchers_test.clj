@@ -78,6 +78,18 @@
     (testing "provides an informative string representation"
       (is (= "｢at-most 2｣" (matchers/description at-most))))))
 
+(deftest between-test
+  (let [between (matchers/between 2 4)]
+    (testing "returns whether actual is between the expected bounds"
+      (is (true? (matchers/matches? between 2)))
+      (is (true? (matchers/matches? between 3)))
+      (is (true? (matchers/matches? between 4)))
+      (is (false? (matchers/matches? between 1)))
+      (is (false? (matchers/matches? between 5))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢between 2 and 4｣" (matchers/description between))))))
+
 (deftest starts-with-test
   (let [starts-with (matchers/starts-with "prefix")]
     (testing "returns whether actual starts with expected prefix"

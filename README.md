@@ -129,6 +129,7 @@ The following matchers are included in `mockfn`:
 | **Numeric**    |                                                                        |                         |
 | `at-least`     | Matches if actual value is greater or equal than the expected value.   | `(at-least value)`      |
 | `at-most`      | Matches if actual value is less or equal than the expected value.      | `(at-most value)`       |
+| `between`      | Matches if actual value is between the lower and upper bounds.         | `(between lower upper)` |
 | **String**     |                                                                        |                         |
 | `starts-with`  | Matches if actual string starts with the expected prefix.              | `(starts-with prefix)`  |
 | `ends-with`    | Matches if actual string ends with the expected suffix.                | `(ends-with suffix)`    |
