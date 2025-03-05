@@ -1,33 +1,31 @@
 (ns me.pmatiello.mockfn.clj-test-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
+            [me.pmatiello.mockfn.fixtures :as f]
             [me.pmatiello.mockfn.matchers :as mfn.m]))
 
 (def tests-run (atom #{}))
-
-(declare one-fn)
-(declare other-fn)
 
 (mfn/deftest deftest-test
   (swap! tests-run conj :deftest))
 
 (mfn/deftest deftest-providing-test
-  (swap! tests-run conj (one-fn))
+  (swap! tests-run conj (f/one-fn))
   (mfn/providing
-    (one-fn) :deftest-providing))
+    (f/one-fn) :deftest-providing))
 
 (mfn/deftest deftest-verifying-test
-  (swap! tests-run conj (one-fn))
+  (swap! tests-run conj (f/one-fn))
   (mfn/verifying
-    (one-fn) :deftest-verifying (mfn.m/exactly 1)))
+    (f/one-fn) :deftest-verifying (mfn.m/exactly 1)))
 
 (mfn/deftest deftest-providing-and-verifying-test
-  (swap! tests-run conj (one-fn))
-  (swap! tests-run conj (other-fn))
+  (swap! tests-run conj (f/one-fn))
+  (swap! tests-run conj (f/other-fn))
   (mfn/providing
-    (one-fn) :deftest-providing-with-verifying)
+    (f/one-fn) :deftest-providing-with-verifying)
   (mfn/verifying
-    (other-fn) :deftest-verifying-with-providing (mfn.m/exactly 1)))
+    (f/other-fn) :deftest-verifying-with-providing (mfn.m/exactly 1)))
 
 (mfn/deftest testing-test
   (mfn/testing "testing"
@@ -35,33 +33,33 @@
 
 (mfn/deftest testing-providing-test
   (mfn/testing "testing-providing"
-    (swap! tests-run conj (one-fn))
+    (swap! tests-run conj (f/one-fn))
     (mfn/providing
-      (one-fn) :testing-providing)))
+      (f/one-fn) :testing-providing)))
 
 (mfn/deftest testing-verifying-test
   (mfn/testing "testing-verifying"
-    (swap! tests-run conj (one-fn))
+    (swap! tests-run conj (f/one-fn))
     (mfn/verifying
-      (one-fn) :testing-verifying (mfn.m/exactly 1))))
+      (f/one-fn) :testing-verifying (mfn.m/exactly 1))))
 
 (mfn/deftest testing-providing-and-verifying-test
   (mfn/testing "testing-providing-and-verifying"
-    (swap! tests-run conj (one-fn))
-    (swap! tests-run conj (other-fn))
+    (swap! tests-run conj (f/one-fn))
+    (swap! tests-run conj (f/other-fn))
     (mfn/providing
-      (one-fn) :testing-providing-with-verifying)
+      (f/one-fn) :testing-providing-with-verifying)
     (mfn/verifying
-      (other-fn) :testing-verifying-with-providing (mfn.m/exactly 1))))
+      (f/other-fn) :testing-verifying-with-providing (mfn.m/exactly 1))))
 
 (mfn/deftest deftest-testing-test
   (mfn/testing "deftest-testing"
-    (swap! tests-run conj (one-fn))
-    (swap! tests-run conj (other-fn))
+    (swap! tests-run conj (f/one-fn))
+    (swap! tests-run conj (f/other-fn))
     (mfn/providing
-      (one-fn) :deftest-testing-pt1))
+      (f/one-fn) :deftest-testing-pt1))
   (mfn/providing
-    (other-fn) :deftest-testing-pt2))
+    (f/other-fn) :deftest-testing-pt2))
 
 (def expected-tests-run
   #{:deftest
