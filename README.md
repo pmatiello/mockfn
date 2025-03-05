@@ -4,6 +4,7 @@ This is a library for mockist test-driven-development in Clojure. It is meant to
 be used alongside a regular testing framework such as `clojure.test`.
 
 [![Clojars Project](https://img.shields.io/clojars/v/me.pmatiello/mockfn.svg)](https://clojars.org/me.pmatiello/mockfn)
+[![Documentation](https://cljdoc.org/badge/me.pmatiello/mockfn)](https://cljdoc.org/d/me.pmatiello/mockfn)
 
 ## Usage
 
