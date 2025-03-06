@@ -27,6 +27,16 @@
   (mfn/verifying
     (f/other-fn) :deftest-verifying-with-providing (mfn.m/exactly 1)))
 
+(mfn/deftest private-fn-providing-test
+  (swap! tests-run conj (#'f/pvt-fn))
+  (mfn/providing
+    (#'f/pvt-fn) :private-fn-providing))
+
+(mfn/deftest private-fn
+  (swap! tests-run conj (#'f/pvt-fn))
+  (mfn/verifying
+    (#'f/pvt-fn) :private-fn-verifying (mfn.m/exactly 1)))
+
 (mfn/deftest testing-test
   (mfn/testing "testing"
     (swap! tests-run conj :testing)))
@@ -64,16 +74,18 @@
 (def expected-tests-run
   #{:deftest
     :deftest-providing
-    :deftest-verifying
     :deftest-providing-with-verifying
+    :deftest-testing-pt1
+    :deftest-testing-pt2
+    :deftest-verifying
     :deftest-verifying-with-providing
+    :private-fn-providing
+    :private-fn-verifying
     :testing
     :testing-providing
-    :testing-verifying
     :testing-providing-with-verifying
-    :testing-verifying-with-providing
-    :deftest-testing-pt1
-    :deftest-testing-pt2})
+    :testing-verifying
+    :testing-verifying-with-providing})
 
 (defn teardown []
   (is (= @tests-run expected-tests-run))
