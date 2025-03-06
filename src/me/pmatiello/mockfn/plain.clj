@@ -1,10 +1,16 @@
 (ns me.pmatiello.mockfn.plain
   (:require [me.pmatiello.mockfn.internal.mock :as mock]))
 
+(defn ^:private fn-sym
+  [func]
+  (cond
+    (symbol? func) func
+    (seq? func) (last func)))
+
 (defn ^:private as-redefs
   [func->definition]
   (->> func->definition
-       (map (fn [[func definition]] [func `(mock/mock ~func ~definition)]))
+       (map (fn [[func definition]] [(fn-sym func) `(mock/mock ~func ~definition)]))
        (apply concat)))
 
 (defn ^:private func->spec
@@ -58,7 +64,9 @@
     (is (= :result (one-fn :argument))))
   ```"
   [bindings & body]
-  (let [specs# (->> bindings (partition 3) func->spec)]
+  (let [specs#  (->> bindings (partition 3) func->spec)
+        un-var# #(if (var? %) (var-get %) %)]
     `(with-redefs ~(as-redefs specs#)
        ~@body
-       (doseq [mock# (keys ~specs#)] (mock/verify mock#)))))
+       (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+         (mock/verify mock#)))))

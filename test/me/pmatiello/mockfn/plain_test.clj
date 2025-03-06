@@ -37,7 +37,12 @@
       [(f/one-fn) :one-fn
        (f/other-fn) :other-fn]
       (is (= :one-fn (f/one-fn)))
-      (is (= :other-fn (f/other-fn))))))
+      (is (= :other-fn (f/other-fn)))))
+
+  (testing "mocks private functions"
+    (plain/providing
+      [(#'f/pvt-fn) :mocked]
+      (is (= :mocked (#'f/pvt-fn))))))
 
 (deftest verifying-test
   (testing "mocks functions without arguments"
@@ -78,4 +83,17 @@
           ExceptionInfo #"Expected call .*"
           (plain/verifying
             [(f/one-fn) :one-fn (matchers/exactly 2)]
-            (is (= :one-fn (f/one-fn))))))))
+            (is (= :one-fn (f/one-fn)))))))
+
+  (testing "mocks private functions"
+    (testing "returns configured values"
+      (plain/verifying
+        [(#'f/pvt-fn) :mocked (matchers/exactly 1)]
+        (is (= :mocked (#'f/pvt-fn)))))
+
+    (testing "validates the call count"
+      (is (thrown-with-msg?
+            ExceptionInfo #"Expected call .*"
+            (plain/verifying
+              [(#'f/pvt-fn) :pvt-fn (matchers/exactly 2)]
+              (is (= :pvt-fn (#'f/pvt-fn)))))))))
