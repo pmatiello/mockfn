@@ -80,6 +80,23 @@ arguments through [matchers](#built-in-matchers).
     (is (= 15 (one-fn 12 18))))))
 ```
 
+#### Mocking private functions
+
+Private functions can be mocked by referring to the `Var` associated with the
+symbol of the mocked function.
+
+```clj
+(testing "providing, private function"
+  (mfn/providing [(#'pvt-fn) :result]
+    (is (= :result (#'pvt-fn)))))
+```
+
+```clj
+(testing "verifying, private function"
+  (mfn/verifying [(#'pvt-fn :argument) :result (mfn.m/exactly 1)]
+    (is (= :result (#'pvt-fn :argument)))))
+```
+
 ### Syntax sugar for clojure.test
 
 Support

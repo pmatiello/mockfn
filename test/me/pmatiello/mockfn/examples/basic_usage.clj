@@ -6,11 +6,16 @@
 
 (def one-fn)
 (def other-fn)
+(def ^:private pvt-fn)
 
 (deftest examples-test
   (testing "providing"
     (mfn/providing [(one-fn) :result]
       (is (= :result (one-fn)))))
+
+  (testing "providing, private function"
+    (mfn/providing [(#'pvt-fn) :result]
+      (is (= :result (#'pvt-fn)))))
 
   (testing "providing - one function, different arguments"
     (mfn/providing [(one-fn :argument-1) :result-1
@@ -27,6 +32,10 @@
   (testing "verifying"
     (mfn/verifying [(one-fn :argument) :result (mfn.m/exactly 1)]
       (is (= :result (one-fn :argument)))))
+
+  (testing "verifying, private function"
+    (mfn/verifying [(#'pvt-fn :argument) :result (mfn.m/exactly 1)]
+      (is (= :result (#'pvt-fn :argument)))))
 
   (testing "argument matchers"
     (mfn/providing [(one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15]
