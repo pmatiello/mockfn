@@ -27,11 +27,14 @@
 
 (defn ^:private return-value-for
   [func spec args]
-  (let [spec* (-> spec :args (for-args args))]
+  (let [spec*   (-> spec :args (for-args args))
+        ret-val (:ret-val spec*)]
     (when (= spec* ::unexpected-call)
       (throw (ex-info (unexpected-call func args) {})))
     (-> spec* :calls (swap! inc))
-    (:ret-val spec*)))
+    (if (-> ret-val meta ::invoke-fn)
+      (apply ret-val args)
+      ret-val)))
 
 (defn mock [func spec]
   "Creates a mock function that returns predefined values when called with

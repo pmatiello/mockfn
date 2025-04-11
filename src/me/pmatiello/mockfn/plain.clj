@@ -70,3 +70,16 @@
        ~@body
        (doseq [mock# (->> ~specs# keys (map ~un-var#))]
          (mock/verify mock#)))))
+
+(defn invoke
+  "Marks a function to be dynamically invoked on mock calls. Matching calls
+  will invoke the function with the received arguments and return the output.
+
+  Example:
+  ```
+  (providing
+    [(one-fn :invoke-fn) (invoke identity)]
+    (is (= :invoke-fn (one-fn :invoke-fn))))
+  ```"
+  [func]
+  (with-meta func {::mock/invoke-fn true}))

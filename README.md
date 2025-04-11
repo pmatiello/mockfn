@@ -97,6 +97,19 @@ symbol of the mocked function.
     (is (= :result (#'pvt-fn :argument)))))
 ```
 
+#### Returning dynamic values
+
+The `invoke` function allows mocks to dynamically invoke a function with the
+received arguments and return the output.
+
+```clj
+(testing "returns dynamic values"
+  (mfn/providing
+    [(one-fn (matchers/any)) (mfn/invoke identity)]
+    (is (= :x (#'f/one-fn :x)))
+    (is (= :y (#'f/one-fn :y)))))
+```
+
 ### Syntax sugar for clojure.test
 
 Support

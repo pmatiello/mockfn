@@ -10,13 +10,17 @@
               :args {[]            {:ret-val :no-args :calls (atom 0)}
                      [:arg1]       {:ret-val :one-arg :calls (atom 0)}
                      [:arg1 :arg2] {:ret-val :two-args :calls (atom 0)}
-                     [:nil]        {:ret-val nil :calls (atom 0)}}}
+                     [:nil]        {:ret-val nil :calls (atom 0)}
+                     [:fn]         {:ret-val identity :calls (atom 0)}
+                     [:invoke-fn]  {:ret-val (with-meta identity {::mock/invoke-fn true}) :calls (atom 0)}}}
         mock (mock/mock f/one-fn spec)]
     (testing "returns to expected calls with configured return values"
       (is (= :no-args (mock)))
       (is (= :one-arg (mock :arg1)))
       (is (= :two-args (mock :arg1 :arg2)))
-      (is (= nil (mock :nil))))
+      (is (= nil (mock :nil)))
+      (is (= identity (mock :fn)))
+      (is (= :invoke-fn (mock :invoke-fn))))
 
     (testing "throws exception when called with unexpected arguments"
       (is (thrown-with-msg?

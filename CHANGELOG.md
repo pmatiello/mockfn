@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## 0.6.0 - Unreleased
+
+- Added support for mocks that invoke functions instead of returning fixed values.
+
 ## 0.5.0 - 2025-03-10
 
 - Added support for mocking private functions.

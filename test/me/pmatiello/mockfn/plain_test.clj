@@ -42,7 +42,13 @@
   (testing "mocks private functions"
     (plain/providing
       [(#'f/pvt-fn) :mocked]
-      (is (= :mocked (#'f/pvt-fn))))))
+      (is (= :mocked (#'f/pvt-fn)))))
+
+  (testing "supports dynamic return values"
+    (plain/providing
+      [(f/one-fn (matchers/any)) (plain/invoke identity)]
+      (is (= :x (f/one-fn :x)))
+      (is (= :y (f/one-fn :y))))))
 
 (deftest verifying-test
   (testing "mocks functions without arguments"
@@ -96,4 +102,10 @@
             ExceptionInfo #"Expected call .*"
             (plain/verifying
               [(#'f/pvt-fn) :pvt-fn (matchers/exactly 2)]
-              (is (= :pvt-fn (#'f/pvt-fn)))))))))
+              (is (= :pvt-fn (#'f/pvt-fn))))))))
+
+  (testing "supports dynamic return values"
+    (plain/verifying
+      [(f/one-fn (matchers/any)) (plain/invoke identity) (matchers/exactly 2)]
+      (is (= :x (f/one-fn :x)))
+      (is (= :y (f/one-fn :y))))))

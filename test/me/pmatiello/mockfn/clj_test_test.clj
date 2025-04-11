@@ -32,7 +32,7 @@
   (mfn/providing
     (#'f/pvt-fn) :private-fn-providing))
 
-(mfn/deftest private-fn
+(mfn/deftest private-fn-test
   (swap! tests-run conj (#'f/pvt-fn))
   (mfn/verifying
     (#'f/pvt-fn) :private-fn-verifying (mfn.m/exactly 1)))
@@ -71,6 +71,11 @@
   (mfn/providing
     (f/other-fn) :deftest-testing-pt2))
 
+(mfn/deftest invoke-fn-test
+  (swap! tests-run conj (f/one-fn :invoke-fn))
+  (mfn/providing
+    (f/one-fn :invoke-fn) (mfn/invoke identity)))
+
 (def expected-tests-run
   #{:deftest
     :deftest-providing
@@ -79,6 +84,7 @@
     :deftest-testing-pt2
     :deftest-verifying
     :deftest-verifying-with-providing
+    :invoke-fn
     :private-fn-providing
     :private-fn-verifying
     :testing
