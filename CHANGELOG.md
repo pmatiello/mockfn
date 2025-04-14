@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## 0.6.0 - Unreleased
+## 0.6.0 - 2025-04-14
 
 - Added support for mocks that invoke functions instead of returning fixed values.
 - Changed verify so that the evaluated body is returned it (as providing does). 
