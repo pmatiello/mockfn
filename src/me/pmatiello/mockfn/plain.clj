@@ -67,9 +67,10 @@
   (let [specs#  (->> bindings (partition 3) func->spec)
         un-var# #(if (var? %) (var-get %) %)]
     `(with-redefs ~(as-redefs specs#)
-       ~@body
-       (doseq [mock# (->> ~specs# keys (map ~un-var#))]
-         (mock/verify mock#)))))
+       (let [result# (do ~@body)]
+         (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+           (mock/verify mock#))
+         result#))))
 
 (defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls

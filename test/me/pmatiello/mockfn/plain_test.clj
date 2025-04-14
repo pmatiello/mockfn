@@ -48,7 +48,11 @@
     (plain/providing
       [(f/one-fn (matchers/any)) (plain/invoke identity)]
       (is (= :x (f/one-fn :x)))
-      (is (= :y (f/one-fn :y))))))
+      (is (= :y (f/one-fn :y)))))
+
+  (testing "returns the evaluated body"
+    (is (= :result
+           (plain/providing [(f/one-fn) :result] (f/one-fn))))))
 
 (deftest verifying-test
   (testing "mocks functions without arguments"
@@ -108,4 +112,8 @@
     (plain/verifying
       [(f/one-fn (matchers/any)) (plain/invoke identity) (matchers/exactly 2)]
       (is (= :x (f/one-fn :x)))
-      (is (= :y (f/one-fn :y))))))
+      (is (= :y (f/one-fn :y)))))
+
+  (testing "returns the evaluated body"
+    (is (= :result
+           (plain/verifying [(f/one-fn) :result (matchers/exactly 1)] (f/one-fn))))))
