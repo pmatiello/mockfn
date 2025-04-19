@@ -79,7 +79,7 @@
   `(test/testing ~string
      ~(with-mocking body)))
 
-(def invoke
+(defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls
   will invoke the function with the received arguments and return the output.
 
@@ -90,4 +90,5 @@
     (providing
       (one-fn :invoke-fn) (invoke identity)))
   ```"
-  plain/invoke)
+  [func]
+  (plain/invoke func))
