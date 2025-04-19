@@ -50,6 +50,12 @@
       (is (= :x (f/one-fn :x)))
       (is (= :y (f/one-fn :y)))))
 
+  (testing "supports calling original implementation"
+    (plain/providing
+      [(f/same-val (matchers/any)) (plain/invoke f/same-val)]
+      (is (= :x (f/same-val :x)))
+      (is (= :y (f/same-val :y)))))
+
   (testing "returns the evaluated body"
     (is (= :result
            (plain/providing [(f/one-fn) :result] (f/one-fn))))))
@@ -113,6 +119,12 @@
       [(f/one-fn (matchers/any)) (plain/invoke identity) (matchers/exactly 2)]
       (is (= :x (f/one-fn :x)))
       (is (= :y (f/one-fn :y)))))
+
+  (testing "supports calling original implementation"
+    (plain/verifying
+      [(f/same-val (matchers/any)) (plain/invoke f/same-val) (matchers/exactly 2)]
+      (is (= :x (f/same-val :x)))
+      (is (= :y (f/same-val :y)))))
 
   (testing "returns the evaluated body"
     (is (= :result

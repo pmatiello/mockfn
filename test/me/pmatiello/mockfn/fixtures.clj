@@ -3,3 +3,5 @@
 (declare one-fn)
 (declare other-fn)
 (declare ^:private pvt-fn)
+
+(defn same-val [x] x)

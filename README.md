@@ -110,6 +110,18 @@ received arguments and return the output.
     (is (= :y (#'f/one-fn :y)))))
 ```
 
+The same approach can be used to invoke the original implementation to test
+whether a function has been invoked as expected without overriding its
+implementation:
+
+```clj
+(testing "invokes the original implementation"
+  (plain/verifying
+    [(f/one-fn (matchers/any)) (plain/invoke f/one-fn) (matchers/exactly 2)]
+    (is (= :x (f/one-fn :x)))
+    (is (= :y (f/one-fn :y)))))
+```
+
 ### Syntax sugar for clojure.test
 
 Support
