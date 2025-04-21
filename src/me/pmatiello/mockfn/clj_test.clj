@@ -92,3 +92,19 @@
   ```"
   [func]
   (plain/invoke func))
+
+(defn raise
+  "Creates a mock behavior that throws the given exception when the mock is called.
+
+  This can be used to simulate error scenarios in tests by configuring a mock
+  to throw a specific exception.
+
+  Example:
+  ```
+  (deftest raise-test
+    (is (thrown? ExceptionInfo (f/one-fn)))
+    (providing
+      (f/one-fn) (raise (ex-info \"error!\" {}))))
+  ```"
+  [exception]
+  (plain/raise exception))

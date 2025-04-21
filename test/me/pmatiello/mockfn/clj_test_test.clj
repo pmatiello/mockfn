@@ -2,7 +2,8 @@
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.fixtures :as f]
-            [me.pmatiello.mockfn.matchers :as mfn.m]))
+            [me.pmatiello.mockfn.matchers :as mfn.m])
+  (:import (clojure.lang ExceptionInfo)))
 
 (def tests-run (atom #{}))
 
@@ -76,6 +77,12 @@
   (mfn/providing
     (f/one-fn :invoke-fn) (mfn/invoke identity)))
 
+(mfn/deftest raise-test
+  (is (thrown? ExceptionInfo (f/one-fn)))
+  (swap! tests-run conj :raise)
+  (mfn/providing
+    (f/one-fn) (mfn/raise (ex-info "error!" {}))))
+
 (def expected-tests-run
   #{:deftest
     :deftest-providing
@@ -87,6 +94,7 @@
     :invoke-fn
     :private-fn-providing
     :private-fn-verifying
+    :raise
     :testing
     :testing-providing
     :testing-providing-with-verifying

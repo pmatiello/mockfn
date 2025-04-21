@@ -84,3 +84,18 @@
   ```"
   [func]
   (with-meta func {::mock/invoke-fn true}))
+
+(defn raise
+  "Creates a mock behavior that throws the given exception when the mock is called.
+
+  This can be used to simulate error scenarios in tests by configuring a mock
+  to throw a specific exception.
+
+  Example:
+  ```
+  (providing
+    [(one-fn) (raise (ex-info \"error!\" {}))]
+    (is (thrown-with-msg? ExceptionInfo #\"error!\" (one-fn))))
+  ```"
+  [exception]
+  (invoke (fn [& _] (throw exception))))

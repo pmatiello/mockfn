@@ -7,6 +7,7 @@ All notable changes to this project are documented in this file.
 ## 0.7.0 - Unreleased
 
 - Added explicit support for mocks that invoke the original implementation.
+- Added support for mocks that throw exceptions when invoked.
 
 ## 0.6.0 - 2025-04-14
 

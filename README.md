@@ -116,10 +116,22 @@ implementation:
 
 ```clj
 (testing "invokes the original implementation"
-  (plain/verifying
-    [(one-fn (matchers/any)) (plain/invoke one-fn) (matchers/exactly 2)]
+  (mfn/verifying
+    [(one-fn (matchers/any)) (mfn/invoke one-fn) (matchers/exactly 2)]
     (is (= :x (one-fn :x)))
     (is (= :y (one-fn :y)))))
+```
+
+#### Throwing exceptions
+
+Mocks can be configured to throw exceptions when invoked using the `raise`
+function. This can be used to simulate error scenarios in tests.
+
+```clj
+(testing "throws an exception"
+  (mfn/providing 
+    [(one-fn) (mfn/raise (ex-info "error!" {}))]
+    (is (thrown-with-msg? ExceptionInfo #"error!" (one-fn)))))
 ```
 
 ### Syntax sugar for clojure.test

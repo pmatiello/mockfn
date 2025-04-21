@@ -50,6 +50,13 @@
       (is (= :x (f/one-fn :x)))
       (is (= :y (f/one-fn :y)))))
 
+  (testing "supports throwing exceptions"
+    (plain/providing
+      [(f/one-fn (matchers/any)) (plain/raise (ex-info "error!" {}))]
+      (is (thrown-with-msg?
+            ExceptionInfo #"error!"
+            (f/one-fn :argument)))))
+
   (testing "supports calling original implementation"
     (plain/providing
       [(f/same-val (matchers/any)) (plain/invoke f/same-val)]
@@ -119,6 +126,13 @@
       [(f/one-fn (matchers/any)) (plain/invoke identity) (matchers/exactly 2)]
       (is (= :x (f/one-fn :x)))
       (is (= :y (f/one-fn :y)))))
+
+  (testing "supports throwing exceptions"
+    (plain/verifying
+      [(f/one-fn (matchers/any)) (plain/raise (ex-info "error!" {})) (matchers/exactly 1)]
+      (is (thrown-with-msg?
+            ExceptionInfo #"error!"
+            (f/one-fn :argument)))))
 
   (testing "supports calling original implementation"
     (plain/verifying
