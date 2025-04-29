@@ -102,9 +102,9 @@
   Example:
   ```
   (deftest raise-test
-    (is (thrown? ExceptionInfo (f/one-fn)))
+    (is (thrown? ExceptionInfo (one-fn)))
     (providing
-      (f/one-fn) (raise (ex-info \"error!\" {}))))
+      (one-fn) (raise (ex-info \"error!\" {}))))
   ```"
   [exception]
   (plain/raise exception))
