@@ -134,7 +134,7 @@ function. This can be used to simulate error scenarios in tests.
     (is (thrown-with-msg? ExceptionInfo #"error!" (one-fn)))))
 ```
 
-#### Returning values in order
+#### Returning different values at each invocation
 
 The `me.pmatiello.mockfn.xtras/return-in-order` function allows a mock to return
 a sequence of values in the order they are called. After the last value, it will
