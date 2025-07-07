@@ -264,7 +264,7 @@ To clean a previous build, run:
 ### Releasing
 
 Before releasing, update the library version in the [build.clj](./build.clj)
-file.
+file and the release date in the changelog.
 
 Make a commit and generate a new tag:
 
@@ -273,6 +273,14 @@ Make a commit and generate a new tag:
 % git tag -a "v${VERSION}" -m "Release: ${VERSION}"
 % git push
 % git push origin "v${VERSION}" 
+```
+
+Run all tests and build the release artifact:
+
+```
+% clj -X:test
+% clj -T:build clean
+% clj -T:build jar
 ```
 
 To release to [clojars](https://clojars.org), run:
