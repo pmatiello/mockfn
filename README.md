@@ -134,6 +134,19 @@ function. This can be used to simulate error scenarios in tests.
     (is (thrown-with-msg? ExceptionInfo #"error!" (one-fn)))))
 ```
 
+#### Returning values in order
+
+The `me.pmatiello.mockfn.xtras/return-in-order` function allows a mock to return
+a sequence of values in the order they are called. After the last value, it will
+continue from the first value in the sequence.
+
+```clj
+(testing "returns values in order"
+  (mfn/providing
+    [(one-fn) (xtras/return-in-order [:a :b :c])]
+    (is (= [:a :b :c :a :b] (repeatedly 5 one-fn))))
+```
+
 ### Syntax sugar for clojure.test
 
 Support
