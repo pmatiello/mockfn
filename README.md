@@ -8,12 +8,12 @@ be used alongside a regular testing framework such as `clojure.test`.
 
 ## Usage
 
-This library is designed to be independent from any testing framework. All
-supported features are described below in
-the [Framework-agnostic usage](#framework-agnostic-usage) section. For
-convenience, syntactic sugar
-for [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html) is
-also available and described in the
+This library is designed to be compatible with any testing framework. All
+supported features are described below in the
+[Framework-agnostic usage](#framework-agnostic-usage) section. For convenience,
+special support for
+[clojure.test](https://clojure.github.io/clojure/clojure.test-api.html) is also
+available and described in the
 [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest) section.
 
 ### Framework-agnostic usage
