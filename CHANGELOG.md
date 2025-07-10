@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## Unreleased
+
+- Improved documentation.
+
 ## 0.8.0 - 2025-07-07
 
 - Added support for returning different return values at each mock invocation.
