@@ -1,6 +1,6 @@
 # me.pmatiello/mockfn
 
-This is a library for mockist test-driven-development in Clojure. It is meant to
+This is a library for mockist test-driven development in Clojure. It is meant to
 be used alongside a regular testing framework such as `clojure.test`.
 
 [![Clojars Project](https://img.shields.io/clojars/v/me.pmatiello/mockfn.svg)](https://clojars.org/me.pmatiello/mockfn)
@@ -8,7 +8,13 @@ be used alongside a regular testing framework such as `clojure.test`.
 
 ## Usage
 
-Instructions for using this library.
+This library is designed to be independent from any testing framework. All
+supported features are described below in
+the [Framework-agnostic usage](#framework-agnostic-usage) section. For
+convenience, syntactic sugar
+for [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html) is
+also available and described in the
+[Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest) section.
 
 ### Framework-agnostic usage
 
@@ -20,7 +26,7 @@ In order to use `mockfn`, it's enough to require it in a test namespace.
           ...)
 ```
 
-This will bring `mockfn` features in scope for this namespace.
+This will bring `mockfn` features into scope for the namespace.
 
 #### Stubbing Function Calls
 
@@ -147,7 +153,7 @@ continue from the first value in the sequence.
     (is (= [:a :b :c :a :b] (repeatedly 5 one-fn))))
 ```
 
-### Syntax sugar for clojure.test
+### Syntactic sugar for clojure.test
 
 Support
 for [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html)
@@ -220,7 +226,7 @@ namespace.
 ## Quirks and Limitations
 
 While `providing` and `verifying` calls can be nested, all required stubs and
-expectations for a single mock must be defined in the same call. Mocking a
+expectations for a single mock must be defined within the same call. Mocking a
 function in an inner `providing` or `verifying` call will override any
 definitions made in the outer scope for the tests being run in the inner scope.
 
@@ -293,7 +299,7 @@ To release to [clojars](https://clojars.org), run:
       -DpomFile=target/classes/META-INF/maven/me.pmatiello/mockfn/pom.xml
 ```
 
-Notice that this step requires clojars to be configured as a server in the local
+Note that this step requires clojars to be configured as a server in the local
 `~/.m2/settings.xml` file.
 
 ## Contribution Policy
