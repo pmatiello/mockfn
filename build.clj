@@ -6,6 +6,7 @@
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
 (def jar-file (format "target/%s-%s.jar" (name lib) version))
+(def description "A mocking library for Clojure.")
 
 (defn clean [_]
       (b/delete {:path "target"}))
@@ -23,7 +24,8 @@
                     :pom-data  [[:licenses
                                  [:license
                                   [:name "Eclipse Public License 2.0"]
-                                  [:url "https://www.eclipse.org/legal/epl-2.0/"]]]]})
+                                  [:url "https://www.eclipse.org/legal/epl-2.0/"]]]
+                                [:description description]]})
       (b/copy-dir {:src-dirs   ["src"]
                    :target-dir class-dir})
       (b/jar {:class-dir class-dir
