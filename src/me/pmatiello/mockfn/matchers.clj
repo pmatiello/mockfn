@@ -3,7 +3,7 @@
   (:require [clojure.set :as set]
             [clojure.string :as str]))
 
-(defrecord Matcher [name match-fn expected args-desc-fn])
+(defrecord Matcher [name match-fn expected args-desc-fn expand-fn])
 
 (defn matches?
   "Returns whether the matcher accepts the actual value."
@@ -21,10 +21,19 @@
          (str/join " ")
          (format "｢%s｣"))))
 
+(defn expand
+  "Expands a matcher using its expand-fn."
+  [matcher args]
+  ((:expand-fn matcher) matcher args))
+
 (defn make
   "Produces a new matcher instance."
-  ([name match-fn expected] (make name match-fn expected identity))
-  ([name match-fn expected args-desc-fn] (->Matcher name match-fn expected args-desc-fn)))
+  ([name match-fn expected]
+   (make name match-fn expected identity))
+  ([name match-fn expected args-desc-fn]
+   (make name match-fn expected args-desc-fn (fn [m _a] [m])))
+  ([name match-fn expected args-desc-fn expand-fn]
+   (->Matcher name match-fn expected args-desc-fn expand-fn)))
 
 (defn any
   "Returns a matcher that expects any value."
@@ -125,3 +134,9 @@
   "Returns a matcher that expects a value matching any of the provided matchers."
   [& matchers]
   (make "or>" (fn [a e] (boolean (some #(matches? % a) e))) matchers description*))
+
+(defn *>
+  "Returns a matcher that matches a sequence of arguments against the provided matcher."
+  [matcher]
+  (make "*>" (fn [_ _] (throw (ex-info "Invalid operation." {}))) matcher description
+        (fn [ma args] (repeat (count args) (:expected ma)))))

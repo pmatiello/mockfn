@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file.
 
 ## Unreleased
 
+- Added support for matching a single matcher against an all remaining call
+  arguments.
 - Improved documentation.
 
 ## 0.8.0 - 2025-07-07

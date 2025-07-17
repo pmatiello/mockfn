@@ -1,7 +1,8 @@
 (ns me.pmatiello.mockfn.integration-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
-            [me.pmatiello.mockfn.matchers :as mfn.m]))
+            [me.pmatiello.mockfn.matchers :as mfn.m])
+  (:import (clojure.lang Symbol)))
 
 (def power-available?)
 (def turn-on-lightbulb)
@@ -40,4 +41,10 @@
         (turn-off-lightbulb 'lightbulb) :dark (mfn.m/exactly 1)))
 
     (mfn/providing
-      (power-available? 'electricity) false)))
+      (power-available? 'electricity) false))
+
+  (mfn/testing "when it's irrelevant"
+    (mfn/testing "acknowledges that the operation was executed"
+      (is (= :ack (light-switch 'state 'lightbulb 'electricity)))
+      (mfn/verifying
+        (light-switch 'state (mfn.m/*> (mfn.m/a Symbol))) :ack (mfn.m/exactly 1)))))

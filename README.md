@@ -219,6 +219,7 @@ The following matchers are included in `mockfn`:
 | `not>`         | Matches if the actual value does not match the provided matcher.       | `(not> matcher)`        |
 | `and>`         | Matches if the actual value matches all provided matchers.             | `(and> m1 m2 ...)`      |
 | `or>`          | Matches if the actual value matches any of the provided matchers.      | `(or> m1 m2 ...)`       |
+| `*>`           | Matches if the the provided matcher matches all remaining arguments.   | `(*> matcher)`          |
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.

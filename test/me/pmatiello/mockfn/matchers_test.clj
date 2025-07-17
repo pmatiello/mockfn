@@ -1,7 +1,7 @@
 (ns me.pmatiello.mockfn.matchers-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.matchers :as matchers])
-  (:import (clojure.lang Keyword)))
+  (:import (clojure.lang ExceptionInfo Keyword)))
 
 (deftest any-test
   (let [any (matchers/any)]
@@ -212,3 +212,13 @@
 
     (testing "provides an informative string representation"
       (is (= "｢or> ｢exactly 2｣ ｢exactly 3｣｣" (matchers/description or>))))))
+
+(deftest *>-test
+  (let [ma (matchers/exactly 1)
+        *> (matchers/*> ma)]
+    (testing "throws exception when matching directly"
+      (is (thrown? ExceptionInfo (matchers/matches? *> :anything))))
+    (testing "provides an informative string representation"
+      (is (= "｢*> ｢exactly 1｣｣" (matchers/description *>))))
+    (testing "expands matcher to expected values for each argument"
+      (is (= [ma ma ma] (matchers/expand *> [1 2 3]))))))

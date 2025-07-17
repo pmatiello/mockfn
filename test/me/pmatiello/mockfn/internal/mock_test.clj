@@ -6,14 +6,17 @@
   (:import (clojure.lang ExceptionInfo Keyword)))
 
 (deftest mock-test
-  (let [spec {:fn   'f/one-fn
-              :args {[]            {:ret-val :no-args :calls (atom 0)}
-                     [:arg1]       {:ret-val :one-arg :calls (atom 0)}
-                     [:arg1 :arg2] {:ret-val :two-args :calls (atom 0)}
-                     [:nil]        {:ret-val nil :calls (atom 0)}
-                     [:fn]         {:ret-val identity :calls (atom 0)}
-                     [:invoke-fn]  {:ret-val (with-meta identity {::mock/invoke-fn true}) :calls (atom 0)}}}
-        mock (mock/mock f/one-fn spec)]
+  (let [spec  {:fn   'f/one-fn
+               :args {[]            {:ret-val :no-args :calls (atom 0)}
+                      [:arg1]       {:ret-val :one-arg :calls (atom 0)}
+                      [:arg1 :arg2] {:ret-val :two-args :calls (atom 0)}
+                      [:nil]        {:ret-val nil :calls (atom 0)}
+                      [:fn]         {:ret-val identity :calls (atom 0)}
+                      [:invoke-fn]  {:ret-val (with-meta identity {::mock/invoke-fn true}) :calls (atom 0)}}}
+        mock  (mock/mock f/one-fn spec)
+        spec2 {:fn   'f/other-fn
+               :args {[:arg] {:ret-val :one-arg :calls (atom 0)}}}
+        mock2 (mock/mock f/other-fn spec2)]
     (testing "returns to expected calls with configured return values"
       (is (= :no-args (mock)))
       (is (= :one-arg (mock :arg1)))
@@ -25,7 +28,13 @@
     (testing "throws exception when called with unexpected arguments"
       (is (thrown-with-msg?
             ExceptionInfo #"Unexpected call to Unbound: #'me.pmatiello.mockfn.fixtures/one-fn with args \[:unexpected\]"
-            (mock :unexpected))))))
+            (mock :unexpected)))
+      (is (thrown-with-msg?
+            ExceptionInfo #"Unexpected call to Unbound: #'me.pmatiello.mockfn.fixtures/other-fn with args \[\]"
+            (mock2)))
+      (is (thrown-with-msg?
+            ExceptionInfo #"Unexpected call to Unbound: #'me.pmatiello.mockfn.fixtures/other-fn with args \[:arg :unexpected\]"
+            (mock2 :arg :unexpected))))))
 
 (deftest mock-call-count-test
   (let [spec {:fn   'f/one-fn
@@ -81,3 +90,17 @@
       (is (thrown-with-msg?
             ExceptionInfo #"Expected call \(f/one-fn ｢exactly :x｣\) ｢exactly 1｣ times, received 0."
             (mock/verify mock))))))
+
+(deftest mock-variadic-matcher-test
+  (let [match-x* (matchers/*> (matchers/exactly :x))
+        spec     {:fn   'f/one-fn
+                  :args {[match-x*] {:ret-val :ok :calls (atom 0)}}}
+        mock     (mock/mock f/one-fn spec)]
+    (testing "matches any number of arguments with variadic matcher"
+      (is (= :ok (mock)))
+      (is (= :ok (mock :x)))
+      (is (= :ok (mock :x :x :x))))
+    (testing "counts calls for variadic matcher"
+      (is (= 3 (-> mock meta :args (get [match-x*]) :calls deref))))
+    (testing "throws exception when called with unexpected arguments"
+      (is (thrown? ExceptionInfo (mock :x :y :z))))))
