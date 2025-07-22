@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file.
 
 ## Unreleased
 
-- Added support for matching a single matcher against an all remaining call
+- Added support for matching a single matcher against all remaining call
   arguments.
 - Improved documentation.
 
