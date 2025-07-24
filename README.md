@@ -195,7 +195,7 @@ The following matchers are included in `mockfn`:
 | Matcher        | Description                                                            | Usage                   |
 |----------------|------------------------------------------------------------------------|-------------------------|
 | **Generic**    |                                                                        |                         |
-| `any`          | Always matches.                                                        | `(any)`                 |
+| `any`          | Matches any value.                                                     | `(any)`                 |
 | `a`            | Matches if actual value is an instance of the expected type.           | `(a type)`              |
 | `exactly`      | Matches if actual value is equal to the expected value.                | `(exactly value)`       |
 | `empty`        | Matches if the actual value is empty.                                  | `(empty)`               |
