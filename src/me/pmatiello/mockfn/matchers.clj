@@ -1,5 +1,5 @@
 (ns me.pmatiello.mockfn.matchers
-  (:refer-clojure :exclude [empty])
+  (:refer-clojure :exclude [empty some])
   (:require [clojure.set :as set]
             [clojure.string :as str]))
 
@@ -50,15 +50,25 @@
   [value]
   (make "exactly" = value))
 
-(defn empty
-  "Returns a matcher that expects an empty value."
-  []
-  (make "empty" (fn [a _] (empty? a)) nil))
-
 (defn pred
   "Returns a matcher that expects a value satisfying the provided predicate."
   [pred-fn]
   (make "pred" #(%2 %1) pred-fn #(-> % class pr-str)))
+
+(defn some
+  "Returns a matcher that expects a non-nil value."
+  []
+  (make "some" (fn [a _] (some? a)) nil))
+
+(defn null
+  "Returns a matcher that expects a nil value."
+  []
+  (make "null" (fn [a _] (nil? a)) nil))
+
+(defn empty
+  "Returns a matcher that expects an empty value."
+  []
+  (make "empty" (fn [a _] (empty? a)) nil))
 
 (defn truthy
   "Returns a matcher that expects a truthy value."
@@ -133,7 +143,7 @@
 (defn or>
   "Returns a matcher that expects a value matching any of the provided matchers."
   [& matchers]
-  (make "or>" (fn [a e] (boolean (some #(matches? % a) e))) matchers description*))
+  (make "or>" (fn [a e] (boolean (clojure.core/some #(matches? % a) e))) matchers description*))
 
 (defn *>
   "Returns a matcher that matches a sequence of arguments against the provided matcher."

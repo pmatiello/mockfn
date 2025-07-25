@@ -31,6 +31,37 @@
     (testing "provides an informative string representation"
       (is (= "｢exactly 1｣" (matchers/description exactly))))))
 
+(deftest pred-test
+  (let [pred (matchers/pred even?)]
+    (testing "matches actual satisfying the predicate"
+      (is (true? (matchers/matches? pred 2)))
+      (is (false? (matchers/matches? pred 3))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
+
+(deftest some-test
+  (let [some (matchers/some)]
+    (testing "returns whether actual is not nil"
+      (is (true? (matchers/matches? some 1)))
+      (is (true? (matchers/matches? some false)))
+      (is (true? (matchers/matches? some "")))
+      (is (false? (matchers/matches? some nil))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢some｣" (matchers/description some))))))
+
+(deftest null-test
+  (let [null (matchers/null)]
+    (testing "returns whether actual is nil"
+      (is (true? (matchers/matches? null nil)))
+      (is (false? (matchers/matches? null 0)))
+      (is (false? (matchers/matches? null "")))
+      (is (false? (matchers/matches? null []))))
+
+    (testing "provides an informative string representation"
+      (is (= "｢null｣" (matchers/description null))))))
+
 (deftest empty-test
   (let [empty (matchers/empty)]
     (testing "returns whether actual is an empty collection"
@@ -48,15 +79,6 @@
 
     (testing "provides an informative string representation"
       (is (= "｢empty｣" (matchers/description empty))))))
-
-(deftest pred-test
-  (let [pred (matchers/pred even?)]
-    (testing "matches actual satisfying the predicate"
-      (is (true? (matchers/matches? pred 2)))
-      (is (false? (matchers/matches? pred 3))))
-
-    (testing "provides an informative string representation"
-      (is (= "｢pred clojure.core$even_QMARK_｣" (matchers/description pred))))))
 
 (deftest truthy-test
   (let [truthy (matchers/truthy)]

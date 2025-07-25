@@ -198,8 +198,11 @@ The following matchers are included in `mockfn`:
 | `any`          | Matches any value.                                                     | `(any)`                 |
 | `a`            | Matches if actual value is an instance of the expected type.           | `(a type)`              |
 | `exactly`      | Matches if actual value is equal to the expected value.                | `(exactly value)`       |
-| `empty`        | Matches if the actual value is empty.                                  | `(empty)`               |
 | `pred`         | Matches if the actual value satisfies the provided predicate function. | `(pred pred-fn)`        |
+| **Presence**   |                                                                        |                         |
+| `some`         | Matches if the actual value is not nil.                                | `(some)`                |
+| `null`         | Matches if the actual value is nil.                                    | `(null)`                |
+| `empty`        | Matches if the actual value is empty (collection, string, etc).        | `(empty)`               |
 | **Boolean**    |                                                                        |                         |
 | `truthy`       | Matches if the actual value is truthy.                                 | `(truthy)`              |
 | `falsy`        | Matches if the actual value is falsy.                                  | `(falsy)`               |

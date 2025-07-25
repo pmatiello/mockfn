@@ -8,6 +8,7 @@ All notable changes to this project are documented in this file.
 
 - Added support for matching a single matcher against all remaining call
   arguments.
+- Added presence matchers: some, null.
 - Improved documentation.
 
 ## 0.8.0 - 2025-07-07
