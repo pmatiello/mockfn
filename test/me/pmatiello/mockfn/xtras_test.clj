@@ -1,7 +1,6 @@
 (ns me.pmatiello.mockfn.xtras-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
-            [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.fixtures :as f]
             [me.pmatiello.mockfn.plain :as plain]
             [me.pmatiello.mockfn.xtras :as xtras]))
