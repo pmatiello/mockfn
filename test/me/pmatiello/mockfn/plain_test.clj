@@ -32,6 +32,11 @@
             ExceptionInfo #"Unexpected call"
             (f/one-fn "unexpected")))))
 
+  (testing "mocks functions with collection-valued arguments"
+    (plain/providing
+      [(f/one-fn [1 2]) :mocked]
+      (is (= :mocked (f/one-fn [1 2])))))
+
   (testing "mocks multiple functions at once"
     (plain/providing
       [(f/one-fn) :one-fn
@@ -93,6 +98,11 @@
       (is (thrown-with-msg?
             ExceptionInfo #"Unexpected call"
             (f/one-fn "unexpected")))))
+
+  (testing "mocks functions with collection-valued arguments"
+    (plain/verifying
+      [(f/one-fn [1 2]) :mocked (matchers/exactly 1)]
+      (is (= :mocked (f/one-fn [1 2])))))
 
   (testing "mocks multiple functions at once"
     (plain/verifying

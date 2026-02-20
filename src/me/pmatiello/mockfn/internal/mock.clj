@@ -13,13 +13,13 @@
   [expected args]
   (if (instance? Matcher expected)
     (matchers/expand expected args)
-    expected))
+    [expected]))
 
 (defn ^:private matches-args?
   [expected args]
   (let [args*             (-> (map #(subvec args %) (range (count args)))
                               (concat (repeat [])))
-        expected*         (->> args* (map expand expected) flatten)
+        expected*         (->> args* (map expand expected) (mapcat identity))
         arity-matches?    (= (count expected*) (count args))
         each-arg-matches? (every? matches-arg? (map vector expected* args))]
     (and arity-matches? each-arg-matches? expected)))
