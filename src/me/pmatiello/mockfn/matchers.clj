@@ -104,17 +104,17 @@
 (defn starts-with
   "Returns a matcher that expects a string starting with the provided prefix."
   [prefix]
-  (make "starts-with" #(str/starts-with? %1 %2) prefix pr-str))
+  (make "starts-with" #(and (string? %1) (string? %2) (str/starts-with? %1 %2)) prefix pr-str))
 
 (defn ends-with
   "Returns a matcher that expects a string ending with the provided suffix."
   [suffix]
-  (make "ends-with" #(str/ends-with? %1 %2) suffix pr-str))
+  (make "ends-with" #(and (string? %1) (string? %2) (str/ends-with? %1 %2)) suffix pr-str))
 
 (defn includes
   "Returns a matcher that expects a string containing the provided substring."
   [substring]
-  (make "includes" #(str/includes? %1 %2) substring pr-str))
+  (make "includes" #(and (string? %1) (string? %2) (str/includes? %1 %2)) substring pr-str))
 
 (defn regex
   "Returns a matcher that expects a string matching the provided regular expression."
