@@ -83,12 +83,12 @@
 (defn at-least
   "Returns a matcher that expects a value greater than or equal to the argument."
   [value]
-  (make "at-least" >= value))
+  (make "at-least" (fn [a e] (and (number? a) (number? e) (>= a e))) value))
 
 (defn at-most
   "Returns a matcher that expects a value less than or equal to the argument."
   [value]
-  (make "at-most" <= value))
+  (make "at-most" (fn [a e] (and (number? a) (number? e) (<= a e))) value))
 
 (defn between
   "Returns a matcher that expects a value between lower-bound and upper-bound, inclusive."

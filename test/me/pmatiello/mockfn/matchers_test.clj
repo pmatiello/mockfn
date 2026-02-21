@@ -110,7 +110,8 @@
     (testing "returns whether actual is at least equal to expected"
       (is (true? (matchers/matches? at-least 2)))
       (is (true? (matchers/matches? at-least 3)))
-      (is (false? (matchers/matches? at-least 1))))
+      (is (false? (matchers/matches? at-least 1)))
+      (is (false? (matchers/matches? at-least :x))))
 
     (testing "provides an informative string representation"
       (is (= "｢at-least 2｣" (matchers/description at-least))))))
@@ -120,7 +121,8 @@
     (testing "returns whether actual is at most equal to expected"
       (is (true? (matchers/matches? at-most 1)))
       (is (true? (matchers/matches? at-most 2)))
-      (is (false? (matchers/matches? at-most 3))))
+      (is (false? (matchers/matches? at-most 3)))
+      (is (false? (matchers/matches? at-most :x))))
 
     (testing "provides an informative string representation"
       (is (= "｢at-most 2｣" (matchers/description at-most))))))
