@@ -174,7 +174,8 @@
   (let [regex (matchers/regex #"^prefix.*suffix$")]
     (testing "returns whether actual matches the expected regular expression"
       (is (true? (matchers/matches? regex "prefix-middle-suffix")))
-      (is (false? (matchers/matches? regex "no-match"))))
+      (is (false? (matchers/matches? regex "no-match")))
+      (is (false? (matchers/matches? regex 123))))
 
     (testing "provides an informative string representation"
       (is (= "｢regex #\"^prefix.*suffix$\"｣" (matchers/description regex))))))

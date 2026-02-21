@@ -119,7 +119,10 @@
 (defn regex
   "Returns a matcher that expects a string matching the provided regular expression."
   [regex]
-  (make "regex" #(some? (re-matches %2 %1)) regex pr-str))
+  (make "regex" #(and (instance? java.util.regex.Pattern %2)
+                      (string? %1)
+                      (some? (re-matches %2 %1)))
+        regex pr-str))
 
 (defn contains-all
   "Returns a matcher that expects a collection containing all the provided values."
