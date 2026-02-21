@@ -128,8 +128,7 @@
   "Returns a matcher that expects a collection containing all the provided values."
   [values]
   (make "contains-all"
-        #(and (coll? %1)
-              (-> %1 set (set/intersection %2) (= %2)))
+        #(and (coll? %1) (-> %1 set (set/intersection %2) (= %2)))
         (set values)
         pr-str))
 
@@ -137,8 +136,7 @@
   "Returns a matcher that expects a collection containing at least one of the provided values."
   [values]
   (make "contains-any"
-        #(and (coll? %1)
-              (-> %1 set (set/intersection %2) empty? not))
+        #(and (coll? %1) (-> %1 set (set/intersection %2) empty? not))
         (set values)
         pr-str))
 
