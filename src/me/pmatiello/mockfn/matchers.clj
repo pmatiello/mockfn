@@ -127,12 +127,20 @@
 (defn contains-all
   "Returns a matcher that expects a collection containing all the provided values."
   [values]
-  (make "contains-all" #(-> %1 set (set/intersection %2) (= %2)) (set values) pr-str))
+  (make "contains-all"
+        #(and (coll? %1)
+              (-> %1 set (set/intersection %2) (= %2)))
+        (set values)
+        pr-str))
 
 (defn contains-any
   "Returns a matcher that expects a collection containing at least one of the provided values."
   [values]
-  (make "contains-any" #(-> %1 set (set/intersection %2) empty? not) (set values) pr-str))
+  (make "contains-any"
+        #(and (coll? %1)
+              (-> %1 set (set/intersection %2) empty? not))
+        (set values)
+        pr-str))
 
 (defn not>
   "Returns a matcher that expects a value not matching the provided matcher."

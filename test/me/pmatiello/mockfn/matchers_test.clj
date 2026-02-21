@@ -186,7 +186,8 @@
       (is (true? (matchers/matches? contains-all [1 2 3])))
       (is (true? (matchers/matches? contains-all [2 1])))
       (is (false? (matchers/matches? contains-all [1 3])))
-      (is (false? (matchers/matches? contains-all [3 4]))))
+      (is (false? (matchers/matches? contains-all [3 4])))
+      (is (false? (matchers/matches? contains-all :not-coll))))
 
     (testing "provides an informative string representation"
       (is (= "｢contains-all #{1 2}｣" (matchers/description contains-all)))))
@@ -202,7 +203,8 @@
       (is (true? (matchers/matches? contains-any [1 3])))
       (is (true? (matchers/matches? contains-any [2 4])))
       (is (false? (matchers/matches? contains-any [3 4])))
-      (is (false? (matchers/matches? contains-any []))))
+      (is (false? (matchers/matches? contains-any [])))
+      (is (false? (matchers/matches? contains-any :not-coll))))
 
     (testing "provides an informative string representation"
       (is (= "｢contains-any #{1 2}｣" (matchers/description contains-any)))))
