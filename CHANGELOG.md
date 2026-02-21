@@ -8,6 +8,8 @@ All notable changes to this project are documented in this file.
 
 - Fixed argument matching so collection-valued arguments are treated as single
   call arguments in `providing` and `verifying`.
+- Fixed `empty` matcher so type-mismatched values produce a non-match instead of
+  causing exceptions.
 
 ## 0.9.0 - 2025-07-25
 

@@ -68,7 +68,7 @@
 (defn empty
   "Returns a matcher that expects an empty value."
   []
-  (make "empty" (fn [a _] (empty? a)) nil))
+  (make "empty" (fn [a _] (and (seqable? a) (empty? a))) nil))
 
 (defn truthy
   "Returns a matcher that expects a truthy value."

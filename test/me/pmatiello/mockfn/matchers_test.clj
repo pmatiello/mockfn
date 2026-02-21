@@ -71,7 +71,8 @@
       (is (true? (matchers/matches? empty #{})))
       (is (true? (matchers/matches? empty {})))
       (is (false? (matchers/matches? empty [1])))
-      (is (false? (matchers/matches? empty {:key "value"}))))
+      (is (false? (matchers/matches? empty {:key "value"})))
+      (is (false? (matchers/matches? empty :not-emptiable))))
 
     (testing "returns whether actual is an empty string"
       (is (true? (matchers/matches? empty "")))
