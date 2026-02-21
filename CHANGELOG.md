@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## UNRELEASED
+## 0.9.1 - 2026-02-21
 
 - Fixed argument matching so collection-valued arguments are treated as single
   call arguments in `providing` and `verifying`.
