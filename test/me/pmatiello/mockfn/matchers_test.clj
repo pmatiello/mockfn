@@ -134,7 +134,8 @@
       (is (true? (matchers/matches? between 3)))
       (is (true? (matchers/matches? between 4)))
       (is (false? (matchers/matches? between 1)))
-      (is (false? (matchers/matches? between 5))))
+      (is (false? (matchers/matches? between 5)))
+      (is (false? (matchers/matches? between :x))))
 
     (testing "provides an informative string representation"
       (is (= "｢between 2 and 4｣" (matchers/description between))))))
