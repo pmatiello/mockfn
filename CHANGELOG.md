@@ -4,6 +4,10 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## 0.9.2 - 2026-02-22
+
+- Fixed release to Clojars.
+
 ## 0.9.1 - 2026-02-21
 
 - Fixed argument matching so collection-valued arguments are treated as single
