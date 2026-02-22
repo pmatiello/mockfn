@@ -300,7 +300,9 @@ To release to [clojars](https://clojars.org), run:
       -Dfile=target/mockfn-${VERSION}.jar \
       -DrepositoryId=clojars \
       -Durl=https://clojars.org/repo \
-      -DpomFile=target/classes/META-INF/maven/me.pmatiello/mockfn/pom.xml
+      -DpomFile=target/classes/META-INF/maven/me.pmatiello/mockfn/pom.xml \
+      -DgeneratePom=false \
+      -Daether.connector.basic.parallelPut=false
 ```
 
 Note that this step requires clojars to be configured as a server in the local
