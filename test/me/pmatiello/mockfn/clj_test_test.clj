@@ -33,7 +33,7 @@
   (mfn/providing
     (#'f/pvt-fn) :private-fn-providing))
 
-(mfn/deftest private-fn-test
+(mfn/deftest private-fn-verifying-test
   (swap! tests-run conj (#'f/pvt-fn))
   (mfn/verifying
     (#'f/pvt-fn) :private-fn-verifying (mfn.m/exactly 1)))
@@ -83,6 +83,24 @@
   (mfn/providing
     (f/one-fn) (mfn/raise (ex-info "error!" {}))))
 
+(deftest multiple-providing-forms-test
+  (mfn/testing "testing-multiple-providing-forms"
+    (swap! tests-run conj (f/one-fn))
+    (swap! tests-run conj (f/other-fn))
+    (mfn/providing
+      (f/one-fn) :multiple-providing-forms-pt1)
+    (mfn/providing
+      (f/other-fn) :multiple-providing-forms-pt2)))
+
+(deftest multiple-verifying-forms-test
+  (mfn/testing "testing-multiple-providing-forms"
+    (swap! tests-run conj (f/one-fn))
+    (swap! tests-run conj (f/other-fn))
+    (mfn/verifying
+      (f/one-fn) :multiple-verifying-forms-pt1 (mfn.m/exactly 1))
+    (mfn/verifying
+      (f/other-fn) :multiple-verifying-forms-pt2 (mfn.m/exactly 1))))
+
 (def expected-tests-run
   #{:deftest
     :deftest-providing
@@ -99,7 +117,11 @@
     :testing-providing
     :testing-providing-with-verifying
     :testing-verifying
-    :testing-verifying-with-providing})
+    :testing-verifying-with-providing
+    :multiple-providing-forms-pt1
+    :multiple-providing-forms-pt2
+    :multiple-verifying-forms-pt1
+    :multiple-verifying-forms-pt2})
 
 (defn teardown []
   (is (= @tests-run expected-tests-run))

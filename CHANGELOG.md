@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## Unreleased
+
+- Fixed `clj-test` macros so all `providing` and `verifying` forms in the same
+  test body are applied.
+
 ## 0.9.2 - 2026-02-22
 
 - Fixed release to Clojars.

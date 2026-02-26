@@ -14,8 +14,8 @@
 
 (defn ^:private with-mocking
   [body]
-  (let [providing-bindings# (->> body (filter providing-only?) first rest)
-        verifying-bindings# (->> body (filter verifying-only?) first rest)
+  (let [providing-bindings# (->> body (filter providing-only?) (mapcat rest))
+        verifying-bindings# (->> body (filter verifying-only?) (mapcat rest))
         actual-body#        (->> body (remove providing-only?) (remove verifying-only?))]
     `(plain/providing [~@providing-bindings#]
        (plain/verifying [~@verifying-bindings#]
