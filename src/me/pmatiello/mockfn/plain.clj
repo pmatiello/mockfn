@@ -7,6 +7,12 @@
     (symbol? func) func
     (seq? func) (last func)))
 
+(defn ^:private partition-strictly
+  [n coll]
+  (if (-> coll count (mod n) zero?)
+    (partition n coll)
+    (throw (ex-info "Malformed bindings" {:bindings coll}))))
+
 (defn ^:private as-redefs
   [func->definition]
   (->> func->definition
@@ -43,7 +49,7 @@
     (is (= :result (one-fn))))
   ```"
   [bindings & body]
-  `(with-redefs ~(->> bindings (partition 2) func->spec as-redefs)
+  `(with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
      ~@body))
 
 (defmacro verifying
@@ -64,7 +70,7 @@
     (is (= :result (one-fn :argument))))
   ```"
   [bindings & body]
-  (let [specs#  (->> bindings (partition 3) func->spec)
+  (let [specs#  (->> bindings (partition-strictly 3) func->spec)
         un-var# #(if (var? %) (var-get %) %)]
     `(with-redefs ~(as-redefs specs#)
        (let [result# (do ~@body)]

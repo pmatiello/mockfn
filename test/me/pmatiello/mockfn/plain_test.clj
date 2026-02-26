@@ -3,7 +3,7 @@
             [me.pmatiello.mockfn.fixtures :as f]
             [me.pmatiello.mockfn.matchers :as matchers]
             [me.pmatiello.mockfn.plain :as plain])
-  (:import (clojure.lang ExceptionInfo Keyword)))
+  (:import (clojure.lang Compiler$CompilerException ExceptionInfo Keyword)))
 
 (deftest providing-test
   (testing "mocks functions without arguments"
@@ -70,7 +70,13 @@
 
   (testing "returns the evaluated body"
     (is (= :result
-           (plain/providing [(f/one-fn) :result] (f/one-fn))))))
+           (plain/providing [(f/one-fn) :result] (f/one-fn)))))
+
+  (testing "fails at macro expansion time on malformed bindings"
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand '(me.pmatiello.mockfn.plain/providing
+                          [(f/one-fn) :result :malformed]))))))
 
 (deftest verifying-test
   (testing "mocks functions without arguments"
@@ -152,4 +158,10 @@
 
   (testing "returns the evaluated body"
     (is (= :result
-           (plain/verifying [(f/one-fn) :result (matchers/exactly 1)] (f/one-fn))))))
+           (plain/verifying [(f/one-fn) :result (matchers/exactly 1)] (f/one-fn)))))
+
+  (testing "fails at macro expansion time on malformed bindings"
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand '(me.pmatiello.mockfn.plain/verifying
+                          [(f/one-fn) :result (matchers/exactly 1) :malformed]))))))

@@ -8,6 +8,8 @@ All notable changes to this project are documented in this file.
 
 - Fixed `clj-test` macros so all `providing` and `verifying` forms in the same
   test body are applied.
+- Both `providing` and `verifying` now fail at compile-time when bindings are
+  malformed (instead of silently truncating trailing values).
 
 ## 0.9.2 - 2026-02-22
 
