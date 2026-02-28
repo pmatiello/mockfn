@@ -274,11 +274,13 @@ To clean a previous build, run:
 ### Releasing
 
 Before releasing, update the library version in the [build.clj](./build.clj)
-file and the release date in the changelog.
+file and the release version and date in the changelog.
 
 Make a commit and generate a new tag:
 
 ```
+% export VERSION=$(clj -A:build -M -e '(load-file "build.clj") (println build/version)' \
+  | tail -n-1)
 % git commit -a -m "Release: ${VERSION}"
 % git tag -a "v${VERSION}" -m "Release: ${VERSION}"
 % git push
