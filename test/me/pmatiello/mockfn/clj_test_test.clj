@@ -101,6 +101,12 @@
     (mfn/verifying
       (f/other-fn) :multiple-verifying-forms-pt2 (mfn.m/exactly 1))))
 
+(mfn/deftest deftest-tolerates-non-list-body-forms-test
+  :non-list-form
+  (mfn/testing "tolerates non-list body forms"
+    :non-list-form
+    (swap! tests-run conj :tolerates-non-list-body-forms)))
+
 (def expected-tests-run
   #{:deftest
     :deftest-providing
@@ -121,7 +127,8 @@
     :multiple-providing-forms-pt1
     :multiple-providing-forms-pt2
     :multiple-verifying-forms-pt1
-    :multiple-verifying-forms-pt2})
+    :multiple-verifying-forms-pt2
+    :tolerates-non-list-body-forms})
 
 (defn teardown []
   (is (= @tests-run expected-tests-run))

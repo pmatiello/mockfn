@@ -7,7 +7,9 @@
 
 (defn ^:private only?
   [symbol form]
-  (-> form first resolve #{symbol}))
+  (and (seq? form)
+       (-> form first symbol?)
+       (-> form first resolve #{symbol})))
 
 (def ^:private providing-only? (partial only? #'providing))
 (def ^:private verifying-only? (partial only? #'verifying))
