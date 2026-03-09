@@ -13,23 +13,24 @@
     (partition n coll)
     (throw (ex-info "Malformed bindings" {:bindings coll}))))
 
-(defn ^:private as-redefs
-  [func->definition]
-  (->> func->definition
-       (map (fn [[func definition]] [(fn-sym func) `(mock/mock ~func ~definition)]))
-       (apply concat)))
-
 (defn ^:private func->spec
   [bindings]
   (reduce
     (fn [acc [[func & args] ret-val & expected]]
-      (-> acc
-          (assoc-in [func :fn] func)
-          (assoc-in [func :args (into [] args)]
-                    {:ret-val  ret-val
-                     :calls    `(atom 0)
-                     :expected (into [] expected)})))
+      (let [rule {:args     (into [] args)
+                  :ret-val  ret-val
+                  :calls    `(atom 0)
+                  :expected (into [] expected)}]
+        (-> acc
+            (assoc-in [func :fn] func)
+            (update-in [func :rules] #(conj (or % []) rule)))))
     {} bindings))
+
+(defn ^:private as-redefs
+  [func->spec]
+  (->> func->spec
+       (map (fn [[func spec]] [(fn-sym func) `(mock/mock ~func ~spec)]))
+       (apply concat)))
 
 (defmacro providing
   "Replaces functions with mocks. These mocks return preconfigured values when

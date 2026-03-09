@@ -165,3 +165,13 @@
           Compiler$CompilerException
           (macroexpand '(me.pmatiello.mockfn.plain/verifying
                           [(f/one-fn) :result (matchers/exactly 1) :malformed]))))))
+
+(deftest match-ordering-test
+  (testing "prefers the first declared matching stub regardless of extra bindings"
+    (let [test* (fn [extra-count]
+                  (let [base-bindings  [`(f/one-fn :expected) :exact
+                                        `(f/one-fn (matchers/any)) :any]
+                        extra-bindings (mapcat (fn [n] [`(f/one-fn ~n) n]) (range extra-count))
+                        bindings       (vec (concat base-bindings extra-bindings))]
+                    (eval `(plain/providing ~bindings (f/one-fn :expected)))))]
+      (is (every? #{:exact} (map test* (range 100)))))))

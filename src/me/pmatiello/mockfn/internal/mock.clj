@@ -16,27 +16,26 @@
     [expected]))
 
 (defn ^:private matches-args?
-  [expected args]
-  (let [args*             (-> (map #(subvec args %) (range (count args)))
+  [rule args]
+  (let [expected          (:args rule)
+        args*             (-> (map #(subvec args %) (range (count args)))
                               (concat (repeat [])))
         expected*         (->> args* (map expand expected) (mapcat identity))
         arity-matches?    (= (count expected*) (count args))
         each-arg-matches? (every? matches-arg? (map vector expected* args))]
-    (and arity-matches? each-arg-matches? expected)))
+    (and arity-matches? each-arg-matches? rule)))
 
 (defn ^:private for-args
-  [m args]
-  (let [expected (some #(matches-args? % args) (keys m))]
-    (if expected
-      (get m expected)
-      ::unexpected-call)))
+  [rules args]
+  (let [rule (some #(matches-args? % args) rules)]
+    (or rule ::unexpected-call)))
 
 (defn ^:private unexpected-call [func args]
   (format "Unexpected call to %s with args %s." func args))
 
 (defn ^:private return-value-for
   [func spec args]
-  (let [spec*   (-> spec :args (for-args args))
+  (let [spec*   (-> spec :rules (for-args args))
         ret-val (:ret-val spec*)]
     (when (= spec* ::unexpected-call)
       (throw (ex-info (unexpected-call func args) {})))
@@ -69,8 +68,8 @@
 (defn verify [mock]
   "Verifies that the given mock function was called the expected number of
   times with the expected arguments."
-  (doseq [args     (-> mock meta :args keys)
-          expected (-> mock meta :args (get args) :expected)]
-    (let [times-called (-> mock meta :args (get args) :calls deref)]
+  (doseq [rule     (-> mock meta :rules)
+          expected (:expected rule)]
+    (let [times-called (-> rule :calls deref)]
       (when-not (matchers/matches? expected times-called)
-        (throw (ex-info (doesnt-match (-> mock meta :fn) args expected times-called) {}))))))
+        (throw (ex-info (doesnt-match (-> mock meta :fn) (:args rule) expected times-called) {}))))))

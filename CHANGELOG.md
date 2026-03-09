@@ -10,8 +10,10 @@ All notable changes to this project are documented in this file.
   test body are applied.
 - Both `providing` and `verifying` now fail at compile-time when bindings are
   malformed (instead of silently truncating trailing values).
-- Fixed compile-time errors in `mfn/deftest` and `mfn/testing` in the presence of
-  non-list body forms.
+- Fixed compile-time errors in `mfn/deftest` and `mfn/testing` in the presence
+  of non-list body forms.
+- Fixed non-deterministic behavior when multiple mocking rules are specified for
+  the same function.
 
 ## 0.9.2 - 2026-02-22
 
