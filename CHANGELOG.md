@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## Unreleased
+## 0.10.0 - 2026-03-09
 
 - Fixed `clj-test` macros so all `providing` and `verifying` forms in the same
   test body are applied.
