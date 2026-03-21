@@ -1,6 +1,6 @@
 # me.pmatiello/mockfn
 
-This is a library for mockist test-driven development in Clojure. It is meant to
+This is a mocking library for test-driven development in Clojure. It is meant to
 be used alongside a regular testing framework such as `clojure.test`.
 
 [![Clojars Project](https://img.shields.io/clojars/v/me.pmatiello/mockfn.svg)](https://clojars.org/me.pmatiello/mockfn)
@@ -63,8 +63,8 @@ It's also possible to configure multiple mocks, for multiple functions, at once.
 #### Verifying Interactions
 
 The `verifying` macro works similarly, but also defines an expectation for the
-number of times a call should be performed during the test. A test will fail if
-this expectation is not met.
+number of times a call should be made during the test. A test will fail if this
+expectation is not met.
 
 ```clj
 (testing "verifying"
@@ -192,37 +192,37 @@ necessary to use the `providing` and `verifying` versions provided in the
 
 The following matchers are included in `mockfn`:
 
-| Matcher        | Description                                                            | Usage                   |
-|----------------|------------------------------------------------------------------------|-------------------------|
-| **Generic**    |                                                                        |                         |
-| `any`          | Matches any value.                                                     | `(any)`                 |
-| `a`            | Matches if actual value is an instance of the expected type.           | `(a type)`              |
-| `exactly`      | Matches if actual value is equal to the expected value.                | `(exactly value)`       |
-| `pred`         | Matches if the actual value satisfies the provided predicate function. | `(pred pred-fn)`        |
-| **Presence**   |                                                                        |                         |
-| `some`         | Matches if the actual value is not nil.                                | `(some)`                |
-| `null`         | Matches if the actual value is nil.                                    | `(null)`                |
-| `empty`        | Matches if the actual value is empty (collection, string, etc).        | `(empty)`               |
-| **Boolean**    |                                                                        |                         |
-| `truthy`       | Matches if the actual value is truthy.                                 | `(truthy)`              |
-| `falsy`        | Matches if the actual value is falsy.                                  | `(falsy)`               |
-| **Numeric**    |                                                                        |                         |
-| `at-least`     | Matches if actual value is greater or equal than the expected value.   | `(at-least value)`      |
-| `at-most`      | Matches if actual value is less or equal than the expected value.      | `(at-most value)`       |
-| `between`      | Matches if actual value is between the lower and upper bounds.         | `(between lower upper)` |
-| **String**     |                                                                        |                         |
-| `starts-with`  | Matches if actual string starts with the expected prefix.              | `(starts-with prefix)`  |
-| `ends-with`    | Matches if actual string ends with the expected suffix.                | `(ends-with suffix)`    |
-| `includes`     | Matches if actual string includes the expected substring.              | `(includes substring)`  |
-| `regex`        | Matches if the expected regular expression matches the actual string.  | `(regex expression)`    |
-| **Collection** |                                                                        |                         |
-| `contains-all` | Matches if the actual collection contains all expected values.         | `(contains values)`     |
-| `contains-any` | Matches if the actual collection contains any expected values.         | `(contains-any values)` |
-| **Operators**  |                                                                        |                         |
-| `not>`         | Matches if the actual value does not match the provided matcher.       | `(not> matcher)`        |
-| `and>`         | Matches if the actual value matches all provided matchers.             | `(and> m1 m2 ...)`      |
-| `or>`          | Matches if the actual value matches any of the provided matchers.      | `(or> m1 m2 ...)`       |
-| `*>`           | Matches if the the provided matcher matches all remaining arguments.   | `(*> matcher)`          |
+| Matcher        | Description                                                                 | Usage                   |
+|----------------|-----------------------------------------------------------------------------|-------------------------|
+| **Generic**    |                                                                             |                         |
+| `any`          | Matches any value.                                                          | `(any)`                 |
+| `a`            | Matches if the actual value is an instance of the expected type.            | `(a type)`              |
+| `exactly`      | Matches if the actual value is equal to the expected value.                 | `(exactly value)`       |
+| `pred`         | Matches if the actual value satisfies the provided predicate function.      | `(pred pred-fn)`        |
+| **Presence**   |                                                                             |                         |
+| `some`         | Matches if the actual value is not nil.                                     | `(some)`                |
+| `null`         | Matches if the actual value is nil.                                         | `(null)`                |
+| `empty`        | Matches if the actual value is empty (collection, string, etc).             | `(empty)`               |
+| **Boolean**    |                                                                             |                         |
+| `truthy`       | Matches if the actual value is truthy.                                      | `(truthy)`              |
+| `falsy`        | Matches if the actual value is falsy.                                       | `(falsy)`               |
+| **Numeric**    |                                                                             |                         |
+| `at-least`     | Matches if the actual value is greater than or equal to the expected value. | `(at-least value)`      |
+| `at-most`      | Matches if the actual value is less than or equal to the expected value.    | `(at-most value)`       |
+| `between`      | Matches if the actual value is between the lower and upper bounds.          | `(between lower upper)` |
+| **String**     |                                                                             |                         |
+| `starts-with`  | Matches if the actual string starts with the expected prefix.               | `(starts-with prefix)`  |
+| `ends-with`    | Matches if the actual string ends with the expected suffix.                 | `(ends-with suffix)`    |
+| `includes`     | Matches if the actual string includes the expected substring.               | `(includes substring)`  |
+| `regex`        | Matches if the expected regular expression matches the actual string.       | `(regex expression)`    |
+| **Collection** |                                                                             |                         |
+| `contains-all` | Matches if the actual collection contains all expected values.              | `(contains values)`     |
+| `contains-any` | Matches if the actual collection contains any expected values.              | `(contains-any values)` |
+| **Operators**  |                                                                             |                         |
+| `not>`         | Matches if the actual value does not match the provided matcher.            | `(not> matcher)`        |
+| `and>`         | Matches if the actual value matches all provided matchers.                  | `(and> m1 m2 ...)`      |
+| `or>`          | Matches if the actual value matches any of the provided matchers.           | `(or> m1 m2 ...)`       |
+| `*>`           | Matches if the provided matcher matches all remaining arguments.            | `(*> matcher)`          |
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.
@@ -295,7 +295,7 @@ Run all tests and build the release artifact:
 % clj -T:build jar
 ```
 
-To release to [clojars](https://clojars.org), run:
+To release to [Clojars](https://clojars.org), run:
 
 ```
 % mvn deploy:deploy-file \
@@ -307,7 +307,7 @@ To release to [clojars](https://clojars.org), run:
       -Daether.connector.basic.parallelPut=false
 ```
 
-Note that this step requires clojars to be configured as a server in the local
+Note that this step requires Clojars to be configured as a server in the local
 `~/.m2/settings.xml` file.
 
 ## Contribution Policy
