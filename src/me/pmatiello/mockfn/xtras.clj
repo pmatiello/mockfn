@@ -4,11 +4,12 @@
 
 (defn ^:private return-in-order*
   [values & args]
-  (let [next-val (first @values)]
-    (swap! values rest)
-    (if (-> next-val meta ::mock/invoke-fn)
-      (apply next-val args)
-      next-val)))
+  (locking values
+    (let [next-val (first @values)]
+      (swap! values rest)
+      (if (-> next-val meta ::mock/invoke-fn)
+        (apply next-val args)
+        next-val))))
 
 (defn return-in-order
   "Returns a function that, when called, returns the next value from `values`

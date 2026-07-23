@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## Unreleased
+
+- Fixed race condition in `return-in-order` which could cause values to be
+  returned repeatedly or out of order.
+
 ## 0.10.0 - 2026-03-09
 
 - Fixed `clj-test` macros so all `providing` and `verifying` forms in the same
