@@ -166,6 +166,21 @@
           (macroexpand '(me.pmatiello.mockfn.plain/verifying
                           [(f/one-fn) :result (matchers/exactly 1) :malformed]))))))
 
+(deftest verifying-eventually
+  (testing "verifies mocks"
+    (plain/verifying-eventually
+      {:attempts 50 :interval-ms 20}
+      [(f/one-fn) :mocked (matchers/exactly 1)]
+      (future (Thread/sleep 50) (f/one-fn))))
+
+  (testing "fails after exhausting limit of attempts"
+    (is (thrown-with-msg?
+          ExceptionInfo #"Expected call .*"
+          (plain/verifying-eventually
+            {:attempts 5 :interval-ms 5}
+            [(f/one-fn) :mocked (matchers/exactly 2)]
+            (future (Thread/sleep 50) (f/one-fn)))))))
+
 (deftest match-ordering-test
   (testing "prefers the first declared matching stub regardless of extra bindings"
     (let [test* (fn [extra-count]

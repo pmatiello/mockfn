@@ -1,5 +1,6 @@
 (ns me.pmatiello.mockfn.plain
-  (:require [me.pmatiello.mockfn.internal.mock :as mock]))
+  (:require [me.pmatiello.mockfn.internal.mock :as mock])
+  (:import (clojure.lang ExceptionInfo)))
 
 (defn ^:private fn-sym
   [func]
@@ -79,6 +80,27 @@
            (mock/verify mock#))
          result#))))
 
+(defmacro verifying-eventually
+  [patience-cfg bindings & body]
+  (let [specs#  (->> bindings (partition-strictly 3) func->spec)
+        un-var# #(if (var? %) (var-get %) %)]
+    `(with-redefs ~(as-redefs specs#)
+       (let [result#       (do ~@body)
+             max-attempts# (:attempts ~patience-cfg)
+             interval-ms#  (:interval-ms ~patience-cfg)]
+         (loop [attempt# 0]
+           (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))] (mock/verify mock#))
+                           (catch ExceptionInfo e# e#))]
+             (cond
+               (and (ex-data vrf#) (>= attempt# max-attempts#))
+               (throw vrf#)
+
+               (ex-data vrf#)
+               (do (Thread/sleep interval-ms#) (recur (inc attempt#)))
+
+               :otherwise
+               result#)))))))
+
 (defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls
   will invoke the function with the received arguments and return the output.
@@ -106,3 +128,5 @@
   ```"
   [exception]
   (invoke (fn [& _] (throw exception))))
+
+
