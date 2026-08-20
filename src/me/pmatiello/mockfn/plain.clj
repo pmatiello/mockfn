@@ -55,7 +55,7 @@
      ~@body))
 
 (defmacro verifying
-  "Replaces functions with mocks. Verifies that a calls where performed the
+  "Replaces functions with mocks. Verifies that all calls where performed the
   expected number of times.
 
   ```
@@ -81,22 +81,44 @@
          result#))))
 
 (defmacro verifying-eventually
+  "Replaces functions with mocks. Verifies that all calls where performed the
+  expected number of times. Performs this verification repeatedly, pausing for
+  the specified interval between checks, until all expectations are met or the
+  maximum number of attempts is exceeded.
+
+  ```
+  (verifying-eventually
+    {:max-attempts max-attempts-num :interval-ms interval-between-attempts-ms}
+    [(fn-name &args) return-value call-count-matcher
+     ...]
+    test-body)
+  ```
+
+  Example:
+  ```
+  (plain/verifying-eventually
+    {:max-attempts 50 :interval-ms 20}
+    [(f/one-fn) :mocked (matchers/exactly 1)]
+    (future (Thread/sleep 50) (f/one-fn))))
+  ```"
   [patience-cfg bindings & body]
-  (let [specs#  (->> bindings (partition-strictly 3) func->spec)
-        un-var# #(if (var? %) (var-get %) %)]
+  (let [specs#        (->> bindings (partition-strictly 3) func->spec)
+        un-var#       #(if (var? %) (var-get %) %)
+        max-attempts# (:max-attempts patience-cfg)
+        interval-ms#  (:interval-ms patience-cfg)]
+    (assert (some-> max-attempts# pos?))
+    (assert (some? interval-ms#))
     `(with-redefs ~(as-redefs specs#)
-       (let [result#       (do ~@body)
-             max-attempts# (:attempts ~patience-cfg)
-             interval-ms#  (:interval-ms ~patience-cfg)]
+       (let [result# (do ~@body)]
          (loop [attempt# 0]
            (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))] (mock/verify mock#))
                            (catch ExceptionInfo e# e#))]
              (cond
-               (and (ex-data vrf#) (>= attempt# max-attempts#))
+               (and (ex-data vrf#) (>= attempt# ~max-attempts#))
                (throw vrf#)
 
                (ex-data vrf#)
-               (do (Thread/sleep interval-ms#) (recur (inc attempt#)))
+               (do (Thread/sleep ~interval-ms#) (recur (inc attempt#)))
 
                :otherwise
                result#)))))))
@@ -128,5 +150,3 @@
   ```"
   [exception]
   (invoke (fn [& _] (throw exception))))
-
-

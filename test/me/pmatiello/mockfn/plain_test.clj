@@ -166,20 +166,76 @@
           (macroexpand '(me.pmatiello.mockfn.plain/verifying
                           [(f/one-fn) :result (matchers/exactly 1) :malformed]))))))
 
-(deftest verifying-eventually
-  (testing "verifies mocks"
+(deftest verifying-eventually-test
+  (testing "verifies function calls within the limit of attempts"
     (plain/verifying-eventually
-      {:attempts 50 :interval-ms 20}
+      {:max-attempts 50 :interval-ms 20}
       [(f/one-fn) :mocked (matchers/exactly 1)]
       (future (Thread/sleep 50) (f/one-fn))))
+
+  (testing "supports multiple mocks, arguments and matchers"
+    (plain/verifying-eventually
+      {:max-attempts 50 :interval-ms 20}
+      [(f/one-fn :expected) :mocked (matchers/exactly 1)
+       (f/other-fn (matchers/a Keyword)) :mocked (matchers/exactly 1)
+       (#'f/pvt-fn [1 2]) :mocked (matchers/exactly 1)]
+      (future
+        (Thread/sleep 50)
+        (f/one-fn :expected) (f/other-fn :expected) (#'f/pvt-fn [1 2]))))
+
+  (testing "supports dynamic return values and exceptions"
+    (plain/verifying-eventually
+      {:max-attempts 50 :interval-ms 20}
+      [(f/one-fn (matchers/any)) (plain/invoke identity) (matchers/exactly 1)
+       (f/other-fn :expected) (plain/raise (ex-info "error!" {})) (matchers/exactly 1)]
+      (future
+        (Thread/sleep 50)
+        (-> :expected f/one-fn f/other-fn))))
 
   (testing "fails after exhausting limit of attempts"
     (is (thrown-with-msg?
           ExceptionInfo #"Expected call .*"
           (plain/verifying-eventually
-            {:attempts 5 :interval-ms 5}
+            {:max-attempts 5 :interval-ms 20}
             [(f/one-fn) :mocked (matchers/exactly 2)]
-            (future (Thread/sleep 50) (f/one-fn)))))))
+            (future (f/one-fn))))))
+
+  (testing "fails after exhausting limit of attempts, even if partially successful"
+    (is (thrown-with-msg?
+          ExceptionInfo #"Expected call .*"
+          (plain/verifying-eventually
+            {:max-attempts 5 :interval-ms 20}
+            [(f/one-fn) :mocked (matchers/exactly 1)
+             (f/other-fn :expected) :mocked (matchers/exactly 1)]
+            (future (f/one-fn))))))
+
+  (testing "returns the evaluated body"
+    (is (= :result
+           (plain/verifying-eventually
+             {:max-attempts 1 :interval-ms 0}
+             [(f/one-fn) :result (matchers/exactly 1)]
+             (f/one-fn)))))
+
+  (testing "fails at macro expansion time on malformed bindings"
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand '(me.pmatiello.mockfn.plain/verifying-eventually
+                          {:max-attempts 1 :interval-ms 0}
+                          [(f/one-fn) :result (matchers/exactly 1) :malformed])))))
+
+  (testing "fails at macro expansion time on invalid patience settings"
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand '(me.pmatiello.mockfn.plain/verifying-eventually
+                          {:interval-ms 1}
+                          [(f/one-fn) :result (matchers/exactly 1)]
+                          (f/one-fn)))))
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand '(me.pmatiello.mockfn.plain/verifying-eventually
+                          {:max-attempts 1}
+                          [(f/one-fn) :result (matchers/exactly 1)]
+                          (f/one-fn)))))))
 
 (deftest match-ordering-test
   (testing "prefers the first declared matching stub regardless of extra bindings"
