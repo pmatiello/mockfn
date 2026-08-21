@@ -4,28 +4,35 @@
 
 (declare providing)
 (declare verifying)
+(declare verifying-eventually)
 
 (defn ^:private only?
-  [symbol form]
+  [operator form]
   (and (seq? form)
        (-> form first symbol?)
-       (-> form first resolve #{symbol})))
+       (-> form first resolve operator)))
 
-(def ^:private providing-only? (partial only? #'providing))
-(def ^:private verifying-only? (partial only? #'verifying))
+(defn ^:private forms-for
+  [body operator]
+  (->> body (filter (partial only? #{operator})) (mapcat rest)))
 
 (defn ^:private with-mocking
   [body]
-  (let [providing-bindings# (->> body (filter providing-only?) (mapcat rest))
-        verifying-bindings# (->> body (filter verifying-only?) (mapcat rest))
-        actual-body#        (->> body (remove providing-only?) (remove verifying-only?))]
+  (let [providing-bindings#                (forms-for body #'providing)
+        verifying-bindings#                (forms-for body #'verifying)
+        verifying-eventually-patience-cfg# (-> body (forms-for #'verifying-eventually) first)
+        verifying-eventually-bindings#     (-> body (forms-for #'verifying-eventually) rest)
+        actual-body#                       (remove (partial only? #{#'providing #'verifying #'verifying-eventually}) body)]
     `(plain/providing [~@providing-bindings#]
        (plain/verifying [~@verifying-bindings#]
-         ~@actual-body#))))
+         (plain/verifying-eventually ~verifying-eventually-patience-cfg#
+           [~@verifying-eventually-bindings#]
+           ~@actual-body#)))))
 
 (defmacro deftest
   "Declares a test function as done by `clojure.test/deftest` with built-in
-  support for mocking through (optional) `providing` and `verifying` forms.
+  support for mocking through (optional) `providing`, `verifying` and
+  `verifying-eventually`forms.
 
   ```
   (deftest test-name
@@ -38,6 +45,11 @@
       ; one or more entries in the form:
       ; (fn-name &args) return-value call-count-matcher
       ...)
+    (verifying-eventually
+      {:max-attempts max-attempts-num :interval-ms interval-between-attempts-ms}
+      ; one or more entries in the form:
+      ; (fn-name &args) return-value call-count-matcher
+      ...))
   ```
 
   Example:
@@ -54,7 +66,7 @@
 (defmacro testing
   "Declares a new testing context inside a test function as done by
   `clojure.test/testing` with built-in support for mocking through (optional)
-  `providing` and `verifying` forms.
+  `providing`, `verifying` and `verifying-eventually` forms.
 
   ```
   (testing \"description\"
@@ -67,6 +79,11 @@
       ; one or more entries in the form:
       ; (fn-name &args) return-value call-count-matcher
       ...)
+    (verifying-eventually
+      {:max-attempts max-attempts-num :interval-ms interval-between-attempts-ms}
+      ; one or more entries in the form:
+      ; (fn-name &args) return-value call-count-matcher
+      ...))
   ```
 
   Example:

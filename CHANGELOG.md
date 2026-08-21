@@ -8,6 +8,7 @@ All notable changes to this project are documented in this file.
 
 - Fixed race condition in `return-in-order` which could cause values to be
   returned repeatedly or out of order.
+- Added `verify-eventually` macro to facilitate the test of asynchronous flows.
 
 ## 0.10.0 - 2026-03-09
 

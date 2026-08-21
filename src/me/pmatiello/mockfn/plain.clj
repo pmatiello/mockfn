@@ -99,7 +99,7 @@
 
   Example:
   ```
-  (plain/verifying-eventually
+  (verifying-eventually
     {:max-attempts 50 :interval-ms 20}
     [(f/one-fn) :mocked (matchers/exactly 1)]
     (future (Thread/sleep 50) (f/one-fn))))
