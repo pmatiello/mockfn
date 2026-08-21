@@ -21,9 +21,9 @@
     (f/one-fn) :deftest-verifying (mfn.m/exactly 1)))
 
 (mfn/deftest deftest-verifying-eventually-test
-  (future (Thread/sleep 50) (swap! tests-run conj (f/one-fn)))
+  (future (Thread/sleep 20) (swap! tests-run conj (f/one-fn)))
   (mfn/verifying-eventually
-    {:max-attempts 50 :interval-ms 20}
+    {:max-attempts 10 :interval-ms 20}
     (f/one-fn) :deftest-verifying-eventually (mfn.m/exactly 1)))
 
 (mfn/deftest deftest-providing+verifying-test
@@ -35,21 +35,21 @@
     (f/other-fn) :deftest-providing+verifying-pt2 (mfn.m/exactly 1)))
 
 (mfn/deftest deftest-verifying-eventually-test
-  (future (Thread/sleep 50) (swap! tests-run conj (f/one-fn)))
+  (future (Thread/sleep 20) (swap! tests-run conj (f/one-fn)))
   (mfn/verifying-eventually
-    {:max-attempts 50 :interval-ms 20}
+    {:max-attempts 10 :interval-ms 20}
     (f/one-fn) :deftest-verifying-eventually (mfn.m/exactly 1)))
 
 (mfn/deftest deftest-providing+verifying+verifying-eventually-test
   (swap! tests-run conj (f/one-fn))
   (swap! tests-run conj (f/other-fn))
-  (future (Thread/sleep 50) (swap! tests-run conj (f/another-fn)))
+  (future (Thread/sleep 20) (swap! tests-run conj (f/another-fn)))
   (mfn/providing
     (f/one-fn) :deftest-providing+verifying+verifying-eventually-pt1)
   (mfn/verifying
     (f/other-fn) :deftest-providing+verifying+verifying-eventually-pt2 (mfn.m/exactly 1))
   (mfn/verifying-eventually
-    {:max-attempts 50 :interval-ms 20}
+    {:max-attempts 10 :interval-ms 20}
     (f/another-fn) :deftest-providing+verifying+verifying-eventually-pt3 (mfn.m/exactly 1)))
 
 (mfn/deftest private-fn-providing-test
@@ -80,9 +80,9 @@
 
 (mfn/deftest testing-verifying-eventually-test
   (mfn/testing "testing-verifying-eventually"
-    (future (Thread/sleep 50) (swap! tests-run conj (f/one-fn)))
+    (future (Thread/sleep 20) (swap! tests-run conj (f/one-fn)))
     (mfn/verifying-eventually
-      {:max-attempts 50 :interval-ms 20}
+      {:max-attempts 10 :interval-ms 20}
       (f/one-fn) :testing-verifying-eventually (mfn.m/exactly 1))))
 
 (mfn/deftest testing-providing+verifying-test
@@ -98,13 +98,13 @@
   (mfn/testing "testing-providing-and-verifying"
     (swap! tests-run conj (f/one-fn))
     (swap! tests-run conj (f/other-fn))
-    (future (Thread/sleep 50) (swap! tests-run conj (f/another-fn)))
+    (future (Thread/sleep 20) (swap! tests-run conj (f/another-fn)))
     (mfn/providing
       (f/one-fn) :testing-providing+verifying+verifying-eventually-pt1)
     (mfn/verifying
       (f/other-fn) :testing-providing+verifying+verifying-eventually-pt2 (mfn.m/exactly 1))
     (mfn/verifying-eventually
-      {:max-attempts 50 :interval-ms 20}
+      {:max-attempts 10 :interval-ms 20}
       (f/another-fn) :testing-providing+verifying+verifying-eventually-pt3 (mfn.m/exactly 1))))
 
 (mfn/deftest deftest-testing-test

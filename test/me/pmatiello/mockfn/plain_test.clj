@@ -169,13 +169,13 @@
 (deftest verifying-eventually-test
   (testing "verifies function calls within the limit of attempts"
     (plain/verifying-eventually
-      {:max-attempts 50 :interval-ms 20}
+      {:max-attempts 10 :interval-ms 20}
       [(f/one-fn) :mocked (matchers/exactly 1)]
       (future (Thread/sleep 50) (f/one-fn))))
 
   (testing "supports multiple mocks, arguments and matchers"
     (plain/verifying-eventually
-      {:max-attempts 50 :interval-ms 20}
+      {:max-attempts 10 :interval-ms 20}
       [(f/one-fn :expected) :mocked (matchers/exactly 1)
        (f/other-fn (matchers/a Keyword)) :mocked (matchers/exactly 1)
        (#'f/pvt-fn [1 2]) :mocked (matchers/exactly 1)]
@@ -185,7 +185,7 @@
 
   (testing "supports dynamic return values and exceptions"
     (plain/verifying-eventually
-      {:max-attempts 50 :interval-ms 20}
+      {:max-attempts 10 :interval-ms 20}
       [(f/one-fn (matchers/any)) (plain/invoke identity) (matchers/exactly 1)
        (f/other-fn :expected) (plain/raise (ex-info "error!" {})) (matchers/exactly 1)]
       (future
