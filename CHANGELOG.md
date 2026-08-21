@@ -8,7 +8,9 @@ All notable changes to this project are documented in this file.
 
 - Fixed race condition in `return-in-order` which could cause values to be
   returned repeatedly or out of order.
-- Added `verify-eventually` macro to facilitate the test of asynchronous flows.
+- Added `verifying-eventually` macro to facilitate the test of asynchronous
+  flows: expectations are repeatedly verified up to the specified number of
+  attempts, which separated by a specified interval.
 
 ## 0.10.0 - 2026-03-09
 

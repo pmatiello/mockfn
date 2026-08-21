@@ -75,6 +75,24 @@ expectation is not met.
 Notice that the expected number of calls is defined using a
 [matcher](#built-in-matchers).
 
+#### Verifying Asynchronous Interactions
+
+The `verifying-eventually` also defines call count expectations, but this
+verification is performed repeatedly, pausing for a specified interval between
+checks, until all expectations are met or the maximum number of attempts is
+exceeded.
+
+```clj
+(testing "verifying-eventually"
+  (mfn/verifying-eventually
+    {:max-attempts 10 :interval-ms 20}
+    [(one-fn :argument) :result (mfn.m/exactly 1)]
+    (future (Thread/sleep 50) (one-fn :argument))))
+```
+
+Notice that the expected number of calls is defined using a
+[matcher](#built-in-matchers).
+
 #### Argument Matchers
 
 Mocks can be configured to return a specific value for a range of different
@@ -185,8 +203,8 @@ not nested) mocking style using `mockfn.clj-test/providing` and
 ```
 
 Note that to leverage the built-in support for mocking in these macros, it's
-necessary to use the `providing` and `verifying` versions provided in the
-`mockfn.clj-test` namespace.
+necessary to use the `providing`, `verifying` and `verifying-eventually`
+symbols provided in the `mockfn.clj-test` namespace.
 
 ### Built-in Matchers
 

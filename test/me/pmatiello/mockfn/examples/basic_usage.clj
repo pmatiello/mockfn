@@ -37,6 +37,12 @@
     (mfn/verifying [(#'pvt-fn :argument) :result (mfn.m/exactly 1)]
       (is (= :result (#'pvt-fn :argument)))))
 
+  (testing "verifying-eventually"
+    (mfn/verifying-eventually
+      {:max-attempts 10 :interval-ms 20}
+      [(one-fn :argument) :result (mfn.m/exactly 1)]
+      (future (Thread/sleep 50) (one-fn :argument))))
+
   (testing "argument matchers"
     (mfn/providing [(one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15]
       (is (= 15 (one-fn 12 18)))))
