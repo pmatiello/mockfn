@@ -186,8 +186,8 @@ is provided in the `mockfn.clj-test` namespace.
 
 The `mockfn.clj-test/deftest` and `mockfn.clj-test/testing` macros replace
 `clojure.test/deftest` and `clojure.test/testing` and support a flatter (as in
-not nested) mocking style using `mockfn.clj-test/providing` and
-`mockfn.clj-test/verifying`:
+not nested) mocking style using `mockfn.clj-test/providing`,
+`mockfn.clj-test/verifying` and `mockfn.clj-test/verifying-eventually`.
 
 ```clj
 (mfn/deftest deftest-with-builtin-mocking
