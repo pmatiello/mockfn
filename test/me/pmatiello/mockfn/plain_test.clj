@@ -227,15 +227,27 @@
     (is (thrown?
           Compiler$CompilerException
           (macroexpand '(me.pmatiello.mockfn.plain/verifying-eventually
-                          {:interval-ms 1}
+                          {:max-attempts 0}
                           [(f/one-fn) :result (matchers/exactly 1)]
                           (f/one-fn)))))
     (is (thrown?
           Compiler$CompilerException
           (macroexpand '(me.pmatiello.mockfn.plain/verifying-eventually
-                          {:max-attempts 1}
+                          {:max-attempts "1"}
                           [(f/one-fn) :result (matchers/exactly 1)]
-                          (f/one-fn)))))))
+                          (f/one-fn)))))
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand '(me.pmatiello.mockfn.plain/verifying-eventually
+                          {:interval-ms "20"}
+                          [(f/one-fn) :result (matchers/exactly 1)]
+                          (f/one-fn))))))
+
+  (testing "applies default values for max-attempts and interval-ms when missing"
+    (plain/verifying-eventually
+      nil
+      [(f/one-fn) :mocked (matchers/exactly 1)]
+      (f/one-fn))))
 
 (deftest match-ordering-test
   (testing "prefers the first declared matching stub regardless of extra bindings"

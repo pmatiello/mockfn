@@ -80,6 +80,9 @@
            (mock/verify mock#))
          result#))))
 
+(def ^:private default-patience-cfg
+  {:max-attempts 1 :interval-ms 0})
+
 (defmacro verifying-eventually
   "Replaces functions with mocks. Verifies that all calls where performed the
   expected number of times. Performs this verification repeatedly, pausing for
@@ -102,12 +105,14 @@
     (future (Thread/sleep 50) (f/one-fn))))
   ```"
   [patience-cfg bindings & body]
-  (let [specs#        (->> bindings (partition-strictly 3) func->spec)
+  (let [patience-cfg# (merge default-patience-cfg patience-cfg)
+        specs#        (->> bindings (partition-strictly 3) func->spec)
         un-var#       #(if (var? %) (var-get %) %)
-        max-attempts# (:max-attempts patience-cfg)
-        interval-ms#  (:interval-ms patience-cfg)]
-    (assert (some-> max-attempts# pos?))
-    (assert (some? interval-ms#))
+        max-attempts# (:max-attempts patience-cfg#)
+        interval-ms#  (:interval-ms patience-cfg#)]
+    (assert (number? max-attempts#))
+    (assert (number? interval-ms#))
+    (assert (pos? max-attempts#))
     `(with-redefs ~(as-redefs specs#)
        (let [result# (do ~@body)]
          (loop [attempt# 0]
