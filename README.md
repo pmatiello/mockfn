@@ -26,7 +26,7 @@ In order to use `mockfn`, it's enough to require it in a test namespace.
           ...)
 ```
 
-This will bring `mockfn` features into scope for the namespace.
+This brings `mockfn`'s features into scope for the namespace.
 
 #### Stubbing Function Calls
 
@@ -77,7 +77,7 @@ Notice that the expected number of calls is defined using a
 
 #### Verifying Asynchronous Interactions
 
-The `verifying-eventually` also defines call count expectations, but this
+The `verifying-eventually` macro also defines call-count expectations, but this
 verification is performed repeatedly, pausing for a specified interval between
 checks, until all expectations are met or the maximum number of attempts is
 exceeded.
@@ -158,8 +158,8 @@ function. This can be used to simulate error scenarios in tests.
 #### Returning different values at each invocation
 
 The `me.pmatiello.mockfn.xtras/return-in-order` function allows a mock to return
-a sequence of values in the order they are called. After the last value, it will
-continue from the first value in the sequence.
+a sequence of values in the order the mock is called. After the last value, it
+will continue from the first value in the sequence.
 
 ```clj
 (testing "returns values in order"
@@ -200,7 +200,7 @@ not nested) mocking style using `mockfn.clj-test/providing`,
 ```
 
 Note that to leverage the built-in support for mocking in these macros, it's
-necessary to use the `providing`, `verifying` and `verifying-eventually`
+necessary to use the `providing`, `verifying`, and `verifying-eventually`
 symbols provided in the `mockfn.clj-test` namespace. This namespace also
 provides aliases to the `invoke` and `raise` functions.
 
@@ -218,7 +218,7 @@ The following matchers are included in `mockfn`:
 | **Presence**   |                                                                             |                         |
 | `some`         | Matches if the actual value is not nil.                                     | `(some)`                |
 | `null`         | Matches if the actual value is nil.                                         | `(null)`                |
-| `empty`        | Matches if the actual value is empty (collection, string, etc).             | `(empty)`               |
+| `empty`        | Matches if the actual value is empty (a collection, a string, etc.).        | `(empty)`               |
 | **Boolean**    |                                                                             |                         |
 | `truthy`       | Matches if the actual value is truthy.                                      | `(truthy)`              |
 | `falsy`        | Matches if the actual value is falsy.                                       | `(falsy)`               |
@@ -245,9 +245,9 @@ namespace.
 
 ## Quirks and Limitations
 
-While `providing`, `verifying` and `verifying-eventually` calls can be nested,
+While `providing`, `verifying`, and `verifying-eventually` calls can be nested,
 all required stubs and expectations for a single mock must be defined within the
-same call. Mocking a function in an inner `providing`, `verifying` or
+same call. Mocking a function in an inner `providing`, `verifying`, or
 `verifying-eventually` call will override any definitions made in the outer
 scope for the tests being run in the inner scope.
 
@@ -301,7 +301,7 @@ Make a commit and generate a new tag:
 % git commit -a -m "Release: ${VERSION}"
 % git tag -a "v${VERSION}" -m "Release: ${VERSION}"
 % git push
-% git push origin "v${VERSION}" 
+% git push origin "v${VERSION}"
 ```
 
 Run all tests and build the release artifact:
