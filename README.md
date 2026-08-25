@@ -90,9 +90,6 @@ exceeded.
     (future (Thread/sleep 50) (one-fn :argument))))
 ```
 
-Notice that the expected number of calls is defined using a
-[matcher](#built-in-matchers).
-
 #### Argument Matchers
 
 Mocks can be configured to return a specific value for a range of different
@@ -204,7 +201,8 @@ not nested) mocking style using `mockfn.clj-test/providing`,
 
 Note that to leverage the built-in support for mocking in these macros, it's
 necessary to use the `providing`, `verifying` and `verifying-eventually`
-symbols provided in the `mockfn.clj-test` namespace.
+symbols provided in the `mockfn.clj-test` namespace. This namespace also
+provides aliases to the `invoke` and `raise` functions.
 
 ### Built-in Matchers
 
@@ -247,10 +245,11 @@ namespace.
 
 ## Quirks and Limitations
 
-While `providing` and `verifying` calls can be nested, all required stubs and
-expectations for a single mock must be defined within the same call. Mocking a
-function in an inner `providing` or `verifying` call will override any
-definitions made in the outer scope for the tests being run in the inner scope.
+While `providing`, `verifying` and `verifying-eventually` calls can be nested,
+all required stubs and expectations for a single mock must be defined within the
+same call. Mocking a function in an inner `providing`, `verifying` or
+`verifying-eventually` call will override any definitions made in the outer
+scope for the tests being run in the inner scope.
 
 ```clj
 (testing "nested mocks"
