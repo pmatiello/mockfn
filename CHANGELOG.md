@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## Unreleased
+## 0.11.0 - 2026-08-26
 
 - Fixed race condition in `return-in-order` which could cause values to be
   returned repeatedly or out of order.
