@@ -6,6 +6,29 @@ be used alongside a regular testing framework such as `clojure.test`.
 [![Clojars Project](https://img.shields.io/clojars/v/me.pmatiello/mockfn.svg)](https://clojars.org/me.pmatiello/mockfn)
 [![Documentation](https://cljdoc.org/badge/me.pmatiello/mockfn)](https://cljdoc.org/d/me.pmatiello/mockfn)
 
+<!-- TOC -->
+* [me.pmatiello/mockfn](#mepmatiellomockfn)
+  * [Usage](#usage)
+    * [Framework-agnostic usage](#framework-agnostic-usage)
+      * [Stubbing function calls](#stubbing-function-calls)
+      * [Verifying interactions](#verifying-interactions)
+      * [Verifying asynchronous interactions](#verifying-asynchronous-interactions)
+      * [Argument matchers](#argument-matchers)
+      * [Mocking private functions](#mocking-private-functions)
+      * [Returning dynamic values](#returning-dynamic-values)
+      * [Throwing exceptions](#throwing-exceptions)
+      * [Returning different values at each invocation](#returning-different-values-at-each-invocation)
+    * [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest)
+    * [Built-in matchers](#built-in-matchers)
+  * [Quirks and Limitations](#quirks-and-limitations)
+  * [Development](#development)
+    * [Running tests](#running-tests)
+    * [Building](#building)
+    * [Releasing](#releasing)
+  * [Contribution Policy](#contribution-policy)
+  * [License](#license)
+<!-- TOC -->
+
 ## Usage
 
 This library is designed to be compatible with any testing framework. All
@@ -28,7 +51,7 @@ In order to use `mockfn`, it's enough to require it in a test namespace.
 
 This brings `mockfn`'s features into scope for the namespace.
 
-#### Stubbing Function Calls
+#### Stubbing function calls
 
 The `providing` macro replaces functions with mocks. These mocks return
 preconfigured values when called with the expected arguments.
@@ -60,7 +83,7 @@ It's also possible to configure multiple mocks, for multiple functions, at once.
     (is (= :result-2 (other-fn :argument))))))
 ```
 
-#### Verifying Interactions
+#### Verifying interactions
 
 The `verifying` macro works similarly, but also defines an expectation for the
 number of times a call should be made during the test. A test will fail if this
@@ -75,7 +98,7 @@ expectation is not met.
 Notice that the expected number of calls is defined using a
 [matcher](#built-in-matchers).
 
-#### Verifying Asynchronous Interactions
+#### Verifying asynchronous interactions
 
 The `verifying-eventually` macro also defines call-count expectations, but this
 verification is performed repeatedly, pausing for a specified interval between
@@ -90,7 +113,7 @@ exceeded.
     (future (Thread/sleep 50) (one-fn :argument))))
 ```
 
-#### Argument Matchers
+#### Argument matchers
 
 Mocks can be configured to return a specific value for a range of different
 arguments through [matchers](#built-in-matchers).
@@ -204,7 +227,7 @@ necessary to use the `providing`, `verifying`, and `verifying-eventually`
 symbols provided in the `mockfn.clj-test` namespace. This namespace also
 provides aliases to the `invoke` and `raise` functions.
 
-### Built-in Matchers
+### Built-in matchers
 
 The following matchers are included in `mockfn`:
 
