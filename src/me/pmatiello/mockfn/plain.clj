@@ -116,7 +116,8 @@
     `(with-redefs ~(as-redefs specs#)
        (let [result# (do ~@body)]
          (loop [attempt# 0]
-           (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))] (mock/verify mock#))
+           (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+                             (mock/verify mock#))
                            (catch ExceptionInfo e# e#))]
              (cond
                (and (ex-data vrf#) (>= attempt# ~max-attempts#))
@@ -142,7 +143,8 @@
   (with-meta func {::mock/invoke-fn true}))
 
 (defn raise
-  "Creates a mock behavior that throws the given exception when the mock is called.
+  "Creates a mock behavior that throws the given exception when the mock is
+  called.
 
   This can be used to simulate error scenarios in tests by configuring a mock
   to throw a specific exception.

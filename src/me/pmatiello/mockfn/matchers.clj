@@ -11,7 +11,7 @@
   ((:match-fn matcher) actual (:expected matcher)))
 
 (defn description
-  "Describes a matcher by returning it's name and expectations."
+  "Describes a matcher by returning its name and expectations."
   [matcher]
   (let [m-name       (:name matcher)
         args-desc-fn (:args-desc-fn matcher)
@@ -81,7 +81,8 @@
   (make "falsy" (fn [a _] (not (boolean a))) nil))
 
 (defn at-least
-  "Returns a matcher that expects a value greater than or equal to the argument."
+  "Returns a matcher that expects a value greater than or equal to the
+  argument."
   [value]
   (make "at-least" (fn [a e] (and (number? a) (number? e) (>= a e))) value))
 
@@ -91,7 +92,8 @@
   (make "at-most" (fn [a e] (and (number? a) (number? e) (<= a e))) value))
 
 (defn between
-  "Returns a matcher that expects a value between lower-bound and upper-bound, inclusive."
+  "Returns a matcher that expects a value between lower-bound and upper-bound
+  inclusive."
   [lower-bound upper-bound]
   (make "between" (fn [a [lo up]]
                     (and (number? a)
@@ -117,7 +119,8 @@
   (make "includes" #(and (string? %1) (string? %2) (str/includes? %1 %2)) substring pr-str))
 
 (defn regex
-  "Returns a matcher that expects a string matching the provided regular expression."
+  "Returns a matcher that expects a string matching the provided regular
+  expression."
   [regex]
   (make "regex" #(and (instance? java.util.regex.Pattern %2)
                       (string? %1)
@@ -125,7 +128,8 @@
         regex pr-str))
 
 (defn contains-all
-  "Returns a matcher that expects a collection containing all the provided values."
+  "Returns a matcher that expects a collection containing all the provided
+  values."
   [values]
   (make "contains-all"
         #(and (coll? %1) (-> %1 set (set/intersection %2) (= %2)))
@@ -133,7 +137,8 @@
         pr-str))
 
 (defn contains-any
-  "Returns a matcher that expects a collection containing at least one of the provided values."
+  "Returns a matcher that expects a collection containing at least one of the
+  provided values."
   [values]
   (make "contains-any"
         #(and (coll? %1) (-> %1 set (set/intersection %2) empty? not))
@@ -155,12 +160,14 @@
   (make "and>" (fn [a e] (every? #(matches? % a) e)) matchers description*))
 
 (defn or>
-  "Returns a matcher that expects a value matching any of the provided matchers."
+  "Returns a matcher that expects a value matching any of the provided
+  matchers."
   [& matchers]
   (make "or>" (fn [a e] (boolean (clojure.core/some #(matches? % a) e))) matchers description*))
 
 (defn *>
-  "Returns a matcher that matches a sequence of arguments against the provided matcher."
+  "Returns a matcher that matches a sequence of arguments against the provided
+  matcher."
   [matcher]
   (make "*>" (fn [_ _] (throw (ex-info "Invalid operation." {}))) matcher description
         (fn [ma args] (repeat (count args) (:expected ma)))))
