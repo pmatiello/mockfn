@@ -36,3 +36,21 @@
     (is (= :x (f/one-fn :x)))
     (mfn/providing
       (f/one-fn :x) (xtras/return-in-order :a :b :c (mfn/invoke identity)))))
+
+(mfn/deftest reify-with-test
+  (let [obj (xtras/reify-with f/SomeProtocol {:m1 f/one-fn :m2 f/other-fn})]
+    (mfn/testing "produces an object satisfying the given protocol"
+      (is (satisfies? f/SomeProtocol obj)))
+
+    (mfn/testing "delegates method calls to the given functions"
+      (is (= :one-fn (.m1 obj)))
+      (is (= :other-fn-x (.m2 obj :x)))
+      (is (= :other-fn-x-y (.m2 obj :x :y)))
+      (mfn/providing
+        (f/one-fn obj) :one-fn
+        (f/other-fn obj :x) :other-fn-x
+        (f/other-fn obj :x :y) :other-fn-x-y)))
+
+  (mfn/testing "allows incomplete method-function mappings"
+    (let [obj (xtras/reify-with f/SomeProtocol {})]
+      (is (satisfies? f/SomeProtocol obj)))))

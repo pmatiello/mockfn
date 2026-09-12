@@ -6,3 +6,7 @@
 (declare ^:private pvt-fn)
 
 (defn same-val [x] x)
+
+(defprotocol SomeProtocol
+  (m1 [this])
+  (m2 [this x] [this x y]))

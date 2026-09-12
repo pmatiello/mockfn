@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## 0.12.0 - Unreleased
+
+- Added `xtras/reify-with` to produce objects implementing a protocol that can
+  be conveniently configured with stubs and expectations.
+
 ## 0.11.0 - 2026-08-26
 
 - Fixed race condition in `return-in-order` which could cause values to be

@@ -32,3 +32,48 @@
    ```"
   [& values]
   (plain/invoke (partial return-in-order* (atom (cycle values)))))
+
+(defmacro reify-with
+  "Creates an object implementing a protocol where method calls are always
+  delegated to specified functions.
+
+  As the objects produced by this macro always delegate method calls to
+  predefined functions, regular mockfn primitives like providing and verifying
+  can be configured against these given functions in order to specify and
+  validate interactions against the object.
+
+  ```
+  (reify-with ProtocolName {:method-name fn-name ...})
+  ```
+
+  This macro is similar to [[clojure.core/reify]]. However, it's also different
+  in the following aspects:
+  - It only accepts protocols, not interfaces;
+  - It only supports one protocol per instantiation;
+  - Methods are not implemented in the body but delegated to the given
+  functions instead.
+
+  Example:
+  ```
+  (defprotocol SomeProtocol
+    (m1 [this])
+    (m2 [this x]))
+
+  (declare fn1 fn2)
+  (reify-with SomeProtocol {:m1 fn1 :m2 fn2})
+  (def obj (reify-with SomeProtocol {:m1 fn1 :m2 fn2}))
+
+  (providing
+    [(fn1 obj) :fn1
+     (fn2 obj :x) :fn2]
+    (is (= :fn1 (.m1 obj)))
+    (is (= :fn2 (.m2 obj :x))))
+  ```"
+  [protocol mtd->fn]
+  (let [sigs (->> protocol resolve deref :sigs
+                  (filter (fn [[mtd _sig]] (-> mtd->fn keys set mtd)))
+                  (mapcat (fn [[mtd sig]] (map #(vector mtd %) (:arglists sig)))))]
+    `(reify ~protocol
+       ~@(map
+           (fn [[mtd args]]
+             `(~(symbol mtd) ~args (~(mtd->fn mtd) ~@args))) sigs))))
