@@ -34,13 +34,13 @@
   (plain/invoke (partial return-in-order* (atom (cycle values)))))
 
 (defmacro reify-with
-  "Creates an object implementing a protocol where method calls are always
-  delegated to specified functions.
+  "Creates an object implementing a protocol that delegates calls to protocol
+  methods to predefined functions.
 
-  As the objects produced by this macro always delegate method calls to
-  predefined functions, regular mockfn primitives like providing and verifying
-  can be configured against these given functions in order to specify and
-  validate interactions against the object.
+  As the objects produced by this macro always delegate these calls to the
+  specified functions, regular mocking primitives (such as providing,
+  verifying, etc.) can be configured against these given functions in order to
+  specify and validate interactions against the object.
 
   ```
   (reify-with ProtocolName {:method-name fn-name ...})
@@ -60,7 +60,6 @@
     (m2 [this x]))
 
   (declare fn1 fn2)
-  (reify-with SomeProtocol {:m1 fn1 :m2 fn2})
   (def obj (reify-with SomeProtocol {:m1 fn1 :m2 fn2}))
 
   (providing

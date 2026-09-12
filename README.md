@@ -7,26 +7,29 @@ be used alongside a regular testing framework such as `clojure.test`.
 [![Documentation](https://cljdoc.org/badge/me.pmatiello/mockfn)](https://cljdoc.org/d/me.pmatiello/mockfn)
 
 <!-- TOC -->
+
 * [me.pmatiello/mockfn](#mepmatiellomockfn)
-  * [Usage](#usage)
-    * [Framework-agnostic usage](#framework-agnostic-usage)
-      * [Stubbing function calls](#stubbing-function-calls)
-      * [Verifying interactions](#verifying-interactions)
-      * [Verifying asynchronous interactions](#verifying-asynchronous-interactions)
-      * [Argument matchers](#argument-matchers)
-      * [Mocking private functions](#mocking-private-functions)
-      * [Returning dynamic values](#returning-dynamic-values)
-      * [Throwing exceptions](#throwing-exceptions)
-      * [Returning different values at each invocation](#returning-different-values-at-each-invocation)
-    * [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest)
-    * [Built-in matchers](#built-in-matchers)
-  * [Quirks and Limitations](#quirks-and-limitations)
-  * [Development](#development)
-    * [Running tests](#running-tests)
-    * [Building](#building)
-    * [Releasing](#releasing)
-  * [Contribution Policy](#contribution-policy)
-  * [License](#license)
+    * [Usage](#usage)
+        * [Framework-agnostic usage](#framework-agnostic-usage)
+            * [Stubbing function calls](#stubbing-function-calls)
+            * [Verifying interactions](#verifying-interactions)
+            * [Verifying asynchronous interactions](#verifying-asynchronous-interactions)
+            * [Argument matchers](#argument-matchers)
+            * [Mocking private functions](#mocking-private-functions)
+            * [Returning dynamic values](#returning-dynamic-values)
+            * [Throwing exceptions](#throwing-exceptions)
+            * [Returning different values at each invocation](#returning-different-values-at-each-invocation)
+            * [Mocking protocol methods](#mocking-protocol-methods)
+        * [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest)
+        * [Built-in matchers](#built-in-matchers)
+    * [Quirks and Limitations](#quirks-and-limitations)
+    * [Development](#development)
+        * [Running tests](#running-tests)
+        * [Building](#building)
+        * [Releasing](#releasing)
+    * [Contribution Policy](#contribution-policy)
+    * [License](#license)
+
 <!-- TOC -->
 
 ## Usage
@@ -189,6 +192,32 @@ will continue from the first value in the sequence.
   (mfn/providing
     [(one-fn) (xtras/return-in-order [:a :b :c])]
     (is (= [:a :b :c :a :b] (repeatedly 5 one-fn))))
+```
+
+#### Mocking protocol methods
+
+The `me.pmatiello.mockfn.xtras/reify-with` macro receives a protocol and a
+mapping of methods to functions to produce an object that delegates any calls to
+methods of the given protocol to predefined functions.
+
+As the objects produced by this macro always delegate these calls to the
+specified functions, regular mocking primitives (such as providing, verifying,
+etc.) can be configured against these given functions in order to specify and
+validate interactions against the object.
+
+```clj
+(defprotocol SomeProtocol
+  (m1 [this])
+  (m2 [this x]))
+
+(declare fn1 fn2)
+(def obj (xtras/reify-with SomeProtocol {:m1 fn1 :m2 fn2}))
+
+(mfn/providing
+  [(fn1 obj) :fn1
+   (fn2 obj :x) :fn2]
+  (is (= :fn1 (.m1 obj)))
+  (is (= :fn2 (.m2 obj :x))))
 ```
 
 ### Syntactic sugar for clojure.test
