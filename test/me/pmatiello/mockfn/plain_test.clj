@@ -26,8 +26,10 @@
 
   (testing "mocks functions with argument matchers"
     (plain/providing
-      [(f/one-fn (matchers/a Keyword)) :mocked]
+      [(f/one-fn (matchers/a Keyword)) :mocked
+       (f/other-fn (matchers/at-least 10) (matchers/at-most 20)) :also-mocked]
       (is (= :mocked (f/one-fn :expected)))
+      (is (= :also-mocked (f/other-fn 12 18)))
       (is (thrown-with-msg?
             ExceptionInfo #"Unexpected call"
             (f/one-fn "unexpected")))))
@@ -99,8 +101,10 @@
 
   (testing "mocks functions with argument matchers"
     (plain/verifying
-      [(f/one-fn (matchers/a Keyword)) :mocked (matchers/exactly 1)]
+      [(f/one-fn (matchers/a Keyword)) :mocked (matchers/exactly 1)
+       (f/other-fn (matchers/at-least 10) (matchers/at-most 20)) :also-mocked (matchers/exactly 1)]
       (is (= :mocked (f/one-fn :expected)))
+      (is (= :also-mocked (f/other-fn 12 18)))
       (is (thrown-with-msg?
             ExceptionInfo #"Unexpected call"
             (f/one-fn "unexpected")))))
@@ -258,3 +262,22 @@
                         bindings       (vec (concat base-bindings extra-bindings))]
                     (eval `(plain/providing ~bindings (f/one-fn :expected)))))]
       (is (every? #{:exact} (map test* (range 100)))))))
+
+(deftest nesting-test
+  (testing "definitions can be nested"
+    (plain/providing [(f/one-fn :argument) :result]
+      (plain/providing [(f/other-fn :argument) :result]
+        (is (= :result (f/one-fn :argument)))
+        (is (= :result (f/other-fn :argument))))))
+
+  (testing "lexical scope is respected"
+    (plain/providing [(f/one-fn) :outer]
+      (plain/providing [(f/one-fn) :inner]
+        (is (= :inner (f/one-fn))))
+      (is (= :outer (f/one-fn)))))
+
+  (testing "inner definitions for a var completely override outer definitions"
+    (plain/providing [(f/one-fn :lost) :lost]
+      (plain/providing [(f/one-fn :argument) :result]
+        (is (thrown? ExceptionInfo (f/one-fn :lost)))
+        (is (= :result (f/one-fn :argument)))))))
