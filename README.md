@@ -345,6 +345,15 @@ To clean a previous build, run:
 Before releasing, update the library version in the [build.clj](./build.clj)
 file and the release version and date in the changelog.
 
+Run all tests and build the release artifact:
+
+```
+% clj -X:test
+% clj -T:build clean
+% clj -T:build jar
+% ls target/
+```
+
 Make a commit and generate a new tag:
 
 ```
@@ -356,15 +365,7 @@ Make a commit and generate a new tag:
 % git push origin "v${VERSION}"
 ```
 
-Run all tests and build the release artifact:
-
-```
-% clj -X:test
-% clj -T:build clean
-% clj -T:build jar
-```
-
-To release to [Clojars](https://clojars.org), run:
+Publish to [Clojars](https://clojars.org):
 
 ```
 % mvn deploy:deploy-file \
