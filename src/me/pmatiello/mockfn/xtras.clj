@@ -46,7 +46,7 @@
   (reify-with ProtocolName {:method-name fn-name ...})
   ```
 
-  This macro is similar to [[clojure.core/reify]]. However, it's also different
+  This macro is similar to `clojure.core/reify`. However, it's also different
   in the following aspects:
   - It only accepts protocols, not interfaces;
   - It only supports one protocol per instantiation;
