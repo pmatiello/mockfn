@@ -52,7 +52,7 @@ In order to use `mockfn`, it's enough to require it in a test namespace.
           ...)
 ```
 
-This brings `mockfn`'s features into scope for the namespace.
+This makes `mockfn`'s features available in the namespace.
 
 #### Stubbing function calls
 
@@ -118,8 +118,8 @@ exceeded.
 
 #### Argument matchers
 
-Mocks can be configured to return a specific value for a range of different
-arguments through [matchers](#built-in-matchers).
+Mocks can be configured to return a specific value when called with arguments
+matching certain criteria through [matchers](#built-in-matchers).
 
 ```clj
 (testing "argument matchers"
@@ -147,7 +147,7 @@ symbol of the mocked function.
 #### Returning dynamic values
 
 The `invoke` function allows mocks to dynamically invoke a function with the
-received arguments and return the output.
+received arguments and return its result.
 
 ```clj
 (testing "returns dynamic values"
@@ -197,8 +197,8 @@ will continue from the first value in the sequence.
 #### Mocking protocol methods
 
 The `me.pmatiello.mockfn.xtras/reify-with` macro receives a protocol and a
-mapping of methods to functions to produce an object that delegates any calls to
-methods of the given protocol to predefined functions.
+mapping of methods to functions, producing an object that delegates protocol
+method calls to those functions.
 
 As the objects produced by this macro always delegate these calls to the
 specified functions, regular mocking primitives (such as providing, verifying,
@@ -234,8 +234,8 @@ is provided in the `mockfn.clj-test` namespace.
 ```
 
 The `mockfn.clj-test/deftest` and `mockfn.clj-test/testing` macros replace
-`clojure.test/deftest` and `clojure.test/testing` and support a flatter (as in
-not nested) mocking style using `mockfn.clj-test/providing`,
+`clojure.test/deftest` and `clojure.test/testing` and support a mocking style
+that avoids nesting mocking macros using `mockfn.clj-test/providing`,
 `mockfn.clj-test/verifying` and `mockfn.clj-test/verifying-eventually`.
 
 ```clj
@@ -284,7 +284,7 @@ The following matchers are included in `mockfn`:
 | `includes`     | Matches if the actual string includes the expected substring.               | `(includes substring)`  |
 | `regex`        | Matches if the expected regular expression matches the actual string.       | `(regex expression)`    |
 | **Collection** |                                                                             |                         |
-| `contains-all` | Matches if the actual collection contains all expected values.              | `(contains values)`     |
+| `contains-all` | Matches if the actual collection contains all expected values.              | `(contains-all values)` |
 | `contains-any` | Matches if the actual collection contains any expected values.              | `(contains-any values)` |
 | **Operators**  |                                                                             |                         |
 | `not>`         | Matches if the actual value does not match the provided matcher.            | `(not> matcher)`        |
@@ -354,7 +354,7 @@ Run all tests and build the release artifact:
 % ls target/
 ```
 
-Make a commit and generate a new tag:
+Commit the changes and create a new tag:
 
 ```
 % export VERSION=$(clj -A:build -M -e '(load-file "build.clj") (println build/version)' \

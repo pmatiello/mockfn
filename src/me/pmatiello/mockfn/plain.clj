@@ -131,7 +131,7 @@
 
 (defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls
-  will invoke the function with the received arguments and return the output.
+  will invoke the function with the received arguments and return its result.
 
   Example:
   ```

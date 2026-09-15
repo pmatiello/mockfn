@@ -32,7 +32,7 @@
 (defmacro deftest
   "Declares a test function as done by `clojure.test/deftest` with built-in
   support for mocking through (optional) `providing`, `verifying` and
-  `verifying-eventually`forms.
+  `verifying-eventually` forms.
 
   ```
   (deftest test-name
@@ -100,7 +100,7 @@
 
 (defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls
-  will invoke the function with the received arguments and return the output.
+  will invoke the function with the received arguments and return its result.
 
   Example:
   ```
