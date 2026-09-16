@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## 0.12.0 - Unreleased
+## 0.12.0 - 2026-09-16
 
 - Added `xtras/reify-with` to produce objects implementing a protocol that can
   be conveniently configured with stubs and expectations.
