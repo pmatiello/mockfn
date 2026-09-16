@@ -23,6 +23,8 @@ be used alongside a regular testing framework such as `clojure.test`.
         * [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest)
         * [Built-in matchers](#built-in-matchers)
     * [Quirks and Limitations](#quirks-and-limitations)
+        * [No support for parallel test execution](#no-support-for-parallel-test-execution)
+        * [Inner definitions override outer ones](#inner-definitions-override-outer-ones)
     * [Development](#development)
         * [Running tests](#running-tests)
         * [Building](#building)
@@ -297,9 +299,21 @@ namespace.
 
 ## Quirks and Limitations
 
+The aspects described below are considered expected behavior and unlikely to
+change in future versions of mockfn.
+
+### No support for parallel test execution
+
+This library relies on the `clojure.core/with-redefs` macro to rebind function
+vars to mock implementations. These redefinitions are temporary, but visible to
+all threads while in effect. Therefore, test suites using mockfn must be
+executed sequentially to avoid nondeterministic behavior.
+
+### Inner definitions override outer ones
+
 While `providing`, `verifying`, and `verifying-eventually` calls can be nested,
-all required stubs and expectations for a single mock must be defined within the
-same call. Mocking a function in an inner `providing`, `verifying`, or
+all required stubs and expectations for a single mock must be defined within a
+single call. Mocking a function in an inner `providing`, `verifying`, or
 `verifying-eventually` call will override any definitions made in the outer
 scope for the tests being run in the inner scope.
 
