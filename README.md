@@ -197,8 +197,8 @@ will continue from the first value in the sequence.
 #### Mocking protocol methods
 
 The `me.pmatiello.mockfn.xtras/reify-with` macro receives a protocol and a
-mapping of methods to functions, producing an object that delegates protocol
-method calls to those functions.
+mapping of methods to functions, producing an object that delegates to these
+functions any calls made against the mapped protocol methods.
 
 As the objects produced by this macro always delegate these calls to the
 specified functions, regular mocking primitives (such as providing, verifying,
