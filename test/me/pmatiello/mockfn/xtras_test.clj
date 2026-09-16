@@ -3,7 +3,8 @@
             [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.fixtures :as f]
             [me.pmatiello.mockfn.plain :as plain]
-            [me.pmatiello.mockfn.xtras :as xtras]))
+            [me.pmatiello.mockfn.xtras :as xtras])
+  (:import (clojure.lang Compiler$CompilerException)))
 
 (deftest return-in-order-test
   (testing "returns sequence of values at each invocation, in order"
@@ -53,4 +54,12 @@
 
   (mfn/testing "allows incomplete method-function mappings"
     (let [obj (xtras/reify-with f/SomeProtocol {})]
-      (is (satisfies? f/SomeProtocol obj)))))
+      (is (satisfies? f/SomeProtocol obj))))
+
+  (mfn/testing "fails at macro expansion when mapping non-protocol methods"
+    (is (thrown?
+          Compiler$CompilerException
+          (macroexpand
+            '(me.pmatiello.mockfn.xtras/reify-with
+               me.pmatiello.mockfn.fixtures/SomeProtocol
+               {:missing me.pmatiello.mockfn.fixtures/one-fn}))))))

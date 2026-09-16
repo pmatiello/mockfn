@@ -1,5 +1,6 @@
 (ns me.pmatiello.mockfn.xtras
-  (:require [me.pmatiello.mockfn.internal.mock :as mock]
+  (:require [clojure.set :as set]
+            [me.pmatiello.mockfn.internal.mock :as mock]
             [me.pmatiello.mockfn.plain :as plain]))
 
 (defn ^:private return-in-order*
@@ -34,8 +35,8 @@
   (plain/invoke (partial return-in-order* (atom (cycle values)))))
 
 (defmacro reify-with
-  "Creates an object implementing a protocol that delegates calls to protocol
-  methods to predefined functions.
+  "Creates an object implementing a protocol that delegates to predefined
+  functions any calls performed against the mapped protocol methods.
 
   As the objects produced by this macro always delegate these calls to the
   specified functions, regular mocking primitives (such as providing,
@@ -50,8 +51,8 @@
   in the following aspects:
   - It only accepts protocols, not interfaces;
   - It only supports one protocol per instantiation;
-  - Methods are not implemented in the body but delegated to the given
-  functions instead.
+  - Methods are not implemented in the body of the declaration but delegated to
+  the given functions instead.
 
   Example:
   ```
@@ -69,10 +70,22 @@
     (is (= :fn2 (.m2 obj :x))))
   ```"
   [protocol mtd->fn]
-  (let [sigs (->> protocol resolve deref :sigs
-                  (filter (fn [[mtd _sig]] (-> mtd->fn keys set mtd)))
-                  (mapcat (fn [[mtd sig]] (map #(vector mtd %) (:arglists sig)))))]
+  (let [proto-sigs   (-> protocol resolve deref :sigs)
+        prepd-sigs   (->> proto-sigs
+                          (filter (fn [[mtd _sig]] (-> mtd->fn keys set mtd)))
+                          (mapcat (fn [[mtd sig]] (map #(vector mtd %) (:arglists sig)))))
+        not-in-proto (set/difference (-> mtd->fn keys set)
+                                     (-> proto-sigs keys set))]
+    (when-not (empty? not-in-proto)
+      (throw (ex-info "Methods not in protocols" {:methods not-in-proto})))
     `(reify ~protocol
        ~@(map
            (fn [[mtd args]]
-             `(~(symbol mtd) ~args (~(mtd->fn mtd) ~@args))) sigs))))
+             `(~(symbol mtd) ~args (~(mtd->fn mtd) ~@args))) prepd-sigs))))
+
+(comment
+  (defprotocol Xyz
+    (xx [this])
+    (yy [this that]))
+
+  (-> Xyz :sigs keys))
