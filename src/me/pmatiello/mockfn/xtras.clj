@@ -82,10 +82,3 @@
        ~@(map
            (fn [[mtd args]]
              `(~(symbol mtd) ~args (~(mtd->fn mtd) ~@args))) prepd-sigs))))
-
-(comment
-  (defprotocol Xyz
-    (xx [this])
-    (yy [this that]))
-
-  (-> Xyz :sigs keys))
