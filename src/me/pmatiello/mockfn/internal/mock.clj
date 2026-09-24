@@ -3,6 +3,8 @@
             [me.pmatiello.mockfn.matchers :as matchers])
   (:import (me.pmatiello.mockfn.matchers Matcher)))
 
+(def ^:dynamic *call-log* nil)
+
 (defn ^:private matches-arg?
   [[expected arg]]
   (if (instance? Matcher expected)
@@ -35,6 +37,8 @@
 
 (defn ^:private return-value-for
   [func spec args]
+  (when *call-log*
+    (swap! *call-log* conj (concat [(:fn spec)] args)))
   (let [spec*   (-> spec :rules (for-args args))
         ret-val (:ret-val spec*)]
     (when (= spec* ::unexpected-call)

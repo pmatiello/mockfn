@@ -78,7 +78,20 @@
     (is (thrown?
           Compiler$CompilerException
           (macroexpand '(me.pmatiello.mockfn.plain/providing
-                          [(f/one-fn) :result :malformed]))))))
+                          [(f/one-fn) :result :malformed])))))
+
+  (testing "records call log"
+    (plain/providing
+      [(f/one-fn) :ret-val
+       (f/other-fn :arg) :ret-val
+       (f/another-fn :arg1 :arg2) :ret-val]
+      (f/one-fn)
+      (f/other-fn :arg)
+      (f/another-fn :arg1 :arg2)
+      (is (= [[#'f/one-fn]
+              [#'f/other-fn :arg]
+              [#'f/another-fn :arg1 :arg2]]
+             @plain/*call-log*)))))
 
 (deftest verifying-test
   (testing "mocks functions without arguments"

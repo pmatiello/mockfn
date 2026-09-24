@@ -23,7 +23,7 @@
                   :calls    `(atom 0)
                   :expected (into [] expected)}]
         (-> acc
-            (assoc-in [func :fn] func)
+            (assoc-in [func :fn] `(var ~(fn-sym func)))
             (update-in [func :rules] #(conj (or % []) rule)))))
     {} bindings))
 
@@ -32,6 +32,8 @@
   (->> func->spec
        (map (fn [[func spec]] [(fn-sym func) `(mock/mock ~func ~spec)]))
        (apply concat)))
+
+(def ^:dynamic *call-log* nil)
 
 (defmacro providing
   "Replaces functions with mocks. These mocks return preconfigured values when
@@ -51,8 +53,11 @@
     (is (= :result (one-fn))))
   ```"
   [bindings & body]
-  `(with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
-     ~@body))
+  `(let [call-log# (atom [])]
+     (binding [*call-log* call-log#
+               mock/*call-log* call-log#]
+       (with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
+         ~@body))))
 
 (defmacro verifying
   "Replaces functions with mocks. Verifies that all calls where performed the

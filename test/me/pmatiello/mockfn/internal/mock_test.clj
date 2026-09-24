@@ -115,3 +115,21 @@
       (is (= 3 (-> (rule-for mock [match-x*]) :calls deref))))
     (testing "throws exception when called with unexpected arguments"
       (is (thrown? ExceptionInfo (mock :x :y :z))))))
+
+(deftest mock-call-log-test
+  (testing "records log of mock function invocation"
+    (binding [mock/*call-log* (atom [])]
+      (let [spec  {:fn    #'f/one-fn
+                   :rules [{:args [] :ret-val :ok :calls (atom 0)}
+                           {:args [:arg] :ret-val :ok :calls (atom 0)}]}
+            mock1 (mock/mock f/one-fn spec)
+            spec2 {:fn    #'f/other-fn
+                   :rules [{:args [:arg1 :arg2] :ret-val :one-arg :calls (atom 0)}]}
+            mock2 (mock/mock f/other-fn spec2)]
+        (mock1)
+        (mock1 :arg)
+        (mock2 :arg1 :arg2))
+      (is (= [[#'f/one-fn]
+              [#'f/one-fn :arg]
+              [#'f/other-fn :arg1 :arg2]]
+             @mock/*call-log*)))))
