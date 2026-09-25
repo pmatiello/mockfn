@@ -18,10 +18,10 @@
       (is (= :mocked (f/one-fn :expected)))
       (is (= :also-mocked (f/one-fn :expected :also-expected)))
       (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call"
+            ExceptionInfo #"Unexpected call.*fixtures/one-fn"
             (f/one-fn :unexpected)))
       (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call"
+            ExceptionInfo #"Unexpected call.*fixtures/one-fn"
             (f/one-fn)))))
 
   (testing "mocks functions with argument matchers"
@@ -31,7 +31,7 @@
       (is (= :mocked (f/one-fn :expected)))
       (is (= :also-mocked (f/other-fn 12 18)))
       (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call"
+            ExceptionInfo #"Unexpected call.*fixtures/one-fn"
             (f/one-fn "unexpected")))))
 
   (testing "mocks functions with collection-valued arguments"
@@ -106,10 +106,10 @@
       (is (= :mocked (f/one-fn :expected)))
       (is (= :also-mocked (f/one-fn :expected :also-expected)))
       (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call"
+            ExceptionInfo #"Unexpected call.*fixtures/one-fn"
             (f/one-fn :unexpected)))
       (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call"
+            ExceptionInfo #"Unexpected call.*fixtures/one-fn"
             (f/one-fn)))))
 
   (testing "mocks functions with argument matchers"
@@ -119,7 +119,7 @@
       (is (= :mocked (f/one-fn :expected)))
       (is (= :also-mocked (f/other-fn 12 18)))
       (is (thrown-with-msg?
-            ExceptionInfo #"Unexpected call"
+            ExceptionInfo #"Unexpected call.*fixtures/one-fn"
             (f/one-fn "unexpected")))))
 
   (testing "mocks functions with collection-valued arguments"
@@ -136,7 +136,7 @@
 
   (testing "fails if calls are not performed the expected number of times"
     (is (thrown-with-msg?
-          ExceptionInfo #"Expected call .*"
+          ExceptionInfo #"Expected call.*fixtures/one-fn"
           (plain/verifying
             [(f/one-fn) :one-fn (matchers/exactly 2)]
             (is (= :one-fn (f/one-fn)))))))
@@ -149,7 +149,7 @@
 
     (testing "validates the call count"
       (is (thrown-with-msg?
-            ExceptionInfo #"Expected call .*"
+            ExceptionInfo #"Expected call.*fixtures/pvt-fn"
             (plain/verifying
               [(#'f/pvt-fn) :pvt-fn (matchers/exactly 2)]
               (is (= :pvt-fn (#'f/pvt-fn))))))))
@@ -211,7 +211,7 @@
 
   (testing "fails after exhausting limit of attempts"
     (is (thrown-with-msg?
-          ExceptionInfo #"Expected call .*"
+          ExceptionInfo #"Expected call.*fixtures/one-fn"
           (plain/verifying-eventually
             {:max-attempts 5 :interval-ms 20}
             [(f/one-fn) :mocked (matchers/exactly 2)]
@@ -219,7 +219,7 @@
 
   (testing "fails after exhausting limit of attempts, even if partially successful"
     (is (thrown-with-msg?
-          ExceptionInfo #"Expected call .*"
+          ExceptionInfo #"Expected call.*fixtures/other-fn"
           (plain/verifying-eventually
             {:max-attempts 5 :interval-ms 20}
             [(f/one-fn) :mocked (matchers/exactly 1)
