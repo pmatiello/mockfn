@@ -54,7 +54,7 @@
   ```"
   [bindings & body]
   `(let [call-log# (atom [])]
-     (binding [*call-log* call-log#
+     (binding [*call-log*      call-log#
                mock/*call-log* call-log#]
        (with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
          ~@body))))
@@ -79,11 +79,14 @@
   [bindings & body]
   (let [specs#  (->> bindings (partition-strictly 3) func->spec)
         un-var# #(if (var? %) (var-get %) %)]
-    `(with-redefs ~(as-redefs specs#)
-       (let [result# (do ~@body)]
-         (doseq [mock# (->> ~specs# keys (map ~un-var#))]
-           (mock/verify mock#))
-         result#))))
+    `(let [call-log# (atom [])]
+       (binding [*call-log*      call-log#
+                 mock/*call-log* call-log#]
+         (with-redefs ~(as-redefs specs#)
+           (let [result# (do ~@body)]
+             (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+               (mock/verify mock#))
+             result#))))))
 
 (def ^:private default-patience-cfg
   {:max-attempts 1 :interval-ms 0})
@@ -118,21 +121,24 @@
     (assert (number? max-attempts#))
     (assert (number? interval-ms#))
     (assert (pos? max-attempts#))
-    `(with-redefs ~(as-redefs specs#)
-       (let [result# (do ~@body)]
-         (loop [attempt# 0]
-           (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))]
-                             (mock/verify mock#))
-                           (catch ExceptionInfo e# e#))]
-             (cond
-               (and (ex-data vrf#) (>= attempt# ~max-attempts#))
-               (throw vrf#)
+    `(let [call-log# (atom [])]
+       (binding [*call-log*      call-log#
+                 mock/*call-log* call-log#]
+         (with-redefs ~(as-redefs specs#)
+           (let [result# (do ~@body)]
+             (loop [attempt# 0]
+               (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+                                 (mock/verify mock#))
+                               (catch ExceptionInfo e# e#))]
+                 (cond
+                   (and (ex-data vrf#) (>= attempt# ~max-attempts#))
+                   (throw vrf#)
 
-               (ex-data vrf#)
-               (do (Thread/sleep ~interval-ms#) (recur (inc attempt#)))
+                   (ex-data vrf#)
+                   (do (Thread/sleep ~interval-ms#) (recur (inc attempt#)))
 
-               :otherwise
-               result#)))))))
+                   :otherwise
+                   result#)))))))))
 
 (defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls

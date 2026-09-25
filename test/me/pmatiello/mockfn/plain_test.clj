@@ -181,7 +181,20 @@
     (is (thrown?
           Compiler$CompilerException
           (macroexpand '(me.pmatiello.mockfn.plain/verifying
-                          [(f/one-fn) :result (matchers/exactly 1) :malformed]))))))
+                          [(f/one-fn) :result (matchers/exactly 1) :malformed])))))
+
+  (testing "records call log"
+    (plain/verifying
+      [(f/one-fn) :ret-val (matchers/exactly 1)
+       (f/other-fn :arg) :ret-val (matchers/exactly 1)
+       (f/another-fn :arg1 :arg2) :ret-val (matchers/exactly 1)]
+      (f/one-fn)
+      (f/other-fn :arg)
+      (f/another-fn :arg1 :arg2)
+      (is (= [[#'f/one-fn]
+              [#'f/other-fn :arg]
+              [#'f/another-fn :arg1 :arg2]]
+             @plain/*call-log*)))))
 
 (deftest verifying-eventually-test
   (testing "verifies function calls within the limit of attempts"
@@ -264,7 +277,21 @@
     (plain/verifying-eventually
       nil
       [(f/one-fn) :mocked (matchers/exactly 1)]
-      (f/one-fn))))
+      (f/one-fn)))
+
+  (testing "records call log"
+    (plain/verifying-eventually
+      {:max-attempts 1 :interval-ms 0}
+      [(f/one-fn) :ret-val (matchers/exactly 1)
+       (f/other-fn :arg) :ret-val (matchers/exactly 1)
+       (f/another-fn :arg1 :arg2) :ret-val (matchers/exactly 1)]
+      (f/one-fn)
+      (f/other-fn :arg)
+      (f/another-fn :arg1 :arg2)
+      (is (= [[#'f/one-fn]
+              [#'f/other-fn :arg]
+              [#'f/another-fn :arg1 :arg2]]
+             @plain/*call-log*)))))
 
 (deftest match-ordering-test
   (testing "prefers the first declared matching stub regardless of extra bindings"
