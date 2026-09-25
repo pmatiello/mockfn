@@ -53,7 +53,7 @@
     (is (= :result (one-fn))))
   ```"
   [bindings & body]
-  `(let [call-log# (atom [])]
+  `(let [call-log# (atom (if *call-log* @*call-log* []))]
      (binding [*call-log*      call-log#
                mock/*call-log* call-log#]
        (with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
@@ -79,7 +79,7 @@
   [bindings & body]
   (let [specs#  (->> bindings (partition-strictly 3) func->spec)
         un-var# #(if (var? %) (var-get %) %)]
-    `(let [call-log# (atom [])]
+    `(let [call-log# (atom (if *call-log* @*call-log* []))]
        (binding [*call-log*      call-log#
                  mock/*call-log* call-log#]
          (with-redefs ~(as-redefs specs#)
@@ -121,7 +121,7 @@
     (assert (number? max-attempts#))
     (assert (number? interval-ms#))
     (assert (pos? max-attempts#))
-    `(let [call-log# (atom [])]
+    `(let [call-log# (atom (if *call-log* @*call-log* []))]
        (binding [*call-log*      call-log#
                  mock/*call-log* call-log#]
          (with-redefs ~(as-redefs specs#)

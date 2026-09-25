@@ -320,4 +320,25 @@
     (plain/providing [(f/one-fn :lost) :lost]
       (plain/providing [(f/one-fn :argument) :result]
         (is (thrown? ExceptionInfo (f/one-fn :lost)))
-        (is (= :result (f/one-fn :argument)))))))
+        (is (= :result (f/one-fn :argument))))))
+
+  (testing "call history is carried from outer to inner lexical scope"
+    (plain/providing
+      [(f/one-fn) :ret-val]
+      (f/one-fn)
+      (is (= [[#'f/one-fn]] @plain/*call-log*))
+      (plain/providing
+        [(f/other-fn :arg1) :ret-val]
+        (f/other-fn :arg1)
+        (is (= [[#'f/one-fn] [#'f/other-fn :arg1]] @plain/*call-log*)))
+      (plain/verifying
+        [(f/other-fn :arg2) :ret-val (matchers/any)]
+        (f/other-fn :arg2)
+        (is (= [[#'f/one-fn] [#'f/other-fn :arg2]] @plain/*call-log*)))
+      (plain/verifying-eventually
+        {:max-attempts 1 :interval-ms 0}
+        [(f/other-fn :arg3) :ret-val (matchers/any)]
+        (f/other-fn :arg3)
+        (is (= [[#'f/one-fn] [#'f/other-fn :arg3]] @plain/*call-log*)))
+      (is (= [[#'f/one-fn]] @plain/*call-log*)))
+    (is (nil? plain/*call-log*))))
