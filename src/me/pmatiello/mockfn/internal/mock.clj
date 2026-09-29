@@ -3,7 +3,13 @@
             [me.pmatiello.mockfn.matchers :as matchers])
   (:import (me.pmatiello.mockfn.matchers Matcher)))
 
-(def ^:dynamic *call-log* nil)
+(def ^:dynamic *call-log*
+  "The atom containing the call history for the currently active mocking scope.
+
+   Is `nil` when called outside a mocking scope. The history may be incomplete
+   when mocked functions are called from threads that do not inherit the
+   current dynamic bindings, such as manually created `Thread` instances."
+  nil)
 
 (defn ^:private matches-arg?
   [[expected arg]]
