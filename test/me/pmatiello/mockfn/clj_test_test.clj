@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.fixtures :as f]
+            [me.pmatiello.mockfn.internal.mock :as mock]
             [me.pmatiello.mockfn.matchers :as mfn.m])
   (:import (clojure.lang ExceptionInfo)))
 
@@ -145,11 +146,27 @@
     (mfn/verifying
       (f/other-fn) :multiple-verifying-forms-pt2 (mfn.m/exactly 1))))
 
-(mfn/deftest deftest-tolerates-non-list-body-forms-test
+(mfn/deftest tolerates-non-list-body-forms-test
   :non-list-form
   (mfn/testing "tolerates non-list body forms"
     :non-list-form
     (swap! tests-run conj :tolerates-non-list-body-forms)))
+
+(mfn/deftest deftest-records-call-log-test
+  (mfn/testing "records call log"
+    (f/one-fn :arg1)
+    (f/other-fn :arg2)
+    (f/another-fn :arg3)
+    (is (= [[#'f/one-fn :arg1] [#'f/other-fn :arg2] [#'f/another-fn :arg3]]
+           @mock/*call-log*))
+    (swap! tests-run conj :records-call-log-test)
+    (mfn/providing
+      (f/one-fn :arg1) :ret-val)
+    (mfn/verifying
+      (f/other-fn :arg2) :ret-val (mfn.m/any))
+    (mfn/verifying-eventually
+      {:max-attempts 1 :interval-ms 20}
+      (f/another-fn :arg3) :ret-val (mfn.m/any))))
 
 (def expected-tests-run
   #{:deftest
@@ -180,7 +197,8 @@
     :testing-providing+verifying-pt2
     :testing-verifying
     :testing-verifying-eventually
-    :tolerates-non-list-body-forms})
+    :tolerates-non-list-body-forms
+    :records-call-log-test})
 
 (defn teardown []
   (is (= @tests-run expected-tests-run))
