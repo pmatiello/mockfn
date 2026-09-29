@@ -1,6 +1,7 @@
 (ns me.pmatiello.mockfn.plain-test
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.fixtures :as f]
+            [me.pmatiello.mockfn.internal.mock :as mock]
             [me.pmatiello.mockfn.matchers :as matchers]
             [me.pmatiello.mockfn.plain :as plain])
   (:import (clojure.lang Compiler$CompilerException ExceptionInfo Keyword)))
@@ -91,7 +92,7 @@
       (is (= [[#'f/one-fn]
               [#'f/other-fn :arg]
               [#'f/another-fn :arg1 :arg2]]
-             @plain/*call-log*)))))
+             @mock/*call-log*)))))
 
 (deftest verifying-test
   (testing "mocks functions without arguments"
@@ -194,7 +195,7 @@
       (is (= [[#'f/one-fn]
               [#'f/other-fn :arg]
               [#'f/another-fn :arg1 :arg2]]
-             @plain/*call-log*)))))
+             @mock/*call-log*)))))
 
 (deftest verifying-eventually-test
   (testing "verifies function calls within the limit of attempts"
@@ -291,7 +292,7 @@
       (is (= [[#'f/one-fn]
               [#'f/other-fn :arg]
               [#'f/another-fn :arg1 :arg2]]
-             @plain/*call-log*)))))
+             @mock/*call-log*)))))
 
 (deftest match-ordering-test
   (testing "prefers the first declared matching stub regardless of extra bindings"
@@ -326,19 +327,19 @@
     (plain/providing
       [(f/one-fn) :ret-val]
       (f/one-fn)
-      (is (= [[#'f/one-fn]] @plain/*call-log*))
+      (is (= [[#'f/one-fn]] @mock/*call-log*))
       (plain/providing
         [(f/other-fn :arg1) :ret-val]
         (f/other-fn :arg1)
-        (is (= [[#'f/one-fn] [#'f/other-fn :arg1]] @plain/*call-log*)))
+        (is (= [[#'f/one-fn] [#'f/other-fn :arg1]] @mock/*call-log*)))
       (plain/verifying
         [(f/other-fn :arg2) :ret-val (matchers/any)]
         (f/other-fn :arg2)
-        (is (= [[#'f/one-fn] [#'f/other-fn :arg2]] @plain/*call-log*)))
+        (is (= [[#'f/one-fn] [#'f/other-fn :arg2]] @mock/*call-log*)))
       (plain/verifying-eventually
         {:max-attempts 1 :interval-ms 0}
         [(f/other-fn :arg3) :ret-val (matchers/any)]
         (f/other-fn :arg3)
-        (is (= [[#'f/one-fn] [#'f/other-fn :arg3]] @plain/*call-log*)))
-      (is (= [[#'f/one-fn]] @plain/*call-log*)))
-    (is (nil? plain/*call-log*))))
+        (is (= [[#'f/one-fn] [#'f/other-fn :arg3]] @mock/*call-log*)))
+      (is (= [[#'f/one-fn]] @mock/*call-log*)))
+    (is (nil? mock/*call-log*))))

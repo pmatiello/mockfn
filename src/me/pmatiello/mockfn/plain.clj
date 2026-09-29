@@ -2,6 +2,9 @@
   (:require [me.pmatiello.mockfn.internal.mock :as mock])
   (:import (clojure.lang ExceptionInfo)))
 
+(defn ^:private new-or-existing-call-log! []
+  (atom (if mock/*call-log* @mock/*call-log* [])))
+
 (defn ^:private fn-sym
   [func]
   (cond
@@ -33,8 +36,6 @@
        (map (fn [[func spec]] [(fn-sym func) `(mock/mock ~func ~spec)]))
        (apply concat)))
 
-(def ^:dynamic *call-log* nil)
-
 (defmacro providing
   "Replaces functions with mocks. These mocks return preconfigured values when
   called with the expected arguments.
@@ -53,11 +54,9 @@
     (is (= :result (one-fn))))
   ```"
   [bindings & body]
-  `(let [call-log# (atom (if *call-log* @*call-log* []))]
-     (binding [*call-log*      call-log#
-               mock/*call-log* call-log#]
-       (with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
-         ~@body))))
+  `(binding [mock/*call-log* (#'new-or-existing-call-log!)]
+     (with-redefs ~(->> bindings (partition-strictly 2) func->spec as-redefs)
+       ~@body)))
 
 (defmacro verifying
   "Replaces functions with mocks. Verifies that all calls where performed the
@@ -79,14 +78,12 @@
   [bindings & body]
   (let [specs#  (->> bindings (partition-strictly 3) func->spec)
         un-var# #(if (var? %) (var-get %) %)]
-    `(let [call-log# (atom (if *call-log* @*call-log* []))]
-       (binding [*call-log*      call-log#
-                 mock/*call-log* call-log#]
-         (with-redefs ~(as-redefs specs#)
-           (let [result# (do ~@body)]
-             (doseq [mock# (->> ~specs# keys (map ~un-var#))]
-               (mock/verify mock#))
-             result#))))))
+    `(binding [mock/*call-log* (#'new-or-existing-call-log!)]
+       (with-redefs ~(as-redefs specs#)
+         (let [result# (do ~@body)]
+           (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+             (mock/verify mock#))
+           result#)))))
 
 (def ^:private default-patience-cfg
   {:max-attempts 1 :interval-ms 0})
@@ -110,7 +107,7 @@
   (verifying-eventually
     {:max-attempts 50 :interval-ms 20}
     [(f/one-fn) :mocked (matchers/exactly 1)]
-    (future (Thread/sleep 50) (f/one-fn))))
+    (future (Thread/sleep 50) (f/one-fn)))
   ```"
   [patience-cfg bindings & body]
   (let [patience-cfg# (merge default-patience-cfg patience-cfg)
@@ -121,24 +118,22 @@
     (assert (number? max-attempts#))
     (assert (number? interval-ms#))
     (assert (pos? max-attempts#))
-    `(let [call-log# (atom (if *call-log* @*call-log* []))]
-       (binding [*call-log*      call-log#
-                 mock/*call-log* call-log#]
-         (with-redefs ~(as-redefs specs#)
-           (let [result# (do ~@body)]
-             (loop [attempt# 0]
-               (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))]
-                                 (mock/verify mock#))
-                               (catch ExceptionInfo e# e#))]
-                 (cond
-                   (and (ex-data vrf#) (>= attempt# ~max-attempts#))
-                   (throw vrf#)
+    `(binding [mock/*call-log* (#'new-or-existing-call-log!)]
+       (with-redefs ~(as-redefs specs#)
+         (let [result# (do ~@body)]
+           (loop [attempt# 0]
+             (let [vrf# (try (doseq [mock# (->> ~specs# keys (map ~un-var#))]
+                               (mock/verify mock#))
+                             (catch ExceptionInfo e# e#))]
+               (cond
+                 (and (ex-data vrf#) (>= attempt# ~max-attempts#))
+                 (throw vrf#)
 
-                   (ex-data vrf#)
-                   (do (Thread/sleep ~interval-ms#) (recur (inc attempt#)))
+                 (ex-data vrf#)
+                 (do (Thread/sleep ~interval-ms#) (recur (inc attempt#)))
 
-                   :otherwise
-                   result#)))))))))
+                 :otherwise
+                 result#))))))))
 
 (defn invoke
   "Marks a function to be dynamically invoked on mock calls. Matching calls
