@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.fixtures :as f]
+            [me.pmatiello.mockfn.internal.mock :as mock]
             [me.pmatiello.mockfn.plain :as plain]
             [me.pmatiello.mockfn.xtras :as xtras])
   (:import (clojure.lang Compiler$CompilerException)))
@@ -63,3 +64,102 @@
             '(me.pmatiello.mockfn.xtras/reify-with
                me.pmatiello.mockfn.fixtures/SomeProtocol
                {:missing me.pmatiello.mockfn.fixtures/one-fn}))))))
+
+(deftest calls-ordered?-test
+  (testing "matches when no calls are specified"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg1 :arg2]])]
+      (is (xtras/calls-ordered?))))
+
+  (testing "matches when a single call is specified"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg1 :arg2]])]
+      (is (xtras/calls-ordered? [#'f/one-fn :arg]))))
+
+  (testing "does not match missing calls"
+    (binding [mock/*call-log* (atom [])]
+      (is (false? (xtras/calls-ordered? [#'f/one-fn :arg])))))
+
+  (testing "matches expected calls in order"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg1 :arg2]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/other-fn :arg1 :arg2]))))
+
+  (testing "does not match calls in the wrong order"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg]])]
+      (is (false? (xtras/calls-ordered?
+                    [#'f/other-fn :arg]
+                    [#'f/one-fn :arg])))))
+
+  (testing "allows unrelated calls between expected calls"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :unrelated]
+                                     [#'f/another-fn]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/another-fn]))))
+
+  (testing "allows extra matching calls before the next expected call"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/one-fn :arg]
+                                     [#'f/other-fn :arg1 :arg2]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/other-fn :arg1 :arg2]))))
+
+  (testing "allows extra matching calls after the expected sequence"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg1 :arg2]
+                                     [#'f/one-fn :arg]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/other-fn :arg1 :arg2]))))
+
+  (testing "allows in order repeated calls at different positions"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg1 :arg2]
+                                     [#'f/one-fn :arg]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/other-fn :arg1 :arg2]
+            [#'f/one-fn :arg]))))
+
+  (testing "distinguishes calls to the same function with different arguments"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :first]
+                                     [#'f/one-fn :second]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :first]
+            [#'f/one-fn :second]))
+      (is (false? (xtras/calls-ordered?
+                    [#'f/one-fn :second]
+                    [#'f/one-fn :first])))))
+
+  (testing "matches repeated expectations to separate calls"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/one-fn :arg]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/one-fn :arg]))))
+
+  (testing "does not match repeated expectations to a single call"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]])]
+      (is (false? (xtras/calls-ordered?
+                    [#'f/one-fn :arg]
+                    [#'f/one-fn :arg])))))
+
+  (testing "handles a missing call log as an empty call log"
+    (binding [mock/*call-log* nil]
+      (is (xtras/calls-ordered?))
+      (is (false? (xtras/calls-ordered? [#'f/one-fn])))))
+
+  (testing "works with plain macros"
+    (plain/providing
+      [(f/one-fn :first) :one
+       (f/other-fn :second) :other]
+      (f/one-fn :first) (f/other-fn :second)
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :first]
+            [#'f/other-fn :second])))))

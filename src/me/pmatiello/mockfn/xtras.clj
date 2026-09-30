@@ -82,3 +82,17 @@
        ~@(map
            (fn [[mtd args]]
              `(~(symbol mtd) ~args (~(mtd->fn mtd) ~@args))) prepd-sigs))))
+
+(defn calls-ordered?
+  "Returns whether the specified calls appear in order in the active call log.
+
+   Calls may have other calls between them. Each expected call must exactly
+   match a logged call, including its function and arguments."
+  [& expected]
+  (let [call-log (some-> mock/*call-log* deref)]
+    (->> call-log
+         (reduce
+           (fn [[next & tail :as remaining] call]
+             (if (= next call) tail remaining))
+           expected)
+         empty?)))
