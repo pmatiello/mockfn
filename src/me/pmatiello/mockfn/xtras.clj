@@ -84,7 +84,7 @@
              `(~(symbol mtd) ~args (~(mtd->fn mtd) ~@args))) prepd-sigs))))
 
 (defn calls-ordered?
-  "Returns whether the specified calls appear in order in the active call log.
+  "Returns whether calls to mock functions occurred in the specified order.
 
    Calls may have other calls between them. Each expected function Var must
    match exactly; arguments follow the mock argument-matching rules, including
@@ -92,7 +92,16 @@
 
    The history of calls may be incomplete when mocked functions are called from
    threads that do not inherit the current dynamic bindings, such as manually
-   created `Thread` instances."
+   created `Thread` instances.
+
+   Example:
+   ```
+   (providing
+     [(one-fn :x) :one
+      (other-fn :y) :other]
+     (one-fn :x) (other-fn :y)
+     (is (calls-ordered? [#'one-fn :x] [#'other-fn :y])))
+   ```"
   [& expected]
   (let [call-log (some-> mock/*call-log* deref)]
     (->> call-log

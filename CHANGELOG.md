@@ -4,6 +4,11 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
+## 0.13.0
+
+- Added `xtras/calls-ordered?` to validate whether mock functions were called in
+  the specified order.
+
 ## 0.12.0 - 2026-09-16
 
 - Added `xtras/reify-with` to produce objects implementing a protocol that can

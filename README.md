@@ -14,6 +14,7 @@ be used alongside a regular testing framework such as `clojure.test`.
             * [Stubbing function calls](#stubbing-function-calls)
             * [Verifying interactions](#verifying-interactions)
             * [Verifying asynchronous interactions](#verifying-asynchronous-interactions)
+            * [Verifying the order of interactions](#verifying-the-order-of-interactions)
             * [Argument matchers](#argument-matchers)
             * [Mocking private functions](#mocking-private-functions)
             * [Returning dynamic values](#returning-dynamic-values)
@@ -117,6 +118,24 @@ exceeded.
     [(one-fn :argument) :result (mfn.m/exactly 1)]
     (future (Thread/sleep 50) (one-fn :argument))))
 ```
+
+#### Verifying the order of interactions
+
+The `me.pmatiello.mockfn.xtras/calls-ordered?` function returns whether calls to
+mock functions occurred in the specified order.
+
+```clj
+(testing "calls-ordered"
+  (mfn/providing
+    [(one-fn :x) :one
+     (other-fn :y) :other]
+    (one-fn :x) (other-fn :y)
+    (is (xtras/calls-ordered? [#'one-fn :x] [#'other-fn :y]))))
+```
+
+The history of calls may be incomplete when mocked functions are called from
+threads that do not inherit the current dynamic bindings, such as manually
+created `Thread` instances.
 
 #### Argument matchers
 
