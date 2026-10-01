@@ -133,3 +133,37 @@
               [#'f/one-fn :arg]
               [#'f/other-fn :arg1 :arg2]]
              @mock/*call-log*)))))
+
+(deftest matches-call?-test
+  (testing "matches the expected function and arguments"
+    (is (mock/matches-call? [#'f/one-fn] [#'f/one-fn]))
+    (is (mock/matches-call? [#'f/one-fn :arg] [#'f/one-fn :arg]))
+    (is (false? (mock/matches-call? [#'f/one-fn] [#'f/other-fn])))
+    (is (false? (mock/matches-call? [#'f/one-fn :arg] [#'f/other-fn :arg])))
+    (is (false? (mock/matches-call? [#'f/one-fn :arg] [#'f/one-fn :other])))
+    (is (false? (mock/matches-call? [#'f/one-fn :arg] [#'f/one-fn]))))
+
+  (testing "matches and rejects argument matchers"
+    (is (mock/matches-call?
+          [#'f/one-fn (matchers/a Keyword)]
+          [#'f/one-fn :matches]))
+    (is (mock/matches-call?
+          [#'f/one-fn :fixed (matchers/a Keyword)]
+          [#'f/one-fn :fixed :matches]))
+    (is (false? (mock/matches-call?
+                  [#'f/one-fn (matchers/a Keyword)]
+                  [#'f/one-fn "not-a-keyword"]))))
+
+  (testing "expands variadic argument matchers"
+    (is (mock/matches-call?
+          [#'f/one-fn (matchers/*> (matchers/a Keyword))]
+          [#'f/one-fn]))
+    (is (mock/matches-call?
+          [#'f/one-fn (matchers/*> (matchers/a Keyword))]
+          [#'f/one-fn :x :y :z]))
+    (is (mock/matches-call?
+          [#'f/one-fn :prefix (matchers/*> (matchers/a Keyword))]
+          [#'f/one-fn :prefix :x :y]))
+    (is (false? (mock/matches-call?
+                  [#'f/one-fn (matchers/*> (matchers/a Keyword))]
+                  [#'f/one-fn :x "not-a-keyword"])))))

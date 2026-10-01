@@ -86,13 +86,18 @@
 (defn calls-ordered?
   "Returns whether the specified calls appear in order in the active call log.
 
-   Calls may have other calls between them. Each expected call must exactly
-   match a logged call, including its function and arguments."
+   Calls may have other calls between them. Each expected function Var must
+   match exactly; arguments follow the mock argument-matching rules, including
+   argument matchers.
+
+   The history of calls may be incomplete when mocked functions are called from
+   threads that do not inherit the current dynamic bindings, such as manually
+   created `Thread` instances."
   [& expected]
   (let [call-log (some-> mock/*call-log* deref)]
     (->> call-log
          (reduce
            (fn [[next & tail :as remaining] call]
-             (if (= next call) tail remaining))
+             (if (mock/matches-call? next call) tail remaining))
            expected)
          empty?)))

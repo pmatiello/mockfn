@@ -3,9 +3,10 @@
             [me.pmatiello.mockfn.clj-test :as mfn]
             [me.pmatiello.mockfn.fixtures :as f]
             [me.pmatiello.mockfn.internal.mock :as mock]
+            [me.pmatiello.mockfn.matchers :as matchers]
             [me.pmatiello.mockfn.plain :as plain]
             [me.pmatiello.mockfn.xtras :as xtras])
-  (:import (clojure.lang Compiler$CompilerException)))
+  (:import (clojure.lang Compiler$CompilerException Keyword)))
 
 (deftest return-in-order-test
   (testing "returns sequence of values at each invocation, in order"
@@ -127,6 +128,16 @@
             [#'f/other-fn :arg1 :arg2]
             [#'f/one-fn :arg]))))
 
+  (testing "distinguishes calls to different functions with the same arguments"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :arg]
+                                     [#'f/other-fn :arg]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :arg]
+            [#'f/other-fn :arg]))
+      (is (false? (xtras/calls-ordered?
+                    [#'f/other-fn :arg]
+                    [#'f/one-fn :arg])))))
+
   (testing "distinguishes calls to the same function with different arguments"
     (binding [mock/*call-log* (atom [[#'f/one-fn :first]
                                      [#'f/one-fn :second]])]
@@ -154,6 +165,34 @@
     (binding [mock/*call-log* nil]
       (is (xtras/calls-ordered?))
       (is (false? (xtras/calls-ordered? [#'f/one-fn])))))
+
+  (testing "matches and rejects calls using argument matchers"
+    (binding [mock/*call-log* (atom [[#'f/one-fn :fixed 12]
+                                     [#'f/other-fn :actual]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn :fixed (matchers/at-least 10)]
+            [#'f/other-fn (matchers/a Keyword)]))
+      (is (false? (xtras/calls-ordered?
+                    [#'f/one-fn :fixed (matchers/at-most 10)]
+                    [#'f/other-fn (matchers/a Keyword)])))))
+
+  (testing "skips calls that do not match an argument matcher"
+    (binding [mock/*call-log* (atom [[#'f/one-fn 5]
+                                     [#'f/one-fn 12]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn (matchers/at-least 10)]))))
+
+  (testing "matches and rejects calls using variadic argument matchers"
+    (binding [mock/*call-log* (atom [[#'f/one-fn]
+                                     [#'f/one-fn :x]
+                                     [#'f/one-fn :x :y :z]])]
+      (is (xtras/calls-ordered?
+            [#'f/one-fn (matchers/*> (matchers/a Keyword))]
+            [#'f/one-fn (matchers/*> (matchers/a Keyword))]
+            [#'f/one-fn (matchers/*> (matchers/a Keyword))])))
+    (binding [mock/*call-log* (atom [[#'f/one-fn :x 42]])]
+      (is (false? (xtras/calls-ordered?
+                    [#'f/one-fn (matchers/*> (matchers/a Keyword))])))))
 
   (testing "works with plain macros"
     (plain/providing

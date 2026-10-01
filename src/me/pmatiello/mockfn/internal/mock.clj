@@ -83,3 +83,16 @@
     (let [times-called (-> rule :calls deref)]
       (when-not (matchers/matches? expected times-called)
         (throw (ex-info (doesnt-match (-> mock meta :fn) (:args rule) expected times-called) {}))))))
+
+(defn matches-call?
+  "Returns whether `call` matches `expected`.
+
+   Both are call entries whose first element is a function Var and whose
+   remaining elements are arguments. The function Var must match exactly;
+   arguments use the mock argument-matching rules, including matchers."
+  [expected call]
+  (let [[expected-fn & expected-args] expected
+        [call-fn & call-args] call]
+    (-> (and (= expected-fn call-fn)
+             (matches-args? {:args expected-args} (into [] call-args)))
+        boolean)))
