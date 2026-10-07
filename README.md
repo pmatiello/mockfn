@@ -374,7 +374,7 @@ To clean a previous build, run:
 ### Releasing
 
 Before releasing, update the library version in the [build.clj](./build.clj)
-file and the release version and date in the changelog.
+file and the release version and date in the [changelog](./CHANGELOG.md).
 
 Run all tests and build the release artifact:
 
