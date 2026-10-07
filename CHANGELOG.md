@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 ## Releases
 
-## 0.13.0
+## 0.13.0 - 2026-10-07 
 
 - Added `xtras/calls-ordered?` to validate whether mock functions were called in
   the specified order.
