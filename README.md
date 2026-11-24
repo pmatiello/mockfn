@@ -7,30 +7,40 @@ be used alongside a regular testing framework such as `clojure.test`.
 [![Documentation](https://cljdoc.org/badge/me.pmatiello/mockfn)](https://cljdoc.org/d/me.pmatiello/mockfn)
 
 <!-- TOC -->
+
 * [me.pmatiello/mockfn](#mepmatiellomockfn)
-  * [Usage](#usage)
-    * [Framework-agnostic usage](#framework-agnostic-usage)
-      * [Stubbing function calls](#stubbing-function-calls)
-      * [Verifying interactions](#verifying-interactions)
-      * [Verifying asynchronous interactions](#verifying-asynchronous-interactions)
-      * [Verifying the order of interactions](#verifying-the-order-of-interactions)
-      * [Argument matchers](#argument-matchers)
-      * [Mocking private functions](#mocking-private-functions)
-      * [Returning dynamic values](#returning-dynamic-values)
-      * [Throwing exceptions](#throwing-exceptions)
-      * [Returning different values at each invocation](#returning-different-values-at-each-invocation)
-      * [Mocking protocol methods](#mocking-protocol-methods)
-    * [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest)
-    * [Built-in matchers](#built-in-matchers)
-  * [Quirks and Limitations](#quirks-and-limitations)
-    * [No support for parallel test execution](#no-support-for-parallel-test-execution)
-    * [Inner definitions override outer ones](#inner-definitions-override-outer-ones)
-  * [Development](#development)
-    * [Running tests](#running-tests)
-    * [Building](#building)
-    * [Releasing](#releasing)
-  * [Contribution Policy](#contribution-policy)
-  * [License](#license)
+    * [Usage](#usage)
+        * [Framework-agnostic usage](#framework-agnostic-usage)
+            * [Stubbing function calls](#stubbing-function-calls)
+            * [Verifying interactions](#verifying-interactions)
+            * [Verifying asynchronous interactions](#verifying-asynchronous-interactions)
+            * [Argument matchers](#argument-matchers)
+            * [Mocking private functions](#mocking-private-functions)
+            * [Returning dynamic values](#returning-dynamic-values)
+            * [Throwing exceptions](#throwing-exceptions)
+        * [Syntactic sugar for clojure.test](#syntactic-sugar-for-clojuretest)
+            * [Stubbing function calls](#stubbing-function-calls-1)
+            * [Verifying interactions](#verifying-interactions-1)
+            * [Verifying asynchronous interactions](#verifying-asynchronous-interactions-1)
+            * [Argument matchers](#argument-matchers-1)
+            * [Mocking private functions](#mocking-private-functions-1)
+            * [Returning dynamic values](#returning-dynamic-values-1)
+            * [Throwing exceptions](#throwing-exceptions-1)
+        * [Built-in matchers](#built-in-matchers)
+        * [Extra Features](#extra-features)
+            * [Returning different values at each invocation](#returning-different-values-at-each-invocation)
+            * [Verifying the order of interactions](#verifying-the-order-of-interactions)
+            * [Mocking protocol methods](#mocking-protocol-methods)
+    * [Quirks and Limitations](#quirks-and-limitations)
+        * [No support for parallel test execution](#no-support-for-parallel-test-execution)
+        * [Inner definitions override outer ones](#inner-definitions-override-outer-ones)
+    * [Development](#development)
+        * [Running tests](#running-tests)
+        * [Building](#building)
+        * [Releasing](#releasing)
+    * [Contribution Policy](#contribution-policy)
+    * [License](#license)
+
 <!-- TOC -->
 
 ## Usage
@@ -117,24 +127,6 @@ exceeded.
     (future (Thread/sleep 50) (one-fn :argument))))
 ```
 
-#### Verifying the order of interactions
-
-The `me.pmatiello.mockfn.xtras/calls-ordered?` function returns whether calls to
-mock functions occurred in the specified order.
-
-```clj
-(testing "calls-ordered"
-  (mfn/providing
-    [(one-fn :x) :one
-     (other-fn :y) :other]
-    (one-fn :x) (other-fn :y)
-    (is (xtras/calls-ordered? [#'one-fn :x] [#'other-fn :y]))))
-```
-
-The history of calls may be incomplete when mocked functions are called from
-threads that do not inherit the current dynamic bindings, such as manually
-created `Thread` instances.
-
 #### Argument matchers
 
 Mocks can be configured to return a specific value when called with arguments
@@ -171,7 +163,7 @@ received arguments and return its result.
 ```clj
 (testing "returns dynamic values"
   (mfn/providing
-    [(one-fn (matchers/any)) (mfn/invoke identity)]
+    [(one-fn (mfn.m/any)) (mfn/invoke identity)]
     (is (= :x (#'one-fn :x)))
     (is (= :y (#'one-fn :y)))))
 ```
@@ -183,7 +175,7 @@ implementation:
 ```clj
 (testing "invokes the original implementation"
   (mfn/verifying
-    [(one-fn (matchers/any)) (mfn/invoke one-fn) (matchers/exactly 2)]
+    [(one-fn (mfn.m/any)) (mfn/invoke one-fn) (mfn.m/exactly 2)]
     (is (= :x (one-fn :x)))
     (is (= :y (one-fn :y)))))
 ```
@@ -200,50 +192,15 @@ function. This can be used to simulate error scenarios in tests.
     (is (thrown-with-msg? ExceptionInfo #"error!" (one-fn)))))
 ```
 
-#### Returning different values at each invocation
-
-The `me.pmatiello.mockfn.xtras/return-in-order` function allows a mock to return
-a sequence of values in the order the mock is called. After the last value, it
-will continue from the first value in the sequence.
-
-```clj
-(testing "returns values in order"
-  (mfn/providing
-    [(one-fn) (xtras/return-in-order [:a :b :c])]
-    (is (= [:a :b :c :a :b] (repeatedly 5 one-fn))))
-```
-
-#### Mocking protocol methods
-
-The `me.pmatiello.mockfn.xtras/reify-with` macro receives a protocol and a
-mapping of methods to functions, producing an object that delegates to these
-functions any calls made against the mapped protocol methods.
-
-As the objects produced by this macro always delegate these calls to the
-specified functions, regular mocking primitives (such as providing, verifying,
-etc.) can be configured against these given functions in order to specify and
-validate interactions against the object.
-
-```clj
-(defprotocol SomeProtocol
-  (m1 [this])
-  (m2 [this x]))
-
-(declare fn1 fn2)
-(def obj (xtras/reify-with SomeProtocol {:m1 fn1 :m2 fn2}))
-
-(mfn/providing
-  [(fn1 obj) :fn1
-   (fn2 obj :x) :fn2]
-  (is (= :fn1 (.m1 obj)))
-  (is (= :fn2 (.m2 obj :x))))
-```
-
 ### Syntactic sugar for clojure.test
 
-Support
-for [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html)
-is provided in the `mockfn.clj-test` namespace.
+The `mockfn.clj-test` namespace offers a more convenient interface for test
+suites that use
+[clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
+
+This convenience is mostly provided through dedicated `deftest` and `testing`
+macros that allow mocks to be declared alongside the test code without nesting
+the mocking macros around the test code.
 
 ```clj
 (:require [clojure.test :refer :all]
@@ -252,28 +209,107 @@ is provided in the `mockfn.clj-test` namespace.
           ...)
 ```
 
-The `mockfn.clj-test/deftest` and `mockfn.clj-test/testing` macros replace
-`clojure.test/deftest` and `clojure.test/testing` and support a mocking style
-that avoids nesting mocking macros using `mockfn.clj-test/providing`,
-`mockfn.clj-test/verifying` and `mockfn.clj-test/verifying-eventually`.
+#### Stubbing function calls
+
+The `providing` form replaces functions with mocks. These mocks return
+preconfigured values when called with the expected arguments.
 
 ```clj
-(mfn/deftest deftest-with-builtin-mocking
-  (is (= :one-fn (one-fn)))
+(mfn/deftest providing-test
+  (is (= :result (one-fn :argument)))
   (mfn/providing
-    (one-fn) :one-fn)
-
-  (mfn/testing "testing with built-in-mocking"
-    (is (= :one-fn (one-fn)))
-    (is (= :other-fn (other-fn)))
-    (mfn/verifying
-      (other-fn) :other-fn (mfn.m/exactly 1))))
+    (one-fn :argument) :result))
 ```
 
-Note that to leverage the built-in support for mocking in these macros, it's
-necessary to use the `providing`, `verifying`, and `verifying-eventually`
-symbols provided in the `mockfn.clj-test` namespace. This namespace also
-provides aliases to the `invoke` and `raise` functions.
+#### Verifying interactions
+
+The `verifying` form works similarly, but also defines an expectation for the
+number of times a call should be made during the test. A test will fail if this
+expectation is not met. The expected number of calls is defined using a
+[matcher](#built-in-matchers).
+
+```clj
+(mfn/deftest verifying-test
+  (is (= :result (one-fn :argument)))
+  (mfn/verifying
+    (one-fn :argument) :result (mfn.m/exactly 1)))
+```
+
+#### Verifying asynchronous interactions
+
+The `verifying-eventually` form also defines call-count expectations, but this
+verification is performed repeatedly, pausing for a specified interval between
+checks, until all expectations are met or the maximum number of attempts is
+exceeded.
+
+```clj
+(mfn/deftest verifying-eventually-test
+  (future (Thread/sleep 50) (one-fn :argument))
+  (mfn/verifying-eventually
+    {:max-attempts 10 :interval-ms 20}
+    (one-fn :argument) :result (mfn.m/exactly 1)))
+```
+
+#### Argument matchers
+
+Mocks can be configured to return a specific value when called with arguments
+matching certain criteria through [matchers](#built-in-matchers).
+
+```clj
+(mfn/deftest argument-matchers-test
+  (is (= 15 (one-fn 12 18)))
+  (mfn/providing
+    (one-fn (mfn.m/at-least 10) (mfn.m/at-most 20)) 15))
+```
+
+#### Mocking private functions
+
+Private functions can be mocked by referring to the `Var` associated with the
+symbol of the mocked function.
+
+```clj
+(mfn/deftest private-function-test
+  (is (= :result (#'pvt-fn)))
+  (mfn/providing
+    (#'pvt-fn) :result))
+```
+
+#### Returning dynamic values
+
+The `invoke` function allows mocks to dynamically invoke a function with the
+received arguments and return its result.
+
+```clj
+(mfn/deftest dynamic-values-test
+  (is (= :x (one-fn :x)))
+  (is (= :y (one-fn :y)))
+  (mfn/providing
+    (one-fn (mfn.m/any)) (mfn/invoke identity)))
+```
+
+The same approach can be used to invoke the original implementation to test
+whether a function has been invoked as expected without overriding its
+implementation:
+
+```clj
+(mfn/deftest original-implementation-test
+  (is (= :x (one-fn :x)))
+  (is (= :y (one-fn :y)))
+  (mfn/verifying
+    (one-fn (mfn.m/any)) (mfn/invoke one-fn) (mfn.m/exactly 2)))
+```
+
+#### Throwing exceptions
+
+Mocks can be configured to throw exceptions when invoked using the `raise`
+function. This can be used to simulate error scenarios in tests.
+
+```clj
+(mfn/deftest throwing-exception-test
+  (is (thrown-with-msg? ExceptionInfo #"error!" (one-fn)))
+  (mfn/providing
+    (one-fn) (mfn/raise (ex-info "error!" {}))))
+```
 
 ### Built-in matchers
 
@@ -313,6 +349,107 @@ The following matchers are included in `mockfn`:
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.
+
+### Extra Features
+
+The `me.pmatiello.mockfn.xtras` namespace provides additional mocking utilities.
+
+```clj
+(:require [me.pmatiello.mockfn.xtras :as xtras])
+```
+
+#### Returning different values at each invocation
+
+The `return-in-order` function allows a mock to return a sequence of values in
+the order the mock is called. After the last value, it continues from the first
+value in the sequence.
+
+Framework-agnostic usage:
+
+```clj
+(testing "returns values in order"
+  (mfn/providing
+    [(one-fn) (xtras/return-in-order :a :b :c)]
+    (is (= [:a :b :c :a :b] (repeatedly 5 one-fn)))))
+```
+
+Using the `clojure.test` syntax sugar:
+
+```clj
+(mfn/deftest return-in-order-test
+  (is (= [:a :b :c :a :b] (repeatedly 5 one-fn)))
+  (mfn/providing
+    (one-fn) (xtras/return-in-order :a :b :c)))
+```
+
+#### Verifying the order of interactions
+
+The `calls-ordered?` function returns whether calls to mock functions occurred
+in the specified order.
+
+Framework-agnostic usage:
+
+```clj
+(testing "calls-ordered"
+  (mfn/providing
+    [(one-fn :x) :one
+     (other-fn :y) :other]
+    (one-fn :x) (other-fn :y)
+    (is (xtras/calls-ordered? [#'one-fn :x] [#'other-fn :y]))))
+```
+
+Using the `clojure.test` syntax sugar:
+
+```clj
+(mfn/deftest calls-ordered-test
+  (one-fn :x)
+  (other-fn :y)
+  (is (xtras/calls-ordered? [#'one-fn :x] [#'other-fn :y]))
+  (mfn/providing
+    (one-fn :x) :one
+    (other-fn :y) :other))
+```
+
+The history of calls may be incomplete when mocked functions are called from
+threads that do not inherit the current dynamic bindings, such as manually
+created `Thread` instances.
+
+#### Mocking protocol methods
+
+The `reify-with` macro receives a protocol and a mapping of methods to
+functions, producing an object that delegates calls to those functions for the
+mapped protocol methods. Regular mocking primitives can be configured against
+the functions to specify and validate interactions with the object.
+
+```clj
+(defprotocol SomeProtocol
+  (m1 [this])
+  (m2 [this x]))
+
+(declare fn1 fn2)
+(def obj (xtras/reify-with SomeProtocol {:m1 fn1 :m2 fn2}))
+```
+
+Framework-agnostic usage:
+
+```clj
+(mfn/providing
+  [(fn1 obj) :fn1
+   (fn2 obj :x) :fn2]
+  (is (= :fn1 (.m1 obj)))
+  (is (= :fn2 (.m2 obj :x))))
+```
+
+Using the `clojure.test` syntax sugar:
+
+```clj
+(mfn/deftest protocol-methods-test
+  (is (= :fn1 (.m1 obj)))
+  (is (= :fn2 (.m2 obj :x)))
+  (mfn/providing
+    (fn1 obj) :fn1
+    (fn2 obj :x) :fn2))
+```
 
 ## Quirks and Limitations
 
