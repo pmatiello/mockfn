@@ -26,7 +26,9 @@ be used alongside a regular testing framework such as `clojure.test`.
             * [Mocking private functions](#mocking-private-functions-1)
             * [Returning dynamic values](#returning-dynamic-values-1)
             * [Throwing exceptions](#throwing-exceptions-1)
-        * [Built-in matchers](#built-in-matchers)
+        * [Matchers](#matchers)
+            * [Built-in matchers](#built-in-matchers)
+            * [Creating custom matchers](#creating-custom-matchers)
         * [Extra Features](#extra-features)
             * [Returning different values at each invocation](#returning-different-values-at-each-invocation)
             * [Verifying the order of interactions](#verifying-the-order-of-interactions)
@@ -323,7 +325,13 @@ function. This can be used to simulate error scenarios in tests.
     (one-fn) (mfn/raise (ex-info "error!" {}))))
 ```
 
-### Built-in matchers
+### Matchers
+
+Matchers are used to match function arguments and to specify expected call
+counts. A set of built-in matchers is provided out of the box to cover common
+cases. Custom matchers can be created when more specific behavior is needed.
+
+#### Built-in matchers
 
 The following matchers are included in `mockfn`:
 
@@ -361,6 +369,18 @@ The following matchers are included in `mockfn`:
 
 All matchers above are available in the `me.pmatiello.mockfn.matchers`
 namespace.
+
+#### Creating custom matchers
+
+Custom matchers can be created through the `me.pmatiello.mockfn.matchers/make`
+function. The required arguments are the matcher name, the matching function and
+an expected value.
+
+```clj
+(mfn.m/make "equal to" = :expected)
+```
+
+Refer to the function's docstring for more details.
 
 ### Extra Features
 

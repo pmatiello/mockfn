@@ -27,7 +27,24 @@
   ((:expand-fn matcher) matcher args))
 
 (defn make
-  "Produces a new matcher instance."
+  "Produces a new matcher instance.
+
+  Arguments:
+  - name: matcher name;
+  - match-fn: function that takes actual and expected values as arguments and
+    returns whether they match;
+  - expected: value passed to `match-fn` as expected value;
+  - args-desc-fn: function that converts `expected` to a representation for the
+    matcher's description (optional; defaults to `identity`).
+  - expand-fn: function that produces a sequence of matchers to be applied in
+    order to the remaining arguments (optional; defaults to a sequence containing
+    a single occurrence of the matcher, to be applied to one argument).
+
+  Example:
+  ```
+  (make \"exactly\" = :expected)
+  ```
+  "
   ([name match-fn expected]
    (make name match-fn expected identity))
   ([name match-fn expected args-desc-fn]
