@@ -380,8 +380,6 @@ an expected value.
 (mfn.m/make "equal to" = :expected)
 ```
 
-Refer to the function's docstring for more details.
-
 ### Extra Features
 
 The `me.pmatiello.mockfn.xtras` namespace provides additional mocking utilities.
@@ -414,6 +412,9 @@ Using the `clojure.test` syntax sugar:
     (one-fn) (xtras/return-in-order :a :b :c)))
 ```
 
+Dynamic return values produced by `me.pmatiello.mockfn.plain/invoke` and
+`me.pmatiello.mockfn.clj-test/invoke` are supported.
+
 #### Verifying the order of interactions
 
 The `calls-ordered?` function returns whether calls to mock functions occurred
@@ -442,9 +443,9 @@ Using the `clojure.test` syntax sugar:
     (other-fn :y) :other))
 ```
 
-The history of calls may be incomplete when mocked functions are called from
-threads that do not inherit the current dynamic bindings, such as manually
-created `Thread` instances.
+Calls may have other calls between them. Each expected function Var must match
+exactly; arguments follow the mock argument-matching rules, including argument
+matchers.
 
 #### Mocking protocol methods
 
@@ -482,6 +483,9 @@ Using the `clojure.test` syntax sugar:
     (fn1 obj) :fn1
     (fn2 obj :x) :fn2))
 ```
+
+Notice that this macro can only reify a single protocol. Also, interfaces are
+not supported.
 
 ## Quirks and Limitations
 
