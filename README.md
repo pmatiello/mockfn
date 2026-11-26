@@ -198,7 +198,7 @@ The `mockfn.clj-test` namespace offers a more convenient interface for test
 suites that use
 [clojure.test](https://clojure.github.io/clojure/clojure.test-api.html).
 
-This convenience is mostly provided through dedicated `deftest` and `testing`
+This convenience is mostly provided through substitute `deftest` and `testing`
 macros that allow mocks to be declared alongside the test code without nesting
 the mocking macros around the test code.
 
@@ -219,6 +219,18 @@ preconfigured values when called with the expected arguments.
   (is (= :result (one-fn :argument)))
   (mfn/providing
     (one-fn :argument) :result))
+```
+
+It's also possible to configure multiple mocks at once.
+
+```clj
+(mfn/deftest providing-many-test
+  (mfn/testing "providing with more than one function"
+    (is (= :result-1 (one-fn :argument)))
+    (is (= :result-2 (other-fn :argument)))
+    (mfn/providing
+      (one-fn :argument) :result-1
+      (other-fn :argument) :result-2)))
 ```
 
 #### Verifying interactions
