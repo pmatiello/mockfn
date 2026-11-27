@@ -1,4 +1,5 @@
 (ns me.pmatiello.mockfn.clj-test
+  "A more convenient interface for test suites that use clojure.test."
   (:require [clojure.test :as test]
             [me.pmatiello.mockfn.plain :as plain]))
 

@@ -1,4 +1,5 @@
 (ns me.pmatiello.mockfn.xtras
+  "Additional mocking utilities."
   (:require [clojure.set :as set]
             [me.pmatiello.mockfn.internal.mock :as mock]
             [me.pmatiello.mockfn.plain :as plain]))

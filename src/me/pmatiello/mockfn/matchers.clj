@@ -1,4 +1,5 @@
 (ns me.pmatiello.mockfn.matchers
+  "Argument and call-count matchers."
   (:refer-clojure :exclude [empty some])
   (:require [clojure.set :as set]
             [clojure.string :as str]))

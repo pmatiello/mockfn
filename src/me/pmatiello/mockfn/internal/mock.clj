@@ -1,4 +1,5 @@
 (ns me.pmatiello.mockfn.internal.mock
+  "Internal mock implementation."
   (:require [clojure.string :as str]
             [me.pmatiello.mockfn.matchers :as matchers])
   (:import (me.pmatiello.mockfn.matchers Matcher)))

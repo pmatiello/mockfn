@@ -1,4 +1,5 @@
 (ns me.pmatiello.mockfn.plain
+  "Framework-agnostic macros for stubbing and verifying mock calls."
   (:require [me.pmatiello.mockfn.internal.mock :as mock])
   (:import (clojure.lang ExceptionInfo)))
 
